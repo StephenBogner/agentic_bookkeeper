@@ -1,0 +1,46 @@
+"""
+Package Name: agentic_bookkeeper
+File Name: setup.py
+Description: Package configuration and installation script
+Author: Stephen Bogner, P.Eng.
+LLM: claude-sonnet-4-5-20250929
+Ownership: Stephen Bogner - All Rights Reserved.  See LICENSE.md
+Date Created: 2025-10-24
+"""
+
+from setuptools import setup, find_packages
+
+with open("README.md", "r", encoding="utf-8") as fh:
+    long_description = fh.read()
+
+setup(
+    name="agentic_bookkeeper",
+    version="0.1.0",
+    author="Stephen Bogner, P.Eng.",
+    author_email="stephenbogner@stephenbogner.com",
+    description="An intelligent bookkeeping automation system",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    url="https://github.com/StephenBogner/agentic_bookkeeper",
+    package_dir={"": "src"},
+    packages=find_packages(where="src"),
+    classifiers=[
+        "Development Status :: 3 - Alpha",
+        "Intended Audience :: Developers",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+    ],
+    python_requires=">=3.8",
+    install_requires=[
+        # Production dependencies will be listed here
+    ],
+    entry_points={
+        "console_scripts": [
+            "agentic_bookkeeper=agentic_bookkeeper.main:main",
+        ],
+    },
+)
