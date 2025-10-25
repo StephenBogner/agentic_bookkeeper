@@ -56,3 +56,4 @@ htmlcov/
 *.bak
 temp/
 tmp/
+logs/
