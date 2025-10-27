@@ -57,3 +57,13 @@ htmlcov/
 temp/
 tmp/
 logs/
+
+# Project specific - Agentic Bookkeeper
+data/bookkeeper.db
+data/watch/*
+data/processed/*
+!data/watch/.gitkeep
+!data/processed/.gitkeep
+config/*.json
+!config/categories_cra.json
+!config/categories_irs.json
