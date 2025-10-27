@@ -9,6 +9,11 @@
 
 set -e  # Exit on error
 
+# Activate virtual environment if it exists
+if [ -d "venv" ]; then
+    source venv/bin/activate
+fi
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -49,7 +54,7 @@ run_command() {
     shift
     print_test "$description"
 
-    if uv run python cli.py --db-path "$TEST_DB" "$@"; then
+    if python cli.py --db-path "$TEST_DB" "$@"; then
         print_success "$description"
         return 0
     else
@@ -142,7 +147,7 @@ main() {
 
     # Test invalid date format (should fail)
     print_test "Add transaction with invalid date (should fail)"
-    if ! uv run python cli.py --db-path "$TEST_DB" add \
+    if ! python cli.py --db-path "$TEST_DB" add \
         --date "2025/10/24" --type expense --category "Test" \
         --amount 10.00 --vendor "Test" 2>/dev/null; then
         print_success "Invalid date correctly rejected"
@@ -152,7 +157,7 @@ main() {
 
     # Test negative amount (should fail)
     print_test "Add transaction with negative amount (should fail)"
-    if ! uv run python cli.py --db-path "$TEST_DB" add \
+    if ! python cli.py --db-path "$TEST_DB" add \
         --date "2025-10-24" --type expense --category "Test" \
         --amount -10.00 --vendor "Test" 2>/dev/null; then
         print_success "Negative amount correctly rejected"
@@ -164,7 +169,7 @@ main() {
     print_header "Test 8: Verify Database State"
 
     # Count transactions (should be 5 successful adds)
-    TRANSACTION_COUNT=$(uv run python -c "
+    TRANSACTION_COUNT=$(python -c "
 import sys
 sys.path.insert(0, 'src')
 from agentic_bookkeeper.models.database import Database
@@ -186,7 +191,7 @@ db.close()
 
     for cmd in init list add process monitor stats config; do
         print_test "Display help for '$cmd' command"
-        if uv run python cli.py "$cmd" --help >/dev/null 2>&1; then
+        if python cli.py "$cmd" --help >/dev/null 2>&1; then
             print_success "Help for '$cmd' command"
         else
             print_error "Help for '$cmd' command failed"
