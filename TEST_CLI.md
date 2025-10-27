@@ -2,7 +2,9 @@
 
 ## Overview
 
-The `test_cli.sh` script provides comprehensive testing of all CLI commands for the Agentic Bookkeeper application. It ensures that all functionality works correctly and validates input handling.
+The `test_cli.sh` script provides comprehensive testing of all CLI commands for the Agentic
+Bookkeeper application. It ensures that all functionality works correctly and validates input
+handling.
 
 ## Running the Test Script
 
@@ -22,20 +24,25 @@ bash test_cli.sh
 The test script covers the following areas:
 
 ### 1. Help and Basic Commands
+
 - Display main help
 - Verify CLI is operational
 
 ### 2. Database Initialization
+
 - Initialize test database
 - Verify database file creation
 - Check schema version
 
 ### 3. Configuration Display
+
 - Show current configuration
 - Display API key status
 
 ### 4. Add Transactions
+
 Tests adding various transaction types:
+
 - Expense with tax (Office Supplies)
 - Income (Consulting Revenue)
 - Expense (Travel)
@@ -43,27 +50,34 @@ Tests adding various transaction types:
 - Income (Product Sales)
 
 ### 5. List Transactions
+
 - List all transactions (default limit)
 - List with custom limit (3 records)
 - List with custom limit (10 records)
 
 ### 6. Statistics and Reports
+
 - Basic database statistics
 - Statistics with category breakdown
 - Income/expense summary
 - Net calculation
 
 ### 7. Input Validation
+
 Tests error handling for:
+
 - Invalid date format (should fail)
 - Negative amounts (should fail)
 
 ### 8. Database State Verification
+
 - Verifies correct number of transactions
 - Checks data persistence
 
 ### 9. Subcommand Help
+
 Tests help for all subcommands:
+
 - init
 - list
 - add
@@ -73,12 +87,14 @@ Tests help for all subcommands:
 - config
 
 ### 10. Database Persistence
+
 - Verifies data persists across CLI invocations
 - Tests database reopening
 
 ## Test Results
 
 The script provides:
+
 - Color-coded output (green for pass, red for fail, yellow for info)
 - Individual test status
 - Final summary with pass/fail counts
@@ -87,7 +103,8 @@ The script provides:
 ## Expected Output
 
 When all tests pass, you should see:
-```
+
+```text
 Tests Passed: 25
 Tests Failed: 0
 Total Tests:  25
@@ -164,6 +181,7 @@ uv run python cli.py config
 ## Contributing
 
 When adding new CLI commands:
+
 1. Add corresponding tests to `test_cli.sh`
 2. Update this documentation
 3. Ensure all tests pass before committing

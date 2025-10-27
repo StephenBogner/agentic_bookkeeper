@@ -10,7 +10,7 @@ watchdog>=3.0.0
 python-dotenv>=1.0.0
 
 # Document Processing
-PyPDF2>=3.0.0
+pypdf>=3.0.0
 Pillow>=10.0.0
 pytesseract>=0.3.10
 pymupdf>=1.23.0

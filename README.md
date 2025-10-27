@@ -53,7 +53,7 @@ mypy src/
 
 ## Project Structure
 
-```
+```text
 agentic_bookkeeper/
 ├── src/
 │   └── agentic_bookkeeper/

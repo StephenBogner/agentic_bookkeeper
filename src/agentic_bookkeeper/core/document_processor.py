@@ -12,7 +12,7 @@ import tempfile
 from pathlib import Path
 from typing import Optional, Dict, Any, List
 from PIL import Image
-import PyPDF2
+import pypdf
 
 try:
     import fitz  # PyMuPDF
@@ -91,6 +91,9 @@ class DocumentProcessor:
                 logger.error(f"Extraction failed: {result.error_message}")
                 return None
 
+            # Validate document type vs transaction type consistency
+            self._validate_document_transaction_consistency(result.transaction_data)
+
             # Convert to Transaction object
             transaction = self._create_transaction_from_result(
                 result,
@@ -157,11 +160,7 @@ class DocumentProcessor:
                 mat = fitz.Matrix(4.17, 4.17)
                 pix = page.get_pixmap(matrix=mat)
 
-                # Convert to PIL Image
-                img_data = pix.tobytes("png")
-                img = Image.open(tempfile.NamedTemporaryFile(delete=False, suffix='.png'))
-
-                # Save to temporary file
+                # Create temporary file for the converted image
                 temp_file = tempfile.NamedTemporaryFile(
                     delete=False,
                     suffix='.png',
@@ -170,7 +169,7 @@ class DocumentProcessor:
                 temp_path = temp_file.name
                 temp_file.close()
 
-                # Save the pixmap as PNG
+                # Save the pixmap as PNG to the temporary file
                 pix.save(temp_path)
                 pdf_document.close()
 
@@ -214,15 +213,26 @@ class DocumentProcessor:
         try:
             data = result.transaction_data
 
-            # Create transaction
+            # Helper function to safely convert to float, handling None values
+            def safe_float(value, default=0.0):
+                """Convert value to float, handling None and empty strings."""
+                if value is None or value == '':
+                    return default
+                try:
+                    return float(value)
+                except (ValueError, TypeError):
+                    logger.warning(f"Could not convert '{value}' to float, using default {default}")
+                    return default
+
+            # Create transaction with safe type conversion
             transaction = Transaction(
                 date=data.get('date'),
                 type=data.get('transaction_type'),
                 category=data.get('category', 'Other expenses'),
                 vendor_customer=data.get('vendor_customer'),
                 description=data.get('description'),
-                amount=float(data.get('amount', 0)),
-                tax_amount=float(data.get('tax_amount', 0)),
+                amount=safe_float(data.get('amount'), 0.0),
+                tax_amount=safe_float(data.get('tax_amount'), 0.0),
                 document_filename=document_filename
             )
 
@@ -231,6 +241,48 @@ class DocumentProcessor:
         except Exception as e:
             logger.error(f"Failed to create transaction from result: {e}")
             return None
+
+    def _validate_document_transaction_consistency(
+        self,
+        transaction_data: Dict[str, Any]
+    ) -> None:
+        """
+        Validate that document type matches expected transaction type.
+
+        Invoices should be income, receipts should be expense.
+        Logs warnings for inconsistencies but doesn't fail the extraction.
+
+        Args:
+            transaction_data: Extracted transaction data from LLM
+        """
+        if not transaction_data:
+            return
+
+        document_type = transaction_data.get('document_type', '').lower()
+        transaction_type = transaction_data.get('transaction_type', '').lower()
+
+        # Check for inconsistencies
+        if document_type == 'invoice' and transaction_type != 'income':
+            logger.warning(
+                f"⚠️  INCONSISTENT CLASSIFICATION: Document is an INVOICE but "
+                f"transaction type is '{transaction_type}'. "
+                f"Invoices should typically be INCOME transactions. "
+                f"This may indicate an extraction error."
+            )
+
+        elif document_type == 'receipt' and transaction_type != 'expense':
+            logger.warning(
+                f"⚠️  INCONSISTENT CLASSIFICATION: Document is a RECEIPT but "
+                f"transaction type is '{transaction_type}'. "
+                f"Receipts should typically be EXPENSE transactions. "
+                f"This may indicate an extraction error."
+            )
+
+        # Log successful consistent classification
+        elif document_type in ['invoice', 'receipt']:
+            logger.debug(
+                f"✓ Consistent classification: {document_type} → {transaction_type}"
+            )
 
     def extract_pdf_text(self, pdf_path: str) -> str:
         """
@@ -244,7 +296,7 @@ class DocumentProcessor:
         """
         try:
             with open(pdf_path, 'rb') as file:
-                pdf_reader = PyPDF2.PdfReader(file)
+                pdf_reader = pypdf.PdfReader(file)
                 text = ""
 
                 for page in pdf_reader.pages:

@@ -34,8 +34,16 @@ class Config:
         """
         Initialize configuration manager.
 
+        Implements environment variable precedence (highest to lowest priority):
+        1. System environment variables (e.g., set in ~/.bashrc, /etc/environment)
+        2. Session environment variables (e.g., export VAR=value)
+        3. .env file values (DEVELOPMENT ONLY)
+
+        load_dotenv() only sets variables that are not already in the environment,
+        ensuring that system/session variables always take precedence over .env file.
+
         Args:
-            env_file: Path to .env file
+            env_file: Path to .env file (for development only)
             config_dir: Directory containing JSON config files
         """
         self.env_file = Path(env_file)
@@ -43,7 +51,8 @@ class Config:
         self._config: Dict[str, Any] = {}
         self._cipher: Optional[Fernet] = None
 
-        # Load environment variables
+        # Load environment variables from .env file (only if not already set)
+        # This preserves system/session environment variable precedence
         load_dotenv(self.env_file)
 
         # Initialize encryption

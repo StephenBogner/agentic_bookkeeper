@@ -254,7 +254,17 @@ def create_standard_prompt(categories: List[str]) -> str:
 
     prompt = f"""You are a financial document analyzer. Extract transaction information from the provided document.
 
-Document Type: Identify if this is an invoice, receipt, or payment record.
+CRITICAL: First identify the document type, then set transaction type accordingly:
+
+Document Type Classification:
+- INVOICE: Document requesting payment (has "INVOICE", "Bill To", "Due Date", "Payment Terms")
+  → If INVOICE: transaction_type MUST be "income"
+- RECEIPT: Document acknowledging payment received (has "RECEIPT", "Thank you for your purchase", "Paid")
+  → If RECEIPT: transaction_type MUST be "expense"
+
+IMPORTANT:
+- Invoices = INCOME (money the business expects to receive)
+- Receipts = EXPENSE (money the business has paid out)
 
 Extract the following information:
 1. Date of transaction (YYYY-MM-DD format)
@@ -275,6 +285,8 @@ Return ONLY valid JSON in this exact format:
   "description": "string",
   "category": "string"
 }}
+
+REMEMBER: invoice→income, receipt→expense. This is critical for correct accounting.
 
 If you cannot extract a field with confidence, use null.
 Do not include any explanatory text, only the JSON object.

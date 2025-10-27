@@ -43,7 +43,7 @@ class XAIProvider(LLMProvider):
     def __init__(
         self,
         api_key: str,
-        model: str = "grok-vision-beta",
+        model: str = "grok-4-fast-non-reasoning",
         max_retries: int = 3,
         timeout: int = 30
     ):
@@ -52,7 +52,7 @@ class XAIProvider(LLMProvider):
 
         Args:
             api_key: xAI API key
-            model: Model to use (default: grok-vision-beta)
+            model: Model to use (default: grok-4-fast-non-reasoning)
             max_retries: Maximum number of retry attempts
             timeout: Request timeout in seconds
         """
