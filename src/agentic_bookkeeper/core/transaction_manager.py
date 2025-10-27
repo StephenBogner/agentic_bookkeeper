@@ -9,7 +9,7 @@ Date: 2025-10-24
 
 import logging
 from typing import List, Optional, Dict, Any
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 
 from ..models.database import Database
 from ..models.transaction import Transaction
@@ -330,8 +330,8 @@ class TransactionManager:
         try:
             # Calculate date range
             trans_date = datetime.strptime(transaction.date, "%Y-%m-%d").date()
-            start_date = (trans_date - datetime.timedelta(days=time_window_days)).isoformat()
-            end_date = (trans_date + datetime.timedelta(days=time_window_days)).isoformat()
+            start_date = (trans_date - timedelta(days=time_window_days)).isoformat()
+            end_date = (trans_date + timedelta(days=time_window_days)).isoformat()
 
             # Query similar transactions
             candidates = self.query_transactions(

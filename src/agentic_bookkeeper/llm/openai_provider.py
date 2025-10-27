@@ -42,7 +42,7 @@ class OpenAIProvider(LLMProvider):
     def __init__(
         self,
         api_key: str,
-        model: str = "gpt-4-vision-preview",
+        model: str = "gpt-4o",
         max_retries: int = 3,
         timeout: int = 30
     ):

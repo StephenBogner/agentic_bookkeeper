@@ -8,10 +8,17 @@ Date: 2025-10-24
 """
 
 import logging
+import tempfile
 from pathlib import Path
 from typing import Optional, Dict, Any, List
 from PIL import Image
 import PyPDF2
+
+try:
+    import fitz  # PyMuPDF
+    PYMUPDF_AVAILABLE = True
+except ImportError:
+    PYMUPDF_AVAILABLE = False
 
 from ..llm.llm_provider import LLMProvider, ExtractionResult
 from ..models.transaction import Transaction
@@ -120,7 +127,7 @@ class DocumentProcessor:
             document_path: Path to document
 
         Returns:
-            Path to preprocessed document
+            Path to preprocessed document (will be an image file)
 
         Raises:
             Exception: If preprocessing fails
@@ -130,10 +137,49 @@ class DocumentProcessor:
 
         try:
             if suffix == '.pdf':
-                # For now, return PDF path directly
-                # In future, could convert to image if needed
-                logger.debug(f"PDF document: {path.name}")
-                return document_path
+                # Convert PDF to image
+                if not PYMUPDF_AVAILABLE:
+                    raise ImportError(
+                        "PyMuPDF (fitz) is required for PDF processing. "
+                        "Install with: pip install pymupdf"
+                    )
+
+                logger.debug(f"Converting PDF to image: {path.name}")
+
+                # Open PDF and get first page
+                pdf_document = fitz.open(document_path)
+                if len(pdf_document) == 0:
+                    raise ValueError(f"PDF has no pages: {path.name}")
+
+                # Render first page to pixmap (high resolution for OCR)
+                page = pdf_document[0]
+                # Use 300 DPI for good quality (matrix zoom factor of 4.17 = 300/72)
+                mat = fitz.Matrix(4.17, 4.17)
+                pix = page.get_pixmap(matrix=mat)
+
+                # Convert to PIL Image
+                img_data = pix.tobytes("png")
+                img = Image.open(tempfile.NamedTemporaryFile(delete=False, suffix='.png'))
+
+                # Save to temporary file
+                temp_file = tempfile.NamedTemporaryFile(
+                    delete=False,
+                    suffix='.png',
+                    prefix=f"pdf_convert_{path.stem}_"
+                )
+                temp_path = temp_file.name
+                temp_file.close()
+
+                # Save the pixmap as PNG
+                pix.save(temp_path)
+                pdf_document.close()
+
+                logger.debug(
+                    f"Converted PDF {path.name} to image: {temp_path} "
+                    f"(size: {pix.width}x{pix.height})"
+                )
+
+                return temp_path
 
             elif suffix in {'.png', '.jpg', '.jpeg'}:
                 # Validate image can be opened

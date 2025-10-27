@@ -97,7 +97,7 @@ class TestTransactionManager:
             end_date="2025-01-25"
         )
 
-        assert len(results) == 2  # Should get Jan 15 and Jan 20 transactions
+        assert len(results) == 3  # Should get Jan 15, Jan 20, and Jan 25 transactions
 
     def test_query_transactions_by_type(self, database, multiple_transactions):
         """Test querying transactions by type."""

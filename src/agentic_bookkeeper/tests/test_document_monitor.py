@@ -88,6 +88,10 @@ class TestDocumentMonitor:
         processed_dir = temp_dir / "processed"
         callback = Mock()
 
+        # Ensure directories exist
+        watch_dir.mkdir(parents=True, exist_ok=True)
+        processed_dir.mkdir(parents=True, exist_ok=True)
+
         # Create test files
         test_pdf = watch_dir / "test1.pdf"
         test_jpg = watch_dir / "test2.jpg"

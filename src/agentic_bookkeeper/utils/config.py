@@ -15,7 +15,7 @@ from typing import Optional, Dict, Any
 from dotenv import load_dotenv
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 import base64
 
 
@@ -57,7 +57,7 @@ class Config:
         # Use a machine-specific key derived from environment
         # In production, this should use a more secure key storage method
         salt = b'agentic_bookkeeper_salt_2025'  # Static salt (not ideal for production)
-        kdf = PBKDF2(
+        kdf = PBKDF2HMAC(
             algorithm=hashes.SHA256(),
             length=32,
             salt=salt,

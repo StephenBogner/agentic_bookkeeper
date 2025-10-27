@@ -74,9 +74,11 @@ class TestDocumentProcessor:
         temp_dir
     ):
         """Test successful document processing."""
-        # Create a dummy image file
+        # Create a small valid image file (1x1 pixel PNG)
+        from PIL import Image as PILImage
         test_image = temp_dir / "test_receipt.jpg"
-        test_image.write_text("dummy image data")
+        img = PILImage.new('RGB', (1, 1))
+        img.save(str(test_image))
 
         # Mock provider to return successful result
         mock_provider.extract_transaction.return_value = successful_extraction_result
@@ -117,8 +119,10 @@ class TestDocumentProcessor:
     ):
         """Test document processing when extraction fails."""
         # Create test file
+        from PIL import Image as PILImage
         test_image = temp_dir / "test.jpg"
-        test_image.write_text("dummy")
+        img = PILImage.new('RGB', (1, 1))
+        img.save(str(test_image))
 
         # Mock provider to return failed result
         mock_provider.extract_transaction.return_value = ExtractionResult(
@@ -139,8 +143,10 @@ class TestDocumentProcessor:
         temp_dir
     ):
         """Test processing when extracted data is invalid."""
+        from PIL import Image as PILImage
         test_image = temp_dir / "test.jpg"
-        test_image.write_text("dummy")
+        img = PILImage.new('RGB', (1, 1))
+        img.save(str(test_image))
 
         # Return result with invalid transaction type
         mock_provider.extract_transaction.return_value = ExtractionResult(
@@ -182,21 +188,21 @@ class TestDocumentProcessor:
         """Test validation with missing fields."""
         from agentic_bookkeeper.models.transaction import Transaction
 
-        # Transaction with no date (will fail validation in __post_init__)
-        # So we test with a transaction that passes basic validation
-        # but might fail other checks
-
+        # Create a valid transaction with some missing optional fields
+        # but test that validation notices when amount is zero
         trans = Transaction(
             date='2025-01-15',
             type='expense',
-            category='',  # Empty category
-            amount=0.0  # Zero amount
+            category='Office',
+            amount=0.0  # Zero amount - should be flagged
         )
 
         is_valid, messages = processor.validate_extraction(trans)
 
-        # Should have validation messages
+        # Should detect zero amount
+        assert is_valid is False
         assert len(messages) > 0
+        assert any('amount' in msg.lower() for msg in messages)
 
     def test_change_provider(self, processor):
         """Test changing LLM provider."""
