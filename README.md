@@ -2,7 +2,7 @@
 
 > Intelligent bookkeeping automation powered by AI
 
-[![License](https://img.shields.io/badge/license-Proprietary-red.svg)](LICENSE.md)
+[![License](https://img.shields.io/badge/license-Proprietary-red.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.8%2B-blue.svg)](https://www.python.org/downloads/)
 [![Tests](https://img.shields.io/badge/tests-553%20passing-brightgreen.svg)](#testing)
 [![Coverage](https://img.shields.io/badge/coverage-91%25-brightgreen.svg)](#testing)
@@ -326,7 +326,11 @@ This software is proprietary and confidential. Unauthorized copying, distributio
 or use of this software, via any medium, is strictly prohibited without written
 permission from the author.
 
-See [LICENSE.md](LICENSE.md) for complete license terms.
+See [LICENSE](LICENSE) for complete license terms.
+
+### Third-Party Licenses
+
+This project uses several open-source libraries. See [THIRD_PARTY_LICENSES.md](THIRD_PARTY_LICENSES.md) for details on third-party dependencies and their licenses.
 
 ---
 

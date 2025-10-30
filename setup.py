@@ -4,7 +4,7 @@ File Name: setup.py
 Description: Package configuration and installation script
 Author: Stephen Bogner, P.Eng.
 LLM: claude-sonnet-4-5-20250929
-Ownership: Stephen Bogner - All Rights Reserved.  See LICENSE.md
+Ownership: Stephen Bogner - All Rights Reserved.  See LICENSE
 Date Created: 2025-10-24
 """
 
@@ -27,6 +27,7 @@ setup(
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
+        "License :: Other/Proprietary License",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
@@ -34,6 +35,7 @@ setup(
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
     ],
+    license="Proprietary",
     python_requires=">=3.8",
     install_requires=[
         # Core GUI Framework

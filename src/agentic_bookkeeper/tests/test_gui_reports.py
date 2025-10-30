@@ -4,7 +4,7 @@ File Name: test_gui_reports.py
 Description: Test suite for ReportsWidget GUI component
 Author: Stephen Bogner, P.Eng.
 LLM: claude-sonnet-4-5-20250929
-Ownership: Stephen Bogner - All Rights Reserved.  See LICENSE.md
+Ownership: Stephen Bogner - All Rights Reserved.  See LICENSE
 Date Created: 2025-10-29
 """
 
