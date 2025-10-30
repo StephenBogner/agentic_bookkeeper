@@ -12,6 +12,7 @@ The xAI provider has been successfully tested with real-world financial document
 with the **fastest processing speed** of all providers tested.
 
 **Key Results**:
+
 - **Success Rate**: 6/6 (100.0%) - Perfect extraction
 - **Average Processing Time**: 1.76s per document - **FASTEST provider**
 - **Total Processing Time**: 10.59s for 6 documents
@@ -28,6 +29,7 @@ with the **fastest processing speed** of all providers tested.
 | OpenAI (GPT-4 Vision) | 6/6 (100.0%) | 8.34s | 🥉 3rd |
 
 **Performance Highlights**:
+
 - **33% faster** than Anthropic (1.76s vs 2.62s)
 - **79% faster** than OpenAI (1.76s vs 8.34s)
 - Maintains 100% accuracy while being the fastest
@@ -134,6 +136,7 @@ with the **fastest processing speed** of all providers tested.
 ### Category Assignment
 
 All documents were assigned appropriate expense categories:
+
 - Motor vehicle expenses ✅
 - Telephone and utilities ✅
 - Supplies ✅
@@ -173,18 +176,21 @@ All documents were assigned appropriate expense categories:
 ### grok-4-fast-non-reasoning Advantages
 
 **Speed Optimizations**:
+
 - No reasoning overhead (no chain-of-thought processing)
 - Optimized for direct pattern recognition
 - Fast inference pipeline
 - Efficient token processing
 
 **Document Processing Strengths**:
+
 - Excellent OCR and text extraction
 - Strong structured data recognition
 - Fast vision processing
 - Handles standard document layouts efficiently
 
 **Use Cases**:
+
 - ✅ High-volume document processing
 - ✅ Standard financial documents (invoices, receipts)
 - ✅ Real-time processing requirements
@@ -207,6 +213,7 @@ OpenAI (GPT-4):        ▓▓▓▓▓▓▓▓░░ 8.34s  (474% of xAI)
 ### Accuracy Comparison
 
 All three providers achieved 100% success rate on the test documents:
+
 - xAI: 6/6 (100%)
 - Anthropic: 6/6 (100%)
 - OpenAI: 6/6 (100%)
@@ -238,6 +245,7 @@ All three providers achieved 100% success rate on the test documents:
 ### When to Use xAI (Grok-4-Fast-Non-Reasoning)
 
 **Ideal Use Cases**:
+
 - ✅ High-volume document processing (>100 documents/day)
 - ✅ Standard financial documents (invoices, receipts, statements)
 - ✅ Real-time or near-real-time processing requirements
@@ -245,6 +253,7 @@ All three providers achieved 100% success rate on the test documents:
 - ✅ Batch processing workloads
 
 **Not Recommended For**:
+
 - ❌ Complex documents requiring reasoning
 - ❌ Unusual or non-standard document formats
 - ❌ Documents requiring multi-step analysis
@@ -253,16 +262,19 @@ All three providers achieved 100% success rate on the test documents:
 ### Provider Selection Strategy
 
 **Primary Provider**: xAI (Grok-4-Fast-Non-Reasoning)
+
 - Fastest processing
 - 100% accuracy on standard documents
 - Best cost/performance ratio
 
 **Fallback Provider**: Anthropic (Claude)
+
 - Strong accuracy
 - Good speed (2.62s average)
 - Excellent for complex documents
 
 **Secondary Fallback**: OpenAI (GPT-4 Vision)
+
 - Reliable accuracy
 - Slower but very thorough
 - Good for difficult documents
@@ -299,6 +311,7 @@ export LLM_PROVIDER="xai"
 ### Performance Tuning
 
 **Optimal Settings for Financial Documents**:
+
 - Model: `grok-4-fast-non-reasoning`
 - Temperature: 0.1 (deterministic extraction)
 - Max Tokens: 1000 (sufficient for structured data)
@@ -333,6 +346,7 @@ The xAI provider with grok-4-fast-non-reasoning model is **production-ready** an
 the **primary LLM provider** for the Agentic Bookkeeper system.
 
 **Key Achievements**:
+
 - ✅ 100% success rate on real-world documents
 - ✅ Fastest processing speed (1.76s average)
 - ✅ Correct invoice/receipt classification

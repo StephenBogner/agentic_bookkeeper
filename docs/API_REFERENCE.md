@@ -73,10 +73,12 @@ def __init__(self, llm_provider: LLMProvider, categories: List[str])
 ```
 
 **Parameters**:
+
 - `llm_provider` (LLMProvider): LLM provider instance for extraction
 - `categories` (List[str]): List of valid tax categories
 
 **Example**:
+
 ```python
 from agentic_bookkeeper.core.document_processor import DocumentProcessor
 from agentic_bookkeeper.llm.openai_provider import OpenAIProvider
@@ -93,19 +95,23 @@ processor = DocumentProcessor(provider, categories)
 Process a document and extract transaction data.
 
 **Parameters**:
+
 - `document_path` (str): Path to document file (PDF or image)
 - `validate` (bool, optional): Whether to validate extracted data. Defaults to True.
 
 **Returns**:
+
 - `Optional[Transaction]`: Transaction object or None if extraction fails
 
 **Raises**:
+
 - `FileNotFoundError`: If document doesn't exist
 - `ValueError`: If document format is unsupported
 
 **Supported Formats**: `.pdf`, `.png`, `.jpg`, `.jpeg`
 
 **Example**:
+
 ```python
 transaction = processor.process_document("/path/to/receipt.pdf")
 if transaction:
@@ -117,12 +123,15 @@ if transaction:
 Check if file format is supported.
 
 **Parameters**:
+
 - `file_path` (str): Path to file
 
 **Returns**:
+
 - `bool`: True if format is supported
 
 **Example**:
+
 ```python
 if processor.is_supported_format("receipt.pdf"):
     transaction = processor.process_document("receipt.pdf")
@@ -155,11 +164,13 @@ def __init__(self, watch_folder: str, processor: DocumentProcessor,
 ```
 
 **Parameters**:
+
 - `watch_folder` (str): Directory to monitor
 - `processor` (DocumentProcessor): Document processor instance
 - `transaction_manager` (TransactionManager): Transaction manager for storing results
 
 **Example**:
+
 ```python
 from agentic_bookkeeper.core.document_monitor import DocumentMonitor
 
@@ -177,6 +188,7 @@ monitor = DocumentMonitor(
 Start monitoring the watch folder.
 
 **Example**:
+
 ```python
 monitor.start()
 print("Monitoring started. Waiting for documents...")
@@ -187,6 +199,7 @@ print("Monitoring started. Waiting for documents...")
 Stop monitoring the watch folder.
 
 **Example**:
+
 ```python
 monitor.stop()
 print("Monitoring stopped.")
@@ -197,9 +210,11 @@ print("Monitoring stopped.")
 Check if monitor is currently running.
 
 **Returns**:
+
 - `bool`: True if monitoring is active
 
 **Example**:
+
 ```python
 if monitor.is_running():
     print("Monitor is active")
@@ -231,9 +246,11 @@ def __init__(self, database: Database)
 ```
 
 **Parameters**:
+
 - `database` (Database): Database instance
 
 **Example**:
+
 ```python
 from agentic_bookkeeper.core.transaction_manager import TransactionManager
 from agentic_bookkeeper.models.database import Database
@@ -249,16 +266,20 @@ manager = TransactionManager(db)
 Create a new transaction.
 
 **Parameters**:
+
 - `transaction` (Transaction): Transaction object to create
 
 **Returns**:
+
 - `int`: ID of created transaction
 
 **Raises**:
+
 - `ValueError`: If transaction data is invalid
 - `Exception`: If database operation fails
 
 **Example**:
+
 ```python
 from agentic_bookkeeper.models.transaction import Transaction
 from datetime import date
@@ -280,12 +301,15 @@ print(f"Created transaction ID: {transaction_id}")
 Get a transaction by ID.
 
 **Parameters**:
+
 - `transaction_id` (int): Transaction ID
 
 **Returns**:
+
 - `Optional[Transaction]`: Transaction object or None if not found
 
 **Example**:
+
 ```python
 transaction = manager.get_transaction(123)
 if transaction:
@@ -297,9 +321,11 @@ if transaction:
 Get all transactions, ordered by date (descending).
 
 **Returns**:
+
 - `List[Transaction]`: List of all transactions
 
 **Example**:
+
 ```python
 transactions = manager.get_all_transactions()
 print(f"Total transactions: {len(transactions)}")
@@ -310,16 +336,20 @@ print(f"Total transactions: {len(transactions)}")
 Update an existing transaction.
 
 **Parameters**:
+
 - `transaction` (Transaction): Transaction object with updated data (must have ID)
 
 **Returns**:
+
 - `bool`: True if update successful
 
 **Raises**:
+
 - `ValueError`: If transaction has no ID
 - `Exception`: If database operation fails
 
 **Example**:
+
 ```python
 transaction = manager.get_transaction(123)
 transaction.amount = 175.00
@@ -332,12 +362,15 @@ manager.update_transaction(transaction)
 Delete a transaction by ID.
 
 **Parameters**:
+
 - `transaction_id` (int): Transaction ID
 
 **Returns**:
+
 - `bool`: True if deletion successful
 
 **Example**:
+
 ```python
 manager.delete_transaction(123)
 print("Transaction deleted")
@@ -348,12 +381,15 @@ print("Transaction deleted")
 Filter transactions by type.
 
 **Parameters**:
+
 - `transaction_type` (str): "income" or "expense"
 
 **Returns**:
+
 - `List[Transaction]`: Filtered transactions
 
 **Example**:
+
 ```python
 expenses = manager.filter_by_type("expense")
 print(f"Total expenses: {len(expenses)}")
@@ -364,12 +400,15 @@ print(f"Total expenses: {len(expenses)}")
 Filter transactions by category.
 
 **Parameters**:
+
 - `category` (str): Category name
 
 **Returns**:
+
 - `List[Transaction]`: Filtered transactions
 
 **Example**:
+
 ```python
 travel = manager.filter_by_category("Travel")
 total = sum(t.amount for t in travel)
@@ -381,13 +420,16 @@ print(f"Total travel expenses: ${total:.2f}")
 Filter transactions by date range.
 
 **Parameters**:
+
 - `start_date` (str): Start date (ISO format: YYYY-MM-DD)
 - `end_date` (str): End date (ISO format: YYYY-MM-DD)
 
 **Returns**:
+
 - `List[Transaction]`: Filtered transactions
 
 **Example**:
+
 ```python
 transactions = manager.filter_by_date_range("2025-01-01", "2025-12-31")
 print(f"Transactions in 2025: {len(transactions)}")
@@ -398,12 +440,15 @@ print(f"Transactions in 2025: {len(transactions)}")
 Search transactions by vendor or description.
 
 **Parameters**:
+
 - `query` (str): Search query (case-insensitive)
 
 **Returns**:
+
 - `List[Transaction]`: Matching transactions
 
 **Example**:
+
 ```python
 results = manager.search_transactions("office")
 for t in results:
@@ -415,6 +460,7 @@ for t in results:
 Get summary statistics for all transactions.
 
 **Returns**:
+
 - `Dict[str, Any]`: Dictionary with statistics:
   - `total_transactions` (int): Total count
   - `total_income` (float): Sum of income
@@ -423,6 +469,7 @@ Get summary statistics for all transactions.
   - `categories` (Dict[str, float]): Total per category
 
 **Example**:
+
 ```python
 stats = manager.get_statistics()
 print(f"Net income: ${stats['net_income']:.2f}")
@@ -456,11 +503,13 @@ def __init__(self, transaction_manager: TransactionManager,
 ```
 
 **Parameters**:
+
 - `transaction_manager` (TransactionManager): Transaction manager instance
 - `jurisdiction` (str, optional): Tax jurisdiction ("CRA" or "IRS"). Defaults to "CRA".
 - `currency` (str, optional): Currency code ("CAD", "USD"). Defaults to "CAD".
 
 **Example**:
+
 ```python
 from agentic_bookkeeper.core.report_generator import ReportGenerator
 
@@ -478,10 +527,12 @@ generator = ReportGenerator(
 Generate income statement for date range.
 
 **Parameters**:
+
 - `start_date` (str): Start date (ISO format: YYYY-MM-DD)
 - `end_date` (str): End date (ISO format: YYYY-MM-DD)
 
 **Returns**:
+
 - `Dict[str, Any]`: Income statement dictionary with:
   - `report_type` (str): "Income Statement"
   - `start_date` (str): Report start date
@@ -494,6 +545,7 @@ Generate income statement for date range.
   - `metadata` (Dict): Report metadata (jurisdiction, currency, generated_at)
 
 **Example**:
+
 ```python
 report = generator.generate_income_statement("2025-01-01", "2025-12-31")
 print(f"Net Income: {report['net_income']}")
@@ -505,10 +557,12 @@ print(f"Total Expenses: {report['total_expenses']}")
 Generate expense report with tax codes.
 
 **Parameters**:
+
 - `start_date` (str): Start date (ISO format: YYYY-MM-DD)
 - `end_date` (str): End date (ISO format: YYYY-MM-DD)
 
 **Returns**:
+
 - `Dict[str, Any]`: Expense report dictionary with:
   - `report_type` (str): "Expense Report"
   - `start_date` (str): Report start date
@@ -518,6 +572,7 @@ Generate expense report with tax codes.
   - `metadata` (Dict): Report metadata
 
 **Example**:
+
 ```python
 report = generator.generate_expense_report("2025-01-01", "2025-12-31")
 for category in report['expenses_by_category']:
@@ -548,6 +603,7 @@ def __init__(self, jurisdiction: str = "CRA", currency: str = "CAD")
 ```
 
 **Parameters**:
+
 - `jurisdiction` (str, optional): Tax jurisdiction. Defaults to "CRA".
 - `currency` (str, optional): Currency code. Defaults to "CAD".
 
@@ -558,13 +614,16 @@ def __init__(self, jurisdiction: str = "CRA", currency: str = "CAD")
 Export report to PDF file.
 
 **Parameters**:
+
 - `report_data` (Dict): Report dictionary from ReportGenerator
 - `output_path` (str): Path for output PDF file
 
 **Returns**:
+
 - `bool`: True if export successful
 
 **Example**:
+
 ```python
 from agentic_bookkeeper.core.exporters.pdf_exporter import PDFExporter
 
@@ -595,6 +654,7 @@ def __init__(self, jurisdiction: str = "CRA", currency: str = "CAD")
 ```
 
 **Parameters**:
+
 - `jurisdiction` (str, optional): Tax jurisdiction. Defaults to "CRA".
 - `currency` (str, optional): Currency code. Defaults to "CAD".
 
@@ -605,19 +665,23 @@ def __init__(self, jurisdiction: str = "CRA", currency: str = "CAD")
 Export report to CSV file.
 
 **Parameters**:
+
 - `report_data` (Dict): Report dictionary from ReportGenerator
 - `output_path` (str): Path for output CSV file
 
 **Returns**:
+
 - `bool`: True if export successful
 
 **Features**:
+
 - UTF-8 BOM encoding for Excel compatibility
 - Currency formatting with thousands separator
 - Percentage formatting
 - Excel formula injection prevention
 
 **Example**:
+
 ```python
 from agentic_bookkeeper.core.exporters.csv_exporter import CSVExporter
 
@@ -648,6 +712,7 @@ def __init__(self, jurisdiction: str = "CRA", currency: str = "CAD")
 ```
 
 **Parameters**:
+
 - `jurisdiction` (str, optional): Tax jurisdiction. Defaults to "CRA".
 - `currency` (str, optional): Currency code. Defaults to "CAD".
 
@@ -658,20 +723,24 @@ def __init__(self, jurisdiction: str = "CRA", currency: str = "CAD")
 Export report to JSON file.
 
 **Parameters**:
+
 - `report_data` (Dict): Report dictionary from ReportGenerator
 - `output_path` (str): Path for output JSON file
 - `pretty` (bool, optional): Pretty-print JSON. Defaults to True.
 
 **Returns**:
+
 - `bool`: True if export successful
 
 **Features**:
+
 - Schema versioning (version 1.0)
 - Pretty printing (human-readable)
 - Numeric values without currency symbols
 - Comprehensive metadata
 
 **Example**:
+
 ```python
 from agentic_bookkeeper.core.exporters.json_exporter import JSONExporter
 
@@ -704,6 +773,7 @@ def __init__(self, api_key: str, max_retries: int = 3, timeout: int = 30)
 ```
 
 **Parameters**:
+
 - `api_key` (str): API key for the provider
 - `max_retries` (int, optional): Maximum retry attempts. Defaults to 3.
 - `timeout` (int, optional): Timeout in seconds. Defaults to 30.
@@ -719,10 +789,12 @@ Get the name of the provider.
 Extract transaction data from a document.
 
 **Parameters**:
+
 - `document_path` (str): Path to document (PDF or image)
 - `categories` (List[str]): List of valid tax categories
 
 **Returns**:
+
 - `ExtractionResult`: Result object with:
   - `success` (bool): Whether extraction succeeded
   - `transaction_data` (Optional[Dict]): Extracted data if successful
@@ -754,12 +826,14 @@ def __init__(self, api_key: str, model: str = "gpt-4-vision-preview",
 ```
 
 **Parameters**:
+
 - `api_key` (str): OpenAI API key
 - `model` (str, optional): Model name. Defaults to "gpt-4-vision-preview".
 - `max_retries` (int, optional): Maximum retry attempts. Defaults to 3.
 - `timeout` (int, optional): Timeout in seconds. Defaults to 30.
 
 **Example**:
+
 ```python
 from agentic_bookkeeper.llm.openai_provider import OpenAIProvider
 
@@ -792,12 +866,14 @@ def __init__(self, api_key: str, model: str = "claude-3-opus-20240229",
 ```
 
 **Parameters**:
+
 - `api_key` (str): Anthropic API key
 - `model` (str, optional): Model name. Defaults to "claude-3-opus-20240229".
 - `max_retries` (int, optional): Maximum retry attempts. Defaults to 3.
 - `timeout` (int, optional): Timeout in seconds. Defaults to 30.
 
 **Example**:
+
 ```python
 from agentic_bookkeeper.llm.anthropic_provider import AnthropicProvider
 
@@ -830,12 +906,14 @@ def __init__(self, api_key: str, model: str = "grok-vision-beta",
 ```
 
 **Parameters**:
+
 - `api_key` (str): XAI API key
 - `model` (str, optional): Model name. Defaults to "grok-vision-beta".
 - `max_retries` (int, optional): Maximum retry attempts. Defaults to 3.
 - `timeout` (int, optional): Timeout in seconds. Defaults to 30.
 
 **Example**:
+
 ```python
 from agentic_bookkeeper.llm.xai_provider import XAIProvider
 
@@ -868,12 +946,14 @@ def __init__(self, api_key: str, model: str = "gemini-pro-vision",
 ```
 
 **Parameters**:
+
 - `api_key` (str): Google API key
 - `model` (str, optional): Model name. Defaults to "gemini-pro-vision".
 - `max_retries` (int, optional): Maximum retry attempts. Defaults to 3.
 - `timeout` (int, optional): Timeout in seconds. Defaults to 30.
 
 **Example**:
+
 ```python
 from agentic_bookkeeper.llm.google_provider import GoogleProvider
 
@@ -921,6 +1001,7 @@ class Transaction:
 Create Transaction from dictionary.
 
 **Example**:
+
 ```python
 from agentic_bookkeeper.models.transaction import Transaction
 from datetime import date
@@ -941,6 +1022,7 @@ transaction = Transaction.from_dict(data)
 Convert Transaction to dictionary.
 
 **Example**:
+
 ```python
 data = transaction.to_dict()
 print(data["vendor"])  # "Office Depot"
@@ -951,6 +1033,7 @@ print(data["vendor"])  # "Office Depot"
 Create Transaction from database row.
 
 **Example**:
+
 ```python
 cursor.execute("SELECT * FROM transactions WHERE id = ?", (123,))
 row = cursor.fetchone()
@@ -979,9 +1062,11 @@ def __init__(self, db_path: str)
 ```
 
 **Parameters**:
+
 - `db_path` (str): Path to SQLite database file
 
 **Example**:
+
 ```python
 from agentic_bookkeeper.models.database import Database
 
@@ -1009,6 +1094,7 @@ Initialize database schema (create tables and indexes).
 Get database cursor context manager.
 
 **Example**:
+
 ```python
 with db.get_cursor() as cursor:
     cursor.execute("SELECT * FROM transactions")
@@ -1020,12 +1106,15 @@ with db.get_cursor() as cursor:
 Create database backup.
 
 **Parameters**:
+
 - `backup_path` (str): Path for backup file
 
 **Returns**:
+
 - `bool`: True if backup successful
 
 **Example**:
+
 ```python
 db.backup("/path/to/backup.db")
 ```
@@ -1054,6 +1143,7 @@ class Config:
 Load configuration from file.
 
 **Returns**:
+
 - `Dict[str, Any]`: Configuration dictionary
 
 ###### `save_config(config: Dict[str, Any]) -> None` (staticmethod)
@@ -1061,6 +1151,7 @@ Load configuration from file.
 Save configuration to file.
 
 **Parameters**:
+
 - `config` (Dict): Configuration dictionary
 
 ###### `get_api_key(provider: str) -> Optional[str]` (staticmethod)
@@ -1068,9 +1159,11 @@ Save configuration to file.
 Get decrypted API key for provider.
 
 **Parameters**:
+
 - `provider` (str): Provider name ("openai", "anthropic", "xai", "google")
 
 **Returns**:
+
 - `Optional[str]`: Decrypted API key or None
 
 ###### `set_api_key(provider: str, api_key: str) -> None` (staticmethod)
@@ -1078,10 +1171,12 @@ Get decrypted API key for provider.
 Set encrypted API key for provider.
 
 **Parameters**:
+
 - `provider` (str): Provider name
 - `api_key` (str): API key to encrypt and store
 
 **Example**:
+
 ```python
 from agentic_bookkeeper.utils.config import Config
 
@@ -1102,15 +1197,17 @@ Logging setup with sensitive data filtering.
 
 #### Functions
 
-###### `setup_logging(log_level: str = "INFO", log_file: Optional[str] = None) -> None`
+##### `setup_logging(log_level: str = "INFO", log_file: Optional[str] = None) -> None`
 
 Setup logging configuration.
 
 **Parameters**:
+
 - `log_level` (str, optional): Log level ("DEBUG", "INFO", "WARNING", "ERROR"). Defaults to "INFO".
 - `log_file` (Optional[str], optional): Log file path. Defaults to None (console only).
 
 **Example**:
+
 ```python
 from agentic_bookkeeper.utils.logger import setup_logging
 

@@ -17,6 +17,7 @@ Implemented comprehensive error handling improvements across the agentic_bookkee
 ### Key Deliverables
 
 **Custom Exception Hierarchy:**
+
 - Created `utils/exceptions.py` with 6 exception classes
   - `BookkeeperError` (base exception with error_code, user_message, tech_message, recovery_suggestions)
   - `DocumentError` (document processing failures)
@@ -26,6 +27,7 @@ Implemented comprehensive error handling improvements across the agentic_bookkee
   - `ValidationError` (data validation failures)
 
 **Centralized Error Handler:**
+
 - Created `utils/error_handler.py` with comprehensive error handling utilities
   - `format_error_for_user()` - Format exceptions for GUI display
   - `log_error_with_context()` - Log errors with operation context
@@ -36,6 +38,7 @@ Implemented comprehensive error handling improvements across the agentic_bookkee
   - `get_error_severity()` - Classify error severity (critical/error/warning)
 
 **Enhanced Modules:**
+
 - Updated `document_processor.py` with specific exception types
   - File not found: DocumentError with file path recovery suggestions
   - Unsupported format: DocumentError with supported format list
@@ -44,6 +47,7 @@ Implemented comprehensive error handling improvements across the agentic_bookkee
 - Updated `test_document_processor.py` to test exception behavior
 
 **Test Coverage:**
+
 - `test_exceptions.py`: 29 tests for exception hierarchy (100% coverage)
 - `test_error_handler.py`: 34 tests for error handler functions (97% coverage)
 - All existing tests updated to handle new exception behavior
@@ -66,16 +70,17 @@ Implemented comprehensive error handling improvements across the agentic_bookkee
 
 ## Files Changed
 
-```
+text
  src/agentic_bookkeeper/core/document_processor.py        | 213 +++++++++++++++++++++++++++++---
  src/agentic_bookkeeper/tests/test_document_processor.py  |  38 ++++--
  src/agentic_bookkeeper/tests/test_error_handler.py       | 408 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
  src/agentic_bookkeeper/tests/test_exceptions.py          | 293 ++++++++++++++++++++++++++++++++++++++++++
- src/agentic_bookkeeper/utils/__init__.py                 |   4 +-
+ src/agentic_bookkeeper/utils/**init**.py                 |   4 +-
  src/agentic_bookkeeper/utils/error_handler.py            | 279 ++++++++++++++++++++++++++++++++++++++++
  src/agentic_bookkeeper/utils/exceptions.py               | 272 +++++++++++++++++++++++++++++++++++++++
  7 files changed, 1485 insertions(+), 22 deletions(-)
-```
+
+```text
 
 ## Implementation Notes
 
@@ -96,6 +101,7 @@ Implemented comprehensive error handling improvements across the agentic_bookkee
 ### Patterns Established
 
 **Error Structure:**
+
 ```python
 error = DocumentError(
     user_message="User-friendly description",
@@ -103,9 +109,10 @@ error = DocumentError(
     tech_message="Technical details for logging",
     recovery_suggestions=["Step 1", "Step 2", "Step 3"]
 )
-```
+```text
 
 **Error Logging with Context:**
+
 ```python
 context = create_error_context(
     operation="process_document",
@@ -113,15 +120,16 @@ context = create_error_context(
     user_action="clicking Process button"
 )
 log_error_with_context(error, context, severity="warning")
-```
+```text
 
 **GUI Error Display:**
+
 ```python
 try:
     # operation
 except BookkeeperError as e:
     handle_gui_error(e, context=context, parent_widget=self)
-```
+```text
 
 ### Testing Approach
 

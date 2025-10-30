@@ -21,6 +21,7 @@ Implement CSV export for Excel compatibility with proper formatting and special 
 ## REQUIREMENTS
 
 ### Functional Requirements
+
 - Use pandas for CSV export
 - Proper CSV headers
 - Format amounts with 2 decimal places
@@ -42,6 +43,7 @@ Implement CSV export for Excel compatibility with proper formatting and special 
 ## EXPECTED DELIVERABLES
 
 **Files to Create:**
+
 - `src/agentic_bookkeeper/core/exporters/csv_exporter.py`
 
 ---

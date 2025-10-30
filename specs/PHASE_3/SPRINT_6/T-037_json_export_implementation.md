@@ -21,6 +21,7 @@ Implement structured JSON export with metadata, schema versioning, and pretty pr
 ## REQUIREMENTS
 
 ### Functional Requirements
+
 - Create structured JSON schema
 - Include metadata
 - Valid JSON format
@@ -41,6 +42,7 @@ Implement structured JSON export with metadata, schema versioning, and pretty pr
 ## EXPECTED DELIVERABLES
 
 **Files to Create:**
+
 - `src/agentic_bookkeeper/core/exporters/json_exporter.py`
 
 ---

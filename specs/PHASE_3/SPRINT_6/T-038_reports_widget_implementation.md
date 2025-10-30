@@ -21,6 +21,7 @@ Create reports widget GUI with report type selection, date range picker, format 
 ## REQUIREMENTS
 
 ### Functional Requirements
+
 - Report type selector (Income Statement, Expense Report)
 - Date range picker (presets + custom)
 - Format selector (PDF, CSV, JSON)
@@ -46,6 +47,7 @@ Create reports widget GUI with report type selection, date range picker, format 
 ## EXPECTED DELIVERABLES
 
 **Files to Create:**
+
 - `src/agentic_bookkeeper/gui/reports_widget.py`
 
 ---

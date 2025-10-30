@@ -28,9 +28,11 @@
 ## Files Changed
 
 Files created:
+
 - src/agentic_bookkeeper/tests/test_logger.py (460 lines, 29 tests)
 
 Files modified:
+
 - src/agentic_bookkeeper/utils/logger.py (+57 lines)
   - Added log_operation_start() helper function
   - Added log_operation_success() helper function
@@ -68,18 +70,21 @@ Three new helper functions provide consistent structured logging across the appl
 ### Enhanced Modules
 
 **document_processor.py**:
+
 - Logs operation start with document name and LLM provider
 - Logs success with duration, confidence score
 - Logs failures with duration for performance analysis
 - Fixed bug: start_time now initialized before validation checks
 
 **report_generator.py**:
+
 - Logs report generation start with type, date range, jurisdiction
 - Logs success with duration, transaction count, net amount
 - Logs failures with duration and report type
 - Wrapped in try/except for complete error coverage
 
 **pdf_exporter.py**:
+
 - Logs PDF export start with report type and output path
 - Logs success with duration and file size in KB
 - Logs failures with duration and report type
@@ -90,6 +95,7 @@ Three new helper functions provide consistent structured logging across the appl
 Created test_logger.py with 29 comprehensive tests:
 
 **SensitiveDataFilter Tests (9 tests)**:
+
 - API key filtering (colon and equals separators)
 - Bearer token filtering
 - OpenAI key pattern filtering (sk-...)
@@ -99,6 +105,7 @@ Created test_logger.py with 29 comprehensive tests:
 - No false positives verification
 
 **LoggerSetup Tests (8 tests)**:
+
 - Handler creation (file + console)
 - Console-only mode
 - Sensitive data filter application
@@ -107,11 +114,13 @@ Created test_logger.py with 29 comprehensive tests:
 - Log level filtering
 
 **Context Manager Tests (3 tests)**:
+
 - temporary_log_level changes level
 - Restores original level
 - Restores handler levels
 
 **Structured Logging Tests (6 tests)**:
+
 - log_operation_start with context
 - log_operation_success with/without duration
 - log_operation_failure with error details
@@ -119,6 +128,7 @@ Created test_logger.py with 29 comprehensive tests:
 - Special characters in context
 
 **Additional Tests (3 tests)**:
+
 - get_logger returns Logger instance
 - setup_logging creates logger
 - Log rotation actually works

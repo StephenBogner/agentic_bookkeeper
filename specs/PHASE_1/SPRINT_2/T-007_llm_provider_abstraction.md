@@ -17,6 +17,7 @@
 Create an abstract base class defining the interface for all LLM providers, including methods for document extraction, response validation, error handling, and retry logic with exponential backoff.
 
 **Success Criteria:**
+
 - Abstract base class defines clear contract for LLM providers
 - All required methods are abstract
 - Error handling is comprehensive
@@ -278,6 +279,7 @@ class LLMProvider(ABC):
 ## ACCEPTANCE CRITERIA
 
 ### Must Have
+
 - [ ] LLMProvider abstract base class created
 - [ ] All abstract methods defined
 - [ ] Exception hierarchy implemented
@@ -287,12 +289,14 @@ class LLMProvider(ABC):
 - [ ] Docstrings complete
 
 ### Should Have
+
 - [ ] Rate limiting interface defined
 - [ ] Usage tracking method
 - [ ] Configurable retry parameters
 - [ ] Comprehensive error messages
 
 ### Nice to Have
+
 - [ ] Async support for API calls
 - [ ] Caching interface
 - [ ] Cost tracking
@@ -302,6 +306,7 @@ class LLMProvider(ABC):
 ## EXPECTED DELIVERABLES
 
 ### Files to Create
+
 - `src/agentic_bookkeeper/llm/llm_provider.py` - Abstract base class
 
 ---

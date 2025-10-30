@@ -21,6 +21,7 @@ Implement the document monitor that watches a directory for new financial docume
 ## REQUIREMENTS
 
 ### Functional Requirements
+
 - Watch specified directory for new files
 - Filter for supported file types (PDF, JPG, PNG, JPEG)
 - Detect file creation and modification events
@@ -32,6 +33,7 @@ Implement the document monitor that watches a directory for new financial docume
 - Handle file system errors gracefully
 
 ### Non-Functional Requirements
+
 - Detect new files within 1 second
 - Process files in order of arrival
 - Handle concurrent file arrivals
@@ -57,9 +59,11 @@ Implement the document monitor that watches a directory for new financial docume
 ## EXPECTED DELIVERABLES
 
 **Files to Create:**
+
 - `src/agentic_bookkeeper/core/document_monitor.py`
 
 **Files to Modify:**
+
 - `src/agentic_bookkeeper/core/__init__.py` (export monitor)
 
 ---

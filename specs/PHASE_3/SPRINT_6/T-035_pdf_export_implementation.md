@@ -21,6 +21,7 @@ Implement professional PDF export using ReportLab with headers, footers, tables,
 ## REQUIREMENTS
 
 ### Functional Requirements
+
 - Use ReportLab for PDF generation
 - Professional template with header/footer
 - Company information section
@@ -45,6 +46,7 @@ Implement professional PDF export using ReportLab with headers, footers, tables,
 ## EXPECTED DELIVERABLES
 
 **Files to Create:**
+
 - `src/agentic_bookkeeper/core/exporters/pdf_exporter.py`
 
 ---

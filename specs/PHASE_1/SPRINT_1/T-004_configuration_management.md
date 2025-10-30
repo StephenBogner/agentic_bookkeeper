@@ -17,6 +17,7 @@
 Implement a comprehensive configuration management system to handle environment variables, API keys, application settings, and CRA/IRS tax categories with proper encryption and validation.
 
 **Success Criteria:**
+
 - Configuration loads from .env and JSON files
 - API keys are stored encrypted in database
 - Invalid configuration is rejected with clear errors
@@ -152,6 +153,7 @@ class Config:
 ### Category JSON Structure
 
 **config/categories_cra.json:**
+
 ```json
 {
   "meta": {
@@ -188,6 +190,7 @@ class Config:
 ```
 
 **config/categories_irs.json:**
+
 ```json
 {
   "meta": {
@@ -234,6 +237,7 @@ class Config:
 ## ACCEPTANCE CRITERIA
 
 ### Must Have
+
 - [ ] Config class implemented in src/utils/config.py
 - [ ] Environment variables loaded from .env
 - [ ] API keys encrypted before database storage
@@ -246,12 +250,14 @@ class Config:
 - [ ] Type hints and docstrings complete
 
 ### Should Have
+
 - [ ] Configuration validation with clear error messages
 - [ ] Category lookup by code or description
 - [ ] Configuration caching for performance
 - [ ] Environment variable override support
 
 ### Nice to Have
+
 - [ ] Configuration hot-reloading
 - [ ] Configuration export/import
 - [ ] Multiple encryption key support
@@ -262,12 +268,14 @@ class Config:
 ## CONTEXT REQUIRED
 
 ### Information Needed
+
 - Database connection from T-002
 - Encryption best practices
 - CRA and IRS category standards
 - Environment variable naming conventions
 
 ### Artifacts from Previous Tasks
+
 - T-001: Project structure, .env.example
 - T-002: Database config table
 
@@ -276,11 +284,13 @@ class Config:
 ## EXPECTED DELIVERABLES
 
 ### Files to Create
+
 - `src/agentic_bookkeeper/utils/config.py` - Config class
 - `config/categories_cra.json` - CRA categories
 - `config/categories_irs.json` - IRS categories
 
 ### Files to Modify
+
 - `src/agentic_bookkeeper/utils/__init__.py` - Export Config class
 - `.env.example` - Ensure all variables documented
 

@@ -111,6 +111,7 @@ pip install -e .
    - Google: https://ai.google.dev/ (Gemini Pro Vision)
 
 2. **Launch Application**:
+
    ```bash
    agentic_bookkeeper
    ```
@@ -240,6 +241,7 @@ Found a bug? Please report it on GitHub:
 https://github.com/StephenBogner/agentic_bookkeeper/issues
 
 Include:
+
 - Description of the issue
 - Steps to reproduce
 - Expected vs actual behavior
@@ -269,6 +271,7 @@ or use is strictly prohibited. See LICENSE file for complete terms.
 **Author**: Stephen Bogner, P.Eng. (Professional Engineer)
 
 **Built With**:
+
 - Python 3.8+
 - PySide6 (Qt6 GUI framework)
 - SQLite (embedded database)
@@ -277,6 +280,7 @@ or use is strictly prohibited. See LICENSE file for complete terms.
 - pytest (testing framework)
 
 **Special Thanks**:
+
 - Anthropic's Claude for development assistance
 - Open source community for excellent libraries and tools
 
@@ -287,6 +291,7 @@ or use is strictly prohibited. See LICENSE file for complete terms.
 ### v0.1.0 - Initial Release (2025-10-29)
 
 **Added**:
+
 - Document processing with LLM vision models
 - Multi-LLM provider support (OpenAI, Anthropic, XAI, Google)
 - PySide6 GUI application with dashboard and transaction management
@@ -299,12 +304,14 @@ or use is strictly prohibited. See LICENSE file for complete terms.
 - Linux package distribution (wheel + source)
 
 **Testing**:
+
 - 654 comprehensive tests with 92% coverage
 - Security audit complete (STRONG rating)
 - Performance testing complete (all targets met)
 - User acceptance testing complete (100% pass rate)
 
 **Documentation**:
+
 - Complete user guide
 - Developer documentation
 - API reference

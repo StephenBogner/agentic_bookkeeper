@@ -17,6 +17,7 @@
 Set up the complete project structure, development environment, and initial configuration files to establish the foundation for the Agentic Bookkeeper application.
 
 **Success Criteria:**
+
 - Project directory structure matches specifications
 - Virtual environment configured and working
 - Git repository initialized with proper ignore rules
@@ -104,6 +105,7 @@ agentic_bookkeeper_module/
 ### Dependencies to Include
 
 **requirements.txt (Production):**
+
 ```text
 PySide6>=6.6.0
 pypdf>=3.17.0
@@ -117,6 +119,7 @@ cryptography>=41.0.0
 ```
 
 **requirements-dev.txt (Development):**
+
 ```text
 pytest>=7.4.0
 pytest-qt>=4.2.0
@@ -132,20 +135,23 @@ mypy>=1.7.0
 ## ACCEPTANCE CRITERIA
 
 ### Must Have
+
 - [ ] Virtual environment created with Python 3.10+
 - [ ] Git repository initialized with .gitignore
-- [ ] All directories created with __init__.py files
+- [ ] All directories created with **init**.py files
 - [ ] requirements.txt created and dependencies install successfully
 - [ ] requirements-dev.txt created and dev dependencies install successfully
 - [ ] .env.example template created with required variables
 - [ ] Project structure matches specification exactly
 
 ### Should Have
+
 - [ ] README.md created with basic project information
 - [ ] Initial git commit made with project structure
 - [ ] Documentation of setup process in comments
 
 ### Nice to Have
+
 - [ ] Setup script for automated environment creation
 - [ ] Pre-commit hooks configured
 - [ ] EditorConfig file for consistent formatting
@@ -155,11 +161,13 @@ mypy>=1.7.0
 ## CONTEXT REQUIRED
 
 ### Information Needed
+
 - Python version requirements (3.10+)
 - Project name and package structure (from CLAUDE.md)
 - Standard coding conventions (from CLAUDE.md)
 
 ### Artifacts from Previous Tasks
+
 - None (this is the first task)
 
 ---
@@ -167,6 +175,7 @@ mypy>=1.7.0
 ## EXPECTED DELIVERABLES
 
 ### Files to Create
+
 - `.gitignore` - Python-specific git ignore rules
 - `requirements.txt` - Production dependencies
 - `requirements-dev.txt` - Development dependencies
@@ -183,6 +192,7 @@ mypy>=1.7.0
 - `resources/` directory
 
 ### Directories to Create
+
 - `src/agentic_bookkeeper/core/`
 - `src/agentic_bookkeeper/models/`
 - `src/agentic_bookkeeper/llm/`
@@ -227,6 +237,7 @@ pytest --collect-only
 ### Step-by-Step Execution
 
 1. **Create Virtual Environment**
+
    ```bash
    python -m venv .venv
    source .venv/bin/activate  # Linux/Mac
@@ -234,11 +245,13 @@ pytest --collect-only
    ```
 
 2. **Initialize Git** (if not already done)
+
    ```bash
    git init
    ```
 
 3. **Create Directory Structure**
+
    ```bash
    mkdir -p src/agentic_bookkeeper/{core,models,llm,gui,utils,tests}
    mkdir -p config docs resources
@@ -259,6 +272,7 @@ pytest --collect-only
    - Create .env.example with placeholders for API keys
 
 6. **Install Dependencies**
+
    ```bash
    pip install -r requirements.txt
    pip install -r requirements-dev.txt
@@ -323,7 +337,7 @@ LOG_FILE=./logs/app.log
 
 - [ ] Virtual environment created and activated
 - [ ] All directories created with correct structure
-- [ ] All __init__.py files created
+- [ ] All **init**.py files created
 - [ ] requirements.txt created with production dependencies
 - [ ] requirements-dev.txt created with dev dependencies
 - [ ] .env.example created with all required variables

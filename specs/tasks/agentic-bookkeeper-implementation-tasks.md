@@ -118,7 +118,7 @@ CREATE TABLE config (
 - [ ] Create `src/models/transaction.py` with Transaction class
 - [ ] Implement data validation (date format, amount >= 0, type enum)
 - [ ] Add serialization methods (to_dict, from_dict)
-- [ ] Implement string representation (__str__, __repr__)
+- [ ] Implement string representation (**str**, **repr**)
 - [ ] Add comparison methods for sorting
 - [ ] Create validation for CRA/IRS categories
 - [ ] Add documentation with type hints
@@ -869,6 +869,7 @@ CREATE TABLE config (
 **Priority**: Critical | **Time Invested**: 4 hours | **Status**: 100% complete | **Completed**: 2025-10-28
 
 **Completed**:
+
 - [x] Created `src/gui/transaction_edit_dialog.py` (318 lines)
 - [x] Designed complete edit dialog layout with all form fields
 - [x] Added QDateEdit with calendar popup for date selection
@@ -887,6 +888,7 @@ CREATE TABLE config (
 - [x] Created comprehensive test suite (31 tests, 89% coverage)
 
 **Acceptance Criteria Met**:
+
 - ✅ Dialog opens for existing transaction (from Edit button or double-click)
 - ✅ All fields populate with transaction data (8 fields load correctly)
 - ✅ Validation prevents invalid data (4 validation rules enforced)
@@ -894,13 +896,16 @@ CREATE TABLE config (
 - ✅ UI updates reflect changes (auto-refresh after save)
 
 **Files Created**:
+
 - `src/agentic_bookkeeper/gui/transaction_edit_dialog.py` (318 lines)
 - `src/agentic_bookkeeper/tests/test_gui_transaction_edit_dialog.py` (412 lines, 31 tests)
 
 **Files Modified**:
+
 - `src/agentic_bookkeeper/gui/transactions_widget.py` (+65 lines, edit integration)
 
 **Test Results**:
+
 - 31 unit tests, all passing
 - 89% code coverage for transaction_edit_dialog.py
 - 90% code coverage for transactions_widget.py (improved)
@@ -908,6 +913,7 @@ CREATE TABLE config (
 - Validates initialization, widgets, validation, save, buttons, categories, edge cases
 
 **Technical Details**:
+
 - Full form with 8 editable fields (date, type, category, vendor, amount, tax, description, document)
 - Category filtering by tax jurisdiction (auto-populates CRA or IRS categories)
 - QDoubleSpinBox enforces non-negative amounts (minimum 0.00)

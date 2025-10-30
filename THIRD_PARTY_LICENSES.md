@@ -38,6 +38,7 @@ Agentic Bookkeeper uses the following open-source dependencies:
 **Copyright:** The Qt Company Ltd.
 
 PySide6 is licensed under LGPL v3, which allows:
+
 - Commercial use
 - Modification
 - Distribution
@@ -45,6 +46,7 @@ PySide6 is licensed under LGPL v3, which allows:
 - Private use
 
 Conditions:
+
 - Disclose source for modifications to PySide6 itself (not required for applications using PySide6)
 - Include license and copyright notice
 - State changes made to the library
@@ -98,6 +100,7 @@ Permissive license allowing commercial use, modification, distribution, and priv
 **Copyright:** Copyright (c) 2015-2024 Artifex Software, Inc.
 
 PyMuPDF is licensed under AGPL v3, which requires:
+
 - Disclosure of source code if distributed
 - Network use is considered distribution
 - Same license for derivative works
@@ -175,12 +178,14 @@ Two dependencies use copyleft licenses that require special consideration:
 ### Permissive Licenses
 
 The remaining 12 dependencies use permissive licenses (MIT, Apache 2.0, BSD 3-Clause, HPND) that allow:
+
 - Commercial use
 - Modification
 - Distribution
 - Private use
 
 With minimal requirements:
+
 - Include copyright notices
 - Include license text
 - Disclaimer of warranties
@@ -198,11 +203,13 @@ We gratefully acknowledge the authors and maintainers of these open-source libra
 Full license texts for each dependency can be obtained:
 
 1. From the Python package metadata:
+
    ```bash
    pip show <package-name>
    ```
 
 2. From the package installation directory:
+
    ```bash
    python -c "import <package>; print(<package>.__file__)"
    # Look for LICENSE or COPYING file in package directory

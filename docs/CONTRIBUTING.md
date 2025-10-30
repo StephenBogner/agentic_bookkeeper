@@ -160,7 +160,8 @@ We use a feature branch workflow:
    ```
 
    **Commit Message Format**:
-   ```
+
+   ```text
    <type>: <subject>
 
    <body>
@@ -198,9 +199,10 @@ All code must be formatted with black:
 
 ```bash
 black src/ tests/
-```
+```text
 
 **Configuration**:
+
 - Line length: 100 characters
 - Target Python version: 3.8+
 
@@ -210,15 +212,16 @@ All code must pass flake8 linting:
 
 ```bash
 flake8 src/ tests/
-```
+```text
 
 **Configuration** (`.flake8`):
+
 ```ini
 [flake8]
 max-line-length = 100
 exclude = .git,__pycache__,venv
 ignore = E203, W503
-```
+```text
 
 #### 3. Type Checking (mypy)
 
@@ -226,9 +229,10 @@ All code must pass mypy type checking:
 
 ```bash
 mypy src/
-```
+```text
 
 **Requirements**:
+
 - Type hints on all function signatures
 - No `Any` types unless absolutely necessary
 - Use `Optional[T]` for nullable types
@@ -252,7 +256,7 @@ Purpose: <brief description>
 Author: <your name>
 Created: <YYYY-MM-DD>
 """
-```
+```text
 
 #### Import Organization
 
@@ -274,7 +278,7 @@ import pandas as pd
 # Local
 from agentic_bookkeeper.models.transaction import Transaction
 from agentic_bookkeeper.core.transaction_manager import TransactionManager
-```
+```text
 
 ### Naming Conventions
 
@@ -309,7 +313,7 @@ def process_document(self, document_path: str, validate: bool = True) -> Optiona
         >>> print(transaction.vendor)
         'Office Depot'
     """
-```
+```text
 
 ### Input Validation
 
@@ -328,7 +332,7 @@ def create_transaction(self, transaction: Transaction) -> int:
         raise ValueError("Amount must be positive")
 
     # Process transaction...
-```
+```text
 
 ### Logging
 
@@ -344,7 +348,7 @@ logger.info("General information")
 logger.warning("Warning message")
 logger.error("Error message")
 logger.exception("Exception with traceback")
-```
+```text
 
 ---
 
@@ -377,7 +381,7 @@ pytest tests/test_module.py::test_function_name
 
 # Run with verbose output
 pytest -v
-```
+```text
 
 ### Test Structure
 
@@ -414,7 +418,7 @@ class TestDocumentProcessor:
         """Test processing nonexistent file returns None."""
         transaction = processor.process_document("nonexistent.pdf")
         assert transaction is None
-```
+```text
 
 ### Test Categories
 
@@ -440,7 +444,7 @@ def test_document_processing_with_mock_llm(mocker):
 
     assert transaction.vendor == "Test"
     mock_provider.extract_transaction.assert_called_once()
-```
+```text
 
 ---
 
@@ -472,7 +476,7 @@ If your changes affect users, update:
 ```bash
 # Validate markdown
 markdownlint docs/*.md
-```
+```text
 
 ---
 
@@ -627,7 +631,7 @@ What actually happens.
 ## Additional Context
 
 Any other relevant information, error messages, screenshots, etc.
-```
+```text
 
 ### Feature Requests
 
@@ -653,7 +657,7 @@ Other solutions you've considered.
 ## Additional Context
 
 Any other relevant information or examples.
-```
+```text
 
 ---
 
@@ -683,6 +687,7 @@ If you need help:
 ### Recognition
 
 Contributors will be recognized in:
+
 - `CONTRIBUTORS.md` file (if created)
 - Release notes for their contributions
 - GitHub contributor stats
@@ -702,7 +707,7 @@ pytest tests/ -k "integration"
 
 # Run only performance tests
 pytest tests/ -k "performance"
-```
+```text
 
 ### Debugging Tests
 
@@ -715,7 +720,7 @@ pytest --pdb
 
 # Show local variables on failure
 pytest -l
-```
+```text
 
 ### Code Coverage Reports
 
@@ -732,7 +737,7 @@ open htmlcov/index.html
 
 # Windows
 start htmlcov/index.html
-```
+```text
 
 ### Pre-Commit Hooks (Optional)
 
@@ -741,7 +746,7 @@ Set up pre-commit hooks to automatically run checks:
 ```bash
 pip install pre-commit
 pre-commit install
-```
+```text
 
 Create `.pre-commit-config.yaml`:
 
@@ -763,7 +768,7 @@ repos:
     rev: v1.5.0
     hooks:
       - id: mypy
-```
+```text
 
 ---
 

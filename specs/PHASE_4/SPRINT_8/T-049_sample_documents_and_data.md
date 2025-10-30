@@ -21,6 +21,7 @@ Create sample invoices, receipts, configuration files, and demo database for tes
 ## REQUIREMENTS
 
 ### Functional Requirements
+
 - Create sample invoices (PDF, image)
 - Create sample receipts (PDF, image)
 - Create sample configuration files
@@ -43,6 +44,7 @@ Create sample invoices, receipts, configuration files, and demo database for tes
 ## EXPECTED DELIVERABLES
 
 **Files to Create:**
+
 - `samples/invoices/`
 - `samples/receipts/`
 - `samples/config/`

@@ -15,12 +15,14 @@
 **Purpose:** Intelligent bookkeeping automation system that leverages LLM technology to automatically extract transaction data from financial documents (invoices, receipts) and generate tax-compliant reports for small business owners and freelancers.
 
 **Target Users:**
+
 - Small business owners
 - Freelancers and independent contractors
 - Self-employed individuals
 - Anyone needing simplified bookkeeping and tax preparation
 
 **Key Value Proposition:**
+
 - Automated document processing using AI/LLM vision capabilities
 - Multi-LLM provider support (OpenAI, Anthropic, XAI, Google)
 - Tax jurisdiction support (CRA for Canada, IRS for United States)
@@ -98,36 +100,44 @@
 ### Technology Stack
 
 **Programming Language:**
+
 - Python 3.10+ (type hints, modern syntax)
 
 **GUI Framework:**
+
 - PySide6 (Qt6 for Python)
 
 **Database:**
+
 - SQLite (embedded, file-based)
 
 **LLM Providers:**
+
 - OpenAI API (GPT-4 Vision)
 - Anthropic API (Claude with vision)
 - XAI API (Grok)
 - Google API (Gemini with vision)
 
 **Document Processing:**
+
 - pypdf (PDF text extraction, formerly PyPDF2)
 - Pillow (image preprocessing)
 - LLM vision APIs (document understanding)
 
 **Testing:**
+
 - pytest (unit and integration testing)
 - pytest-qt (GUI testing)
 - pytest-cov (coverage reporting)
 
 **Code Quality:**
+
 - black (code formatting)
 - flake8 (linting)
 - mypy (type checking)
 
 **Deployment:**
+
 - PyInstaller (Windows executable)
 - pip/wheel (Linux package)
 
@@ -140,6 +150,7 @@
 **Goal:** Build foundational infrastructure and core document processing capabilities
 
 **Sprints:**
+
 - **Sprint 1: Project Setup & Database Foundation** (Week 1) - 6 tasks
   - Project structure, database schema, models, configuration, logging, tests
 - **Sprint 2: LLM Integration & Document Processing** (Weeks 2-3) - 10 tasks
@@ -148,6 +159,7 @@
   - End-to-end testing, performance optimization, error handling, documentation
 
 **Key Deliverables:**
+
 - Functional database with transaction storage
 - Working LLM integration with 4 providers
 - Document processing pipeline (PDF and images)
@@ -161,12 +173,14 @@
 **Goal:** Build user-friendly desktop GUI application
 
 **Sprints:**
+
 - **Sprint 4: GUI Foundation** (Weeks 5-6) - 5 tasks ✅
   - Main window, dashboard widget, settings dialog, application startup, GUI tests
 - **Sprint 5: Transaction Management UI** (Weeks 7-8) - 6 tasks ✅
   - Transactions widget, edit dialog, add dialog, delete functionality, document review dialog, GUI tests
 
 **Key Deliverables:**
+
 - Main application window with navigation
 - Dashboard with monitoring controls
 - Settings management interface
@@ -183,10 +197,12 @@
 **Goal:** Implement comprehensive reporting and export capabilities
 
 **Sprints:**
+
 - **Sprint 6: Report Generation** (Weeks 9-10) - 8 tasks
   - Report generator core, income statement template, expense report template, PDF/CSV/JSON exporters, reports widget, tests
 
 **Key Deliverables:**
+
 - Income statement generator
 - Expense report by category
 - Multi-format export (PDF, CSV, JSON)
@@ -200,12 +216,14 @@
 **Goal:** Comprehensive testing, quality assurance, and documentation
 
 **Sprints:**
+
 - **Sprint 7: Comprehensive Testing** (Week 11) - 5 tasks
   - Integration test expansion, UAT scenarios, performance testing, security testing, bug fixes
 - **Sprint 8: Documentation** (Week 12) - 5 tasks
   - User guide, developer documentation, README, code documentation review, sample documents
 
 **Key Deliverables:**
+
 - Complete test suite with >80% coverage
 - User guide with screenshots
 - Developer documentation and API reference
@@ -219,12 +237,14 @@
 **Goal:** Polish application and prepare for distribution
 
 **Sprints:**
+
 - **Sprint 9: Refinement** (Week 13) - 4 tasks
   - Performance optimization, error handling improvements, UI/UX polish, logging enhancements
 - **Sprint 10: Distribution** (Week 14) - 5 tasks
   - Windows executable (PyInstaller), Linux package preparation, GitHub repository setup, license and legal, release checklist
 
 **Key Deliverables:**
+
 - Optimized performance (document processing <30s, queries <50ms)
 - Windows installer (NSIS)
 - Linux pip package
@@ -471,6 +491,7 @@
 ### Phase Completion Criteria
 
 **Phase 1 Complete:**
+
 - Core document processing working
 - All 4 LLM providers implemented
 - Database operations functional
@@ -478,6 +499,7 @@
 - Test coverage >80%
 
 **Phase 2 Complete:** ✅ ACHIEVED
+
 - GUI application launches successfully
 - All CRUD operations working
 - Settings management functional
@@ -485,18 +507,21 @@
 - GUI test coverage >70%
 
 **Phase 3 Complete:**
+
 - Income and expense reports generating
 - All export formats working (PDF, CSV, JSON)
 - Reports preview functional
 - Tax-jurisdiction formatting correct
 
 **Phase 4 Complete:**
+
 - All tests passing with >80% coverage
 - User guide and developer docs complete
 - Security review passed
 - Performance targets met
 
 **Phase 5 Complete:**
+
 - Windows installer working on clean systems
 - Linux package installable via pip
 - GitHub repository live with releases

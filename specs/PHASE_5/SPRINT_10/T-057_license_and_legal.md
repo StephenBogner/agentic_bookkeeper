@@ -21,6 +21,7 @@ Choose appropriate license, create LICENSE file, review third-party licenses, an
 ## REQUIREMENTS
 
 ### Functional Requirements
+
 - Choose appropriate license (MIT, GPL, Apache, etc.)
 - Create LICENSE file
 - Review third-party licenses
@@ -43,6 +44,7 @@ Choose appropriate license, create LICENSE file, review third-party licenses, an
 ## EXPECTED DELIVERABLES
 
 **Files to Create:**
+
 - `LICENSE`
 - `ATTRIBUTION.md` (if needed)
 

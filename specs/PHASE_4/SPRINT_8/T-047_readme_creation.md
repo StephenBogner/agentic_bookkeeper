@@ -21,6 +21,7 @@ Create comprehensive README.md with project description, features, installation,
 ## REQUIREMENTS
 
 ### Functional Requirements
+
 - Project description
 - Features list
 - Installation instructions
@@ -46,6 +47,7 @@ Create comprehensive README.md with project description, features, installation,
 ## EXPECTED DELIVERABLES
 
 **Files to Create:**
+
 - `README.md`
 
 ---

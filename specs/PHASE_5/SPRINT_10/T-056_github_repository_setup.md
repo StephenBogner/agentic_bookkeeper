@@ -21,6 +21,7 @@ Set up GitHub repository with code, releases, executables, issue templates, and 
 ## REQUIREMENTS
 
 ### Functional Requirements
+
 - Create GitHub repository
 - Push code to repository
 - Create release tags

@@ -21,6 +21,7 @@ Create a command-line interface for testing core functionality including documen
 ## REQUIREMENTS
 
 ### Functional Requirements
+
 - Command to process single document
 - Command to list transactions with filters
 - Command to add/edit/delete transactions manually
@@ -32,6 +33,7 @@ Create a command-line interface for testing core functionality including documen
 - Support for command arguments and options
 
 ### Non-Functional Requirements
+
 - Clear, user-friendly output
 - Colored output for better readability
 - Error messages are helpful and actionable
@@ -56,9 +58,11 @@ Create a command-line interface for testing core functionality including documen
 ## EXPECTED DELIVERABLES
 
 **Files to Create:**
+
 - `cli.py` (in project root)
 
 **Files to Modify:**
+
 - `setup.py` or `pyproject.toml` (add CLI entry point)
 
 ---

@@ -112,6 +112,7 @@ PATTERNS = [
 - ✅ Filter is mandatory and cannot be bypassed
 
 **Audit Command:**
+
 ```bash
 grep -i "api[_-]\?key\|sk-[A-Za-z0-9]\{20,\}\|Bearer [A-Za-z0-9]" logs/agentic_bookkeeper.log
 # Result: No matches found
@@ -165,6 +166,7 @@ console_handler.addFilter(SensitiveDataFilter())
 Error messages are informative but do not expose sensitive details:
 
 **Examples:**
+
 - ❌ NOT: "API key sk-abc123... is invalid"
 - ✅ YES: "Failed to decrypt API key: [error type]"
 - ❌ NOT: "Database connection failed: password incorrect"
@@ -205,6 +207,7 @@ cursor.execute(
 ### Transaction Manager (transaction_manager.py)
 
 **Create Operation:**
+
 ```python
 # transaction_manager.py:52-71
 cursor.execute(
@@ -219,6 +222,7 @@ cursor.execute(
 ```
 
 **Read Operation:**
+
 ```python
 # transaction_manager.py:93-95
 cursor.execute(
@@ -228,6 +232,7 @@ cursor.execute(
 ```
 
 **Update Operation:**
+
 ```python
 # transaction_manager.py:122-147
 cursor.execute(
@@ -249,6 +254,7 @@ cursor.execute(
 **Finding:** Zero instances of SQL string concatenation found.
 
 **Verification:**
+
 ```bash
 grep -r "f\".*SELECT\|\".*SELECT.*%\|\".*INSERT.*%" src/
 # Result: No matches
@@ -279,6 +285,7 @@ Dynamic queries (if any) use safe construction methods:
 **Evidence:**
 
 ### Config Module (config.py)
+
 ```python
 # config.py:49-50, 169-170
 self.env_file = Path(env_file)
@@ -288,6 +295,7 @@ dir_path.mkdir(parents=True, exist_ok=True)
 ```
 
 ### Document Processor (document_processor.py)
+
 ```python
 # document_processor.py:66-76
 path = Path(document_path)
@@ -410,6 +418,7 @@ log_file.parent.mkdir(parents=True, exist_ok=True)
 **Finding:** No arbitrary file execution found.
 
 **Verification:**
+
 ```bash
 grep -r "exec\|eval\|__import__\|compile(" src/
 # Result: No dangerous patterns found (only safe usage)
@@ -431,6 +440,7 @@ config/*.json             # ✅ Config files (with exceptions)
 ```
 
 **Verification:**
+
 ```bash
 git check-ignore .env
 # Result: .env is properly gitignored ✅
@@ -556,6 +566,7 @@ machine_id = os.environ.get('MACHINE_ID', 'default_machine_id')
 ### 8.1 Log Audit Results
 
 **Command:**
+
 ```bash
 grep -r "api_key" logs/ | grep -v "REDACTED\|***"
 ```
@@ -565,6 +576,7 @@ grep -r "api_key" logs/ | grep -v "REDACTED\|***"
 ### 8.2 Code Pattern Analysis
 
 **SQL Injection Scan:**
+
 ```bash
 grep -r "f\".*SELECT\|f\".*INSERT" src/
 ```
@@ -572,6 +584,7 @@ grep -r "f\".*SELECT\|f\".*INSERT" src/
 **Result:** ✅ No string interpolation in SQL queries
 
 **Path Traversal Scan:**
+
 ```bash
 grep -r "\.\./\|%2e%2e" src/
 ```
@@ -581,6 +594,7 @@ grep -r "\.\./\|%2e%2e" src/
 ### 8.3 Sensitive File Verification
 
 **Command:**
+
 ```bash
 git check-ignore .env logs/ data/
 ```
@@ -703,6 +717,7 @@ With the following conditions:
 ## Appendix B: Security Testing Commands
 
 ### Log Audit
+
 ```bash
 # Check for API keys in logs
 grep -r "api_key\|sk-[A-Za-z0-9]\{20,\}\|Bearer [A-Za-z0-9]" logs/
@@ -712,6 +727,7 @@ grep -ri "password\|secret" logs/
 ```
 
 ### SQL Injection Check
+
 ```bash
 # Check for string concatenation in SQL
 grep -r "f\".*SELECT\|f\".*INSERT\|%.*SELECT" src/
@@ -721,6 +737,7 @@ grep -r "execute(f\|execute(\"" src/
 ```
 
 ### Path Traversal Check
+
 ```bash
 # Check for path traversal patterns
 grep -r "\.\./\|%2e%2e\|\.\.%2f" src/
@@ -730,6 +747,7 @@ grep -r "os.path.join\|open(" src/
 ```
 
 ### Gitignore Verification
+
 ```bash
 # Verify sensitive files are ignored
 git check-ignore .env

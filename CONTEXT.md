@@ -30,6 +30,7 @@ learnings, patterns, and context that will be useful for future tasks.
 **Purpose:** Intelligent bookkeeping automation system leveraging LLM technology
 
 **Key Features:**
+
 - Automated document processing (PDF, images) using AI/LLM vision
 - Multi-LLM provider support (OpenAI, Anthropic, XAI, Google)
 - Tax jurisdiction support (CRA Canada, IRS United States)
@@ -38,11 +39,13 @@ learnings, patterns, and context that will be useful for future tasks.
 - Multi-format export (PDF, CSV, JSON)
 
 **Target Users:**
+
 - Small business owners
 - Freelancers and independent contractors
 - Self-employed individuals
 
 **Current Status:**
+
 - 🎉 PROJECT 100% COMPLETE - ALL 58 TASKS DONE ✅
 - Phase 5 (Refinement & Distribution) COMPLETE - 9/9 tasks (100%)
 - Phase 4 (Testing & Documentation) COMPLETE - 10/10 tasks (100%)
@@ -69,6 +72,7 @@ learnings, patterns, and context that will be useful for future tasks.
 ## PROJECT STANDARDS
 
 ### Code Organization
+
 - **Design Pattern:** Object-oriented programming
 - **File Structure:** One class per file (maximum 500 lines)
 - **Import Style:** Absolute imports from package root
@@ -79,6 +83,7 @@ learnings, patterns, and context that will be useful for future tasks.
   - Private methods: Leading underscore (e.g., `_internal_helper`, `_validate_input`)
 
 ### Code Quality
+
 - **Type Hints:** Required for all function signatures
 - **Docstrings:** Required for all classes and public methods (Google style)
 - **Input Validation:** All public methods must validate inputs
@@ -87,7 +92,9 @@ learnings, patterns, and context that will be useful for future tasks.
 - **Test Coverage:** Maintain above 80%
 
 ### File Headers
+
 All Python files must include:
+
 ```python
 """
 Module: <module_name>
@@ -95,9 +102,10 @@ Purpose: <brief description>
 Author: Stephen Bogner
 Created: <YYYY-MM-DD>
 """
-```
+```text
 
 ### Code Style
+
 - **Formatter:** black (100 character line length)
 - **Linter:** flake8
 - **Type Checker:** mypy
@@ -108,6 +116,7 @@ Created: <YYYY-MM-DD>
 ## COMMON PATTERNS
 
 ### Logging Setup
+
 ```python
 import logging
 from agentic_bookkeeper.utils.logger import (
@@ -131,9 +140,10 @@ except Exception as e:
     duration_ms = (time.time() - start_time) * 1000
     log_operation_failure(logger, "operation_name", e, duration_ms=duration_ms)
     raise
-```
+```text
 
 ### Input Validation Pattern
+
 ```python
 def process_data(self, data: dict) -> Result:
     """Process input data with validation.
@@ -155,9 +165,10 @@ def process_data(self, data: dict) -> Result:
         raise ValueError("Missing required field: required_field")
 
     # Process data...
-```
+```text
 
 ### Test Structure Pattern
+
 ```python
 import pytest
 from agentic_bookkeeper.module import ClassName
@@ -179,7 +190,7 @@ class TestClassName:
         """Test method raises error with invalid input."""
         with pytest.raises(ValueError):
             instance.method(invalid_input)
-```
+```text
 
 ---
 
@@ -188,6 +199,7 @@ class TestClassName:
 ### Available Helper Functions
 
 **Report Generation (T-032, T-033, T-034):**
+
 - `ReportGenerator.filter_by_date_range()` - Filter transactions by date
 - `ReportGenerator.calculate_totals()` - Calculate income/expense/net
 - `ReportGenerator.group_by_category()` - Aggregate by category with percentages
@@ -198,6 +210,7 @@ class TestClassName:
 - `ReportGenerator._add_tax_codes_to_categories()` - Add jurisdiction-specific tax codes
 
 **PDF Export (T-035):**
+
 - `PDFExporter(jurisdiction, currency)` - Initialize PDF exporter
 - `PDFExporter.export(report_data, output_path)` - Export report to PDF file
 - `PDFExporter._build_income_statement_pdf()` - Build income statement PDF
@@ -206,6 +219,7 @@ class TestClassName:
 - `PDFExporter._format_currency()` - Currency formatting for PDFs
 
 **CSV Export (T-036):**
+
 - `CSVExporter(jurisdiction, currency)` - Initialize CSV exporter
 - `CSVExporter.export(report_data, output_path)` - Export report to CSV file with Excel compatibility
 - `CSVExporter._build_income_statement_csv()` - Build income statement DataFrame
@@ -214,6 +228,7 @@ class TestClassName:
 - `CSVExporter._escape_special_characters()` - Handle Excel formula injection and special chars
 
 **JSON Export (T-037):**
+
 - `JSONExporter(jurisdiction, currency)` - Initialize JSON exporter
 - `JSONExporter.export(report_data, output_path, pretty=True)` - Export report to JSON file
 - `JSONExporter._build_income_statement_json()` - Build income statement JSON structure
@@ -224,11 +239,13 @@ class TestClassName:
 ### Common Test Fixtures
 
 **Report Generator:**
+
 - Mock TransactionManager for isolated testing
 - Sample transaction lists for various scenarios
 - Date range fixtures for testing edge cases
 
 ### Configuration Management
+
 - **Environment Variables:** Loaded from `.env` file
 - **Config File:** (TBD - format and location)
 - **Secrets Management:** (TBD)
@@ -272,7 +289,8 @@ class TestClassName:
    - Date: 2025-10-29
 
 ### Component Structure
-```
+
+text
 src/agentic_bookkeeper/
 ├── main.py                      # Application entry point (224 lines)
 ├── core/                        # Core business logic
@@ -317,19 +335,22 @@ src/agentic_bookkeeper/
     ├── test_report_generator.py # Report generator tests (78 tests, 98% coverage)
     ├── test_exporters.py      # Exporter tests (102 tests: 30 PDF + 37 CSV + 35 JSON)
     └── conftest.py            # Shared pytest fixtures
-```
+```text
 
 ---
 
 ## DEPENDENCIES
 
 ### Production Dependencies
+
 (From requirements.txt - to be populated)
 
 ### Development Dependencies
+
 (From requirements-dev.txt - to be populated)
 
 ### Version Requirements
+
 - **Python:** 3.8+
 - **Key Libraries:** (TBD as they are added)
 
@@ -338,18 +359,21 @@ src/agentic_bookkeeper/
 ## ENVIRONMENT SETUP
 
 ### Environment Variables
+
 (To be populated as environment variables are defined)
 
 Example:
+
 ```bash
 # .env file structure
 DEBUG=true
 LOG_LEVEL=DEBUG
 DATABASE_URL=...
 API_KEY=...
-```
+```text
 
 ### Development Environment
+
 ```bash
 # Set up virtual environment
 python -m venv venv
@@ -364,19 +388,21 @@ pytest
 
 # Run application
 python -m agentic_bookkeeper
-```
+```text
 
 ---
 
 ## TESTING APPROACH
 
 ### Test Structure
+
 - **Test Location:** `tests/` directory
 - **Naming Convention:** `test_<module>.py` for `<module>.py`
 - **Test Framework:** pytest
 - **Coverage Tool:** pytest-cov
 
 ### Running Tests
+
 ```bash
 # Run all tests
 pytest
@@ -389,9 +415,10 @@ pytest tests/test_module.py
 
 # Run specific test
 pytest tests/test_module.py::test_function_name
-```
+```text
 
 ### Test Categories
+
 - **Unit Tests:** Test individual functions/methods
 - **Integration Tests:** Test component interactions
 - **End-to-End Tests:** Test full workflows
@@ -401,9 +428,11 @@ pytest tests/test_module.py::test_function_name
 ## KNOWN GOTCHAS
 
 ### Common Issues
+
 (To be populated as issues are discovered)
 
 ### Workarounds
+
 (To be populated as workarounds are developed)
 
 ---
@@ -413,32 +442,38 @@ pytest tests/test_module.py::test_function_name
 ### Task Execution History
 
 #### Phase 2 Completion (Sprints 4 & 5) ✅
+
 **Completed:** 2025-10-28
 **Tasks:** T-021 through T-031 (11 tasks)
 
 **Key Learnings:**
+
 - PySide6 GUI development workflow well-established
 - pytest-qt excellent for GUI testing (128 tests, all passing)
 - Mock-based testing provides good isolation
 - Test coverage achievable (86-100% for GUI modules)
 
 **New Patterns Established:**
+
 - GUI widget structure with signals/slots
 - Dialog patterns for settings and data entry
 - Table widget patterns for transaction display
 - Test fixtures for Qt widgets (pytest-qt)
 
 **Gotchas Discovered:**
+
 - Circular import issues resolved with lazy imports
 - Test mode detection via PYTEST_CURRENT_TEST environment variable
 - QTableWidget native sorting better than custom pagination
 - Transaction manager dependency injection for testability
 
 #### Phase 3: Sprint 6 Completed (2025-10-29)
+
 **Status:** Complete
 **Tasks:** T-032 through T-039 (8 tasks) - All complete
 
 **Task T-032 Completed: Report Generator Core**
+
 - Implemented ReportGenerator class with comprehensive functionality
 - 55 unit tests written, all passing
 - 98% test coverage achieved
@@ -448,6 +483,7 @@ pytest tests/test_module.py::test_function_name
 - File: `src/agentic_bookkeeper/core/report_generator.py` (150 lines total)
 
 **Task T-033 Completed: Income Statement Template**
+
 - Added `generate_income_statement()` method to ReportGenerator
 - Complete income statement with revenue/expenses/net income
 - Professional formatting suitable for tax filing
@@ -456,6 +492,7 @@ pytest tests/test_module.py::test_function_name
 - Method added: 124 lines of code + 234 lines of tests
 
 **Task T-034 Completed: Expense Report Template**
+
 - Added `generate_expense_report()` method to ReportGenerator
 - Expense report grouped by category with totals and percentages
 - Tax jurisdiction support: CRA T2125 codes and IRS Schedule C codes
@@ -467,6 +504,7 @@ pytest tests/test_module.py::test_function_name
 - Tax codes: CRA (9 categories), IRS (10 categories with variants)
 
 **Task T-035 Completed: PDF Export Implementation**
+
 - Implemented PDFExporter class using ReportLab library
 - Professional PDF generation with headers, footers, and page numbers
 - Support for income statement and expense report formats
@@ -481,6 +519,7 @@ pytest tests/test_module.py::test_function_name
 - Dependencies: reportlab>=4.0.0, pypdf>=4.0.0 (for testing)
 
 **Task T-036 Completed: CSV Export Implementation**
+
 - Implemented CSVExporter class using pandas library
 - CSV export with Excel compatibility (UTF-8 BOM encoding)
 - Professional structure with metadata, summary, and detail sections
@@ -496,6 +535,7 @@ pytest tests/test_module.py::test_function_name
 - Dependencies: pandas>=2.0.0 (already in requirements.txt)
 
 **Task T-037 Completed: JSON Export Implementation**
+
 - Implemented JSONExporter class with structured JSON schema
 - Schema versioning (version 1.0) for future compatibility
 - Pretty printing option (default: True) for human readability
@@ -510,6 +550,7 @@ pytest tests/test_module.py::test_function_name
 - Dependencies: json (standard library), datetime (standard library)
 
 **Task T-038 Completed: Reports Widget Implementation**
+
 - Implemented ReportsWidget class following PySide6 GUI patterns
 - Report type selector (Income Statement, Expense Report)
 - Date range picker with presets (This Month, Last Month, This Quarter, Last Quarter, This Year, Last Year, Custom)
@@ -527,6 +568,7 @@ pytest tests/test_module.py::test_function_name
 - Dependencies: PySide6 (already in requirements.txt)
 
 **Task T-039 Completed: Unit Tests for Reporting**
+
 - All expected test files already existed from previous tasks (T-032 through T-038)
 - Validation task confirming comprehensive test coverage
 - 219 total reporting tests passing:
@@ -552,6 +594,7 @@ pytest tests/test_module.py::test_function_name
 - Files: test_report_generator.py (1162 lines), test_exporters.py (1373 lines), test_gui_reports.py (596 lines)
 
 **Task T-040 Completed: Integration Test Suite Expansion**
+
 - Expanded test_integration_e2e.py from 14 to 34 comprehensive tests (+20 new tests)
 - Test coverage: 98% on integration test file
 - Complete end-to-end workflow testing:
@@ -586,6 +629,7 @@ pytest tests/test_module.py::test_function_name
 - File: test_integration_e2e.py (1,200+ lines, 457 lines of code)
 
 **Task T-042 Completed: Performance Testing**
+
 - Created comprehensive performance test suite (17 tests, all passing)
 - Test coverage: 99% on test_performance.py (550 lines of code)
 - Files created:
@@ -629,6 +673,7 @@ pytest tests/test_module.py::test_function_name
 - All tests complete in under 2 minutes (79s average)
 
 **Task T-043 Completed: Security Testing**
+
 - Comprehensive security audit completed (749-line report)
 - Security assessment: STRONG overall security posture with LOW risk level
 - Areas audited:
@@ -651,6 +696,7 @@ pytest tests/test_module.py::test_function_name
 - Approved for production use with documented conditions
 
 **Task T-044 Completed: Bug Fixes from Testing**
+
 - Critical race condition bug found and fixed in concurrent database write test
 - Issue: Flaky test due to previous tests leaving data in database
 - Solution 1: Enable SQLite WAL mode for better concurrent write performance
@@ -676,6 +722,7 @@ pytest tests/test_module.py::test_function_name
 - Files modified: `src/agentic_bookkeeper/tests/test_integration_e2e.py` (race test fix)
 
 **Task T-041 Completed: User Acceptance Test Scenarios**
+
 - Created comprehensive UAT documentation (15 scenarios covering all workflows)
 - Scenarios organized in 4 categories: Setup, Daily Operations, Reporting, Error Handling
 - Documented execution results with 100% pass rate (15/15 scenarios passed)
@@ -696,6 +743,7 @@ pytest tests/test_module.py::test_function_name
 - Recommendations documented for future enhancements (P2/P3 issues)
 
 **Task T-045 Completed: User Guide Creation**
+
 - Created comprehensive 980-line user guide for end users
 - Sections: Introduction, Requirements, Installation (Windows/Linux), Setup, Operations, Features, Troubleshooting, FAQ, Appendix
 - Installation instructions for both Windows and Linux with step-by-step commands
@@ -714,6 +762,7 @@ pytest tests/test_module.py::test_function_name
 - User guide suitable for non-technical users with no prior experience
 
 **Task T-046 Completed: Developer Documentation**
+
 - Created comprehensive developer documentation (4 major files, 2,952 lines total)
 - ARCHITECTURE.md (661 lines): System overview, design patterns, component architecture
   - High-level architecture diagrams (ASCII art)
@@ -757,6 +806,7 @@ pytest tests/test_module.py::test_function_name
 - Extension mechanisms clearly documented for customization
 
 **Task T-047 Completed: README Creation**
+
 - Created comprehensive README.md (402 lines) for project root
 - Project description with tagline: "Intelligent bookkeeping automation powered by AI"
 - Badges section: License (Proprietary), Python (3.8+), Tests (554 passing), Coverage (91%), Version (0.1.0)
@@ -785,19 +835,20 @@ pytest tests/test_module.py::test_function_name
 - File created: README.md (402 lines, comprehensive project documentation)
 
 **Task T-048 Completed: Code Documentation Review**
+
 - Comprehensive code documentation review and improvement completed
 - Fixed all 44 pydocstyle errors (100% pydocstyle compliance achieved):
   - Fixed module header docstrings (D205, D400) in 13 files: Added summary line ending with period, blank line after summary
-  - Added missing package docstrings (D104) to 5 __init__.py files
+  - Added missing package docstrings (D104) to 5 **init**.py files
   - Fixed class docstring formatting (D204): Added blank lines after class docstrings in 5 exception classes
-  - Fixed docstring imperative mood (D401) in 6 locations: __str__ methods and main() function
+  - Fixed docstring imperative mood (D401) in 6 locations: **str** methods and main() function
 - Added missing type annotations to 20+ functions across 7 files:
-  - models/transaction.py: __post_init__, from_db_row, __eq__, __lt__
-  - models/database.py: __enter__, __exit__ (context manager methods)
+  - models/transaction.py: **post_init**, from_db_row, **eq**, **lt**
+  - models/database.py: **enter**, **exit** (context manager methods)
   - llm/llm_provider.py: retry_with_backoff method
-  - core/exporters/pdf_exporter.py: _add_page_decorations
-  - core/report_generator.py: __init__, generate_report, generate_income_statement, generate_expense_report
-  - core/document_monitor.py: on_created, __enter__, __exit__, __del__
+  - core/exporters/pdf_exporter.py:_add_page_decorations
+  - core/report_generator.py: **init**, generate_report, generate_income_statement, generate_expense_report
+  - core/document_monitor.py: on_created, **enter**, **exit**, **del**
   - utils/logger.py: temporary_log_level context manager methods
 - Code formatted with black (38 files reformatted, PEP 8 compliant)
 - All 554 tests passing with 91% coverage (no regressions)
@@ -810,11 +861,12 @@ pytest tests/test_module.py::test_function_name
 - Key learnings:
   - pydocstyle requires summary line ending with period + blank line before metadata
   - Docstrings should be in imperative mood ("Return X" not "Returns X")
-  - Context manager methods (__enter__, __exit__) need proper type annotations
+  - Context manager methods (**enter**, **exit**) need proper type annotations
   - black formatter automatically fixes many style issues, should always run after manual edits
   - Many mypy errors in GUI code are PySide6 false positives and can be ignored
 
 **Task T-049 Completed: Sample Documents and Data**
+
 - Created comprehensive samples directory structure (invoices/, receipts/, config/)
 - 6 sample documents included: 2 invoices (income) + 4 receipts (expenses)
 - Sample data totals: $14,595 income, $350.43 expenses, $14,244.57 net income
@@ -840,6 +892,7 @@ pytest tests/test_module.py::test_function_name
 - Sprint 8 (Documentation) complete - all 5 tasks done
 
 **Task T-052 Completed: UI/UX Polish**
+
 - Comprehensive UI/UX polish with tooltips and keyboard shortcuts across all GUI widgets
 - Added 59 tooltips across 7 GUI widget files for improved user experience
 - Added 9 keyboard shortcuts: Ctrl+F (search), Ctrl+N (new), Delete (delete), Ctrl+S (save), Ctrl+R (reject), Ctrl+G (generate), Ctrl+E (export)
@@ -856,6 +909,7 @@ pytest tests/test_module.py::test_function_name
   - Consistent tooltip and shortcut patterns across all widgets enhance professional feel
 
 **Task T-051 Completed: Error Handling Improvements**
+
 - Implemented comprehensive custom exception hierarchy (BookkeeperError + 5 specialized types)
 - Created centralized error_handler.py module with formatting and recovery suggestion functions
 - Enhanced document_processor.py with specific DocumentError and ValidationError exceptions
@@ -875,6 +929,7 @@ pytest tests/test_module.py::test_function_name
   - Exception chaining (raise from e) preserves stack trace for debugging
 
 **Task T-054 Completed: Windows Executable with PyInstaller**
+
 - Comprehensive Windows build configuration created (Phase 5, Sprint 10)
 - Created PyInstaller spec file (agentic_bookkeeper.spec) with all dependencies, hidden imports, and exclusions
 - Created automated build script (build_windows.bat) for Windows executable generation
@@ -906,6 +961,7 @@ pytest tests/test_module.py::test_function_name
 - Sprint 10 (Distribution) started - 1/5 tasks complete
 
 **Task T-055 Completed: Linux Package Preparation**
+
 - Comprehensive Linux packaging with setup.py, MANIFEST.in, and install.sh (Phase 5, Sprint 10)
 - Updated setup.py with complete dependency list from requirements.txt (17 dependencies)
 - Created MANIFEST.in for precise control of source distribution contents
@@ -957,6 +1013,7 @@ pytest tests/test_module.py::test_function_name
 - Sprint 10 (Distribution) in progress - 2/5 tasks complete (40%)
 
 **Task T-053 Completed: Logging Enhancements**
+
 - Comprehensive logging enhancements implemented (Phase 5, Sprint 9)
 - Added structured logging helpers to logger.py:
   - log_operation_start(): Log operation start with context
@@ -990,6 +1047,7 @@ pytest tests/test_module.py::test_function_name
 - Sprint 9 (Refinement) 100% COMPLETE - all 4 tasks done
 
 **Task T-056 Completed: GitHub Repository Setup**
+
 - Comprehensive GitHub repository setup and release management (Phase 5, Sprint 10)
 - Created public repository: https://github.com/StephenBogner/agentic_bookkeeper
 - Published v0.1.0 release with Linux distribution packages
@@ -1011,6 +1069,7 @@ pytest tests/test_module.py::test_function_name
 - Sprint 10 (Distribution) in progress - 3/5 tasks complete (60%)
 
 **Task T-058 Completed: Release Checklist (FINAL TASK)**
+
 - Comprehensive release validation completed (Phase 5, Sprint 10)
 - Created RELEASE_CHECKLIST.md (9.4KB) documenting all validation results
 - Code quality validation: 647/652 tests passing (99.2%), 92% coverage
@@ -1038,6 +1097,7 @@ pytest tests/test_module.py::test_function_name
 - 🎉 PROJECT 100% COMPLETE - ALL 58 TASKS DONE
 
 **Task T-057 Completed: License and Legal**
+
 - Comprehensive license and third-party attribution implemented (Phase 5, Sprint 10)
 - Created THIRD_PARTY_LICENSES.md documenting all 14 open-source dependencies (7.6KB)
   - 2 copyleft licenses: PySide6 (LGPL v3), PyMuPDF (AGPL v3)
@@ -1065,6 +1125,7 @@ pytest tests/test_module.py::test_function_name
 - Sprint 10 (Distribution) in progress - 4/5 tasks complete (80%)
 
 **Task T-050 Completed: Performance Optimization**
+
 - Comprehensive performance optimizations implemented (Phase 5, Sprint 9)
 - Database optimizations:
   - Added composite indexes (date+type, date+category) for common filter combinations
@@ -1100,10 +1161,12 @@ pytest tests/test_module.py::test_function_name
 ## COMPLETED WORK
 
 ### Sprint 5: Transaction Management UI (T-026 to T-031) ✅
+
 **Completion Date:** 2025-10-28
 **Test Results:** 128 tests passing, 86-91% coverage
 
 **Files Created:**
+
 - `src/agentic_bookkeeper/gui/transactions_widget.py` (408 lines, 100% coverage)
 - `src/agentic_bookkeeper/gui/transaction_edit_dialog.py` (318 lines, 89% coverage)
 - `src/agentic_bookkeeper/gui/transaction_add_dialog.py` (259 lines, 91% coverage)
@@ -1111,6 +1174,7 @@ pytest tests/test_module.py::test_function_name
 - Comprehensive test suite for all components
 
 **Features Delivered:**
+
 - Full CRUD operations for transactions
 - Advanced filtering (type, category, date range, search)
 - Color-coded transaction display
@@ -1118,10 +1182,12 @@ pytest tests/test_module.py::test_function_name
 - Edit/Add/Delete functionality with validation
 
 ### Sprint 4: GUI Foundation (T-021 to T-025) ✅
+
 **Completion Date:** 2025-10-28
 **Test Results:** 84 tests passing, 97-100% coverage
 
 **Files Created:**
+
 - `src/agentic_bookkeeper/main.py` (224 lines, 97% coverage)
 - `src/agentic_bookkeeper/gui/main_window.py` (integrated tabs)
 - `src/agentic_bookkeeper/gui/dashboard_widget.py` (97% coverage)
@@ -1129,6 +1195,7 @@ pytest tests/test_module.py::test_function_name
 - Complete test suite with pytest-qt
 
 **Features Delivered:**
+
 - Main application window with tabs
 - Dashboard with monitoring controls
 - Settings management (API keys, directories, tax jurisdiction)
@@ -1140,12 +1207,15 @@ pytest tests/test_module.py::test_function_name
 ## FUTURE CONSIDERATIONS
 
 ### Planned Improvements
+
 (To be populated as improvement ideas emerge)
 
 ### Technical Debt
+
 (To be populated as technical debt is identified)
 
 ### Refactoring Candidates
+
 (To be populated as refactoring needs are identified)
 
 ---
@@ -1153,16 +1223,19 @@ pytest tests/test_module.py::test_function_name
 ## RESOURCES
 
 ### Documentation Links
+
 - **Project README:** README.md
 - **API Docs:** (TBD)
 - **Architecture Docs:** (TBD)
 
 ### External Resources
+
 - **PEP 8 Style Guide:** https://pep8.org/
 - **Google Python Style Guide:** https://google.github.io/styleguide/pyguide.html
 - **pytest Documentation:** https://docs.pytest.org/
 
 ### Team Knowledge Base
+
 - **Stephen Bogner's Standards:** DEVELOPER.md (if available)
 - **Claude Instructions:** CLAUDE.md
 
@@ -1171,6 +1244,7 @@ pytest tests/test_module.py::test_function_name
 ## MAINTENANCE
 
 ### Updating This File
+
 - Update after each task completion via /next-task
 - Add new patterns as they are established
 - Document architectural decisions as they are made
@@ -1178,6 +1252,7 @@ pytest tests/test_module.py::test_function_name
 - Keep examples current and relevant
 
 ### Sections to Update Regularly
+
 - **CROSS-TASK LEARNINGS:** After every task
 - **SHARED UTILITIES:** When new utilities are added
 - **COMMON PATTERNS:** When patterns are established

@@ -69,6 +69,7 @@ self-employed individuals.
 4. Launch from Start Menu: **Agentic Bookkeeper**
 
 **System Requirements:**
+
 - Windows 10 (21H2 or later) or Windows 11
 - 64-bit operating system
 - 200 MB disk space
@@ -223,6 +224,7 @@ pytest -v
 ```
 
 **Test Statistics:**
+
 - Total Tests: 553 passing
 - Code Coverage: 91%
 - Test Categories: Unit (515), Integration (34), Performance (17)
@@ -378,6 +380,7 @@ This project was developed using:
 **Current Version**: 0.1.0 (MVP)
 
 **Development Status**:
+
 - Phase 1 (Core Functionality): ✅ Complete (20/20 tasks)
 - Phase 2 (GUI Development): ✅ Complete (11/11 tasks)
 - Phase 3 (Reporting Engine): ✅ Complete (8/8 tasks)

@@ -51,7 +51,7 @@ sudo apt install -y tesseract-ocr
 
 # Install additional image processing libraries
 sudo apt install -y libjpeg-dev zlib1g-dev
-```
+```text
 
 ### Install Prerequisites (CentOS/RHEL)
 
@@ -64,7 +64,7 @@ sudo yum install -y tesseract
 
 # Install image libraries
 sudo yum install -y libjpeg-devel zlib-devel
-```
+```text
 
 ---
 
@@ -83,9 +83,10 @@ cd agentic_bookkeeper_module/
 
 # For development mode (includes dev dependencies and tests):
 ./install.sh --dev
-```
+```text
 
 The script will:
+
 1. Create a virtual environment
 2. Install all dependencies
 3. Set up application directories
@@ -108,7 +109,7 @@ pip install --upgrade build setuptools wheel
 python -m build --sdist
 
 # Output: dist/agentic_bookkeeper-0.1.0.tar.gz
-```
+```text
 
 ### Build Wheel Distribution (bdist_wheel)
 
@@ -119,7 +120,7 @@ A wheel is a built distribution that's faster to install:
 python -m build --wheel
 
 # Output: dist/agentic_bookkeeper-0.1.0-py3-none-any.whl
-```
+```text
 
 ### Build Both Distributions
 
@@ -130,7 +131,7 @@ python -m build
 # Output:
 #   dist/agentic_bookkeeper-0.1.0.tar.gz
 #   dist/agentic_bookkeeper-0.1.0-py3-none-any.whl
-```
+```text
 
 ### Using Legacy setup.py (Deprecated but Still Supported)
 
@@ -143,7 +144,7 @@ python setup.py bdist_wheel
 
 # Build both
 python setup.py sdist bdist_wheel
-```
+```text
 
 ---
 
@@ -163,7 +164,7 @@ pip install dist/agentic_bookkeeper-0.1.0-py3-none-any.whl
 
 # Verify installation
 agentic_bookkeeper --version
-```
+```text
 
 ### Method 2: Install from Source Distribution
 
@@ -177,7 +178,7 @@ pip install dist/agentic_bookkeeper-0.1.0.tar.gz
 
 # Verify installation
 agentic_bookkeeper --version
-```
+```text
 
 ### Method 3: Install in Development Mode
 
@@ -196,7 +197,7 @@ pip install -r requirements-dev.txt
 
 # Verify installation
 agentic_bookkeeper --version
-```
+```text
 
 ### Method 4: Install from PyPI (Future)
 
@@ -204,7 +205,7 @@ Once published to PyPI:
 
 ```bash
 pip install agentic_bookkeeper
-```
+```text
 
 ---
 
@@ -228,7 +229,7 @@ pytest
 
 # Run with coverage
 pytest --cov=agentic_bookkeeper --cov-report=html
-```
+```text
 
 ### Test Application Functionality
 
@@ -241,7 +242,7 @@ agentic_bookkeeper --cli
 
 # Process a sample document
 agentic_bookkeeper --process samples/invoices/invoice_consulting.pdf
-```
+```text
 
 ### Verify Package Contents
 
@@ -251,7 +252,7 @@ unzip -l dist/agentic_bookkeeper-0.1.0-py3-none-any.whl
 
 # List files in source distribution
 tar -tzf dist/agentic_bookkeeper-0.1.0.tar.gz
-```
+```text
 
 ---
 
@@ -277,7 +278,7 @@ cp -r samples/ agentic_bookkeeper_linux_dist/
 tar -czf agentic_bookkeeper_0.1.0_linux.tar.gz agentic_bookkeeper_linux_dist/
 
 # Distribution package: agentic_bookkeeper_0.1.0_linux.tar.gz
-```
+```text
 
 ### Distribution Checklist
 
@@ -301,7 +302,7 @@ cd agentic_bookkeeper_linux_dist/
 
 # Run automated installer
 ./install.sh
-```
+```text
 
 ---
 
@@ -314,14 +315,14 @@ cd agentic_bookkeeper_linux_dist/
 ```bash
 # Solution: Upgrade pip and install setuptools
 pip install --upgrade pip setuptools wheel
-```
+```text
 
 #### Issue: "error: invalid command 'bdist_wheel'"
 
 ```bash
 # Solution: Install wheel package
 pip install wheel
-```
+```text
 
 #### Issue: Build fails with "gcc: command not found"
 
@@ -329,7 +330,7 @@ pip install wheel
 # Solution: Install build tools
 sudo apt install build-essential  # Ubuntu/Debian
 sudo yum install gcc gcc-c++       # CentOS/RHEL
-```
+```text
 
 ### Installation Issues
 
@@ -341,7 +342,7 @@ pip install --upgrade pip
 
 # Or use a different index
 pip install --index-url https://pypi.org/simple/ PySide6
-```
+```text
 
 #### Issue: "pytesseract.pytesseract.TesseractNotFoundError"
 
@@ -352,7 +353,7 @@ sudo yum install tesseract       # CentOS/RHEL
 
 # Verify installation
 tesseract --version
-```
+```text
 
 #### Issue: "ImportError: libGL.so.1: cannot open shared object file"
 
@@ -362,7 +363,7 @@ This is a common issue with PySide6 on headless servers.
 # Solution: Install OpenGL libraries
 sudo apt install -y libgl1-mesa-glx libglib2.0-0  # Ubuntu/Debian
 sudo yum install -y mesa-libGL                     # CentOS/RHEL
-```
+```text
 
 ### Runtime Issues
 
@@ -375,7 +376,7 @@ cp samples/config/.env.sample ~/.config/agentic_bookkeeper/.env
 
 # Edit and add your API keys
 nano ~/.config/agentic_bookkeeper/.env
-```
+```text
 
 #### Issue: "Permission denied" when running install.sh
 
@@ -383,7 +384,7 @@ nano ~/.config/agentic_bookkeeper/.env
 # Solution: Make script executable
 chmod +x install.sh
 ./install.sh
-```
+```text
 
 ### Testing Issues
 
@@ -392,14 +393,14 @@ chmod +x install.sh
 ```bash
 # Solution: Install development dependencies
 pip install -r requirements-dev.txt
-```
+```text
 
 #### Issue: Import errors during tests
 
 ```bash
 # Solution: Install package in development mode
 pip install -e .
-```
+```text
 
 ---
 
@@ -416,7 +417,7 @@ sudo apt install dh-virtualenv
 # Create debian/ directory structure
 mkdir -p debian
 # (Additional configuration required - see dh-virtualenv documentation)
-```
+```text
 
 ### Creating an RPM Package
 
@@ -428,7 +429,7 @@ sudo yum install rpm-build
 
 # Create RPM spec file
 # (Additional configuration required - see RPM packaging documentation)
-```
+```text
 
 ### Publishing to PyPI
 
@@ -443,7 +444,7 @@ twine upload --repository testpypi dist/*
 
 # Upload to production PyPI
 twine upload dist/*
-```
+```text
 
 **Note:** Publishing to PyPI requires an account and proper package configuration.
 
@@ -453,7 +454,7 @@ twine upload dist/*
 
 ### Package Contents
 
-```
+text
 agentic_bookkeeper_module/
 ├── setup.py                    # Package configuration
 ├── pyproject.toml             # Build system configuration
@@ -468,7 +469,7 @@ agentic_bookkeeper_module/
 ├── docs/                      # Documentation
 ├── samples/                   # Sample documents
 └── dist/                      # Built distributions (created by build)
-```
+```text
 
 ---
 
@@ -483,7 +484,7 @@ pip-compile requirements.txt
 
 # Update development dependencies
 pip-compile requirements-dev.txt
-```
+```text
 
 ### Version Management
 

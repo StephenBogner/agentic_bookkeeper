@@ -21,6 +21,7 @@ Create comprehensive unit tests for LLM providers, document processor, transacti
 ## REQUIREMENTS
 
 ### Functional Requirements
+
 - Test all LLM providers with mock API responses
 - Test document processor with sample PDFs and images
 - Test transaction manager CRUD operations
@@ -31,6 +32,7 @@ Create comprehensive unit tests for LLM providers, document processor, transacti
 - Achieve >80% code coverage for all modules
 
 ### Non-Functional Requirements
+
 - Tests must run in <30 seconds total
 - Tests must be deterministic (no flaky tests)
 - Mock external dependencies (APIs, file system)
@@ -55,6 +57,7 @@ Create comprehensive unit tests for LLM providers, document processor, transacti
 ## EXPECTED DELIVERABLES
 
 **Files to Create:**
+
 - `src/agentic_bookkeeper/tests/test_llm_providers.py`
 - `src/agentic_bookkeeper/tests/test_document_processor.py`
 - `src/agentic_bookkeeper/tests/test_transaction_manager.py`
@@ -63,6 +66,7 @@ Create comprehensive unit tests for LLM providers, document processor, transacti
 - `src/agentic_bookkeeper/tests/fixtures/sample_invoice.jpg`
 
 **Files to Modify:**
+
 - `src/agentic_bookkeeper/tests/conftest.py` (add fixtures)
 
 ---

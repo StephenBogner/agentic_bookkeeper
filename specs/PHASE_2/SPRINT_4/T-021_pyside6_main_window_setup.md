@@ -22,6 +22,7 @@ Create the main application window using PySide6 with menu bar, tab widget, and 
 ## REQUIREMENTS
 
 ### Functional Requirements
+
 - Create main window with PySide6
 - Implement menu bar (File, Help)
 - Set up tab widget for main views
@@ -32,6 +33,7 @@ Create the main application window using PySide6 with menu bar, tab widget, and 
 - Implement Help menu (About)
 
 ### Non-Functional Requirements
+
 - Window must be responsive
 - Clean, professional appearance
 - Proper resource management
@@ -54,6 +56,7 @@ Create the main application window using PySide6 with menu bar, tab widget, and 
 ## EXPECTED DELIVERABLES
 
 **Files Created:**
+
 - `src/agentic_bookkeeper/gui/main_window.py`
 - `resources/icons/app_icon.png`
 - `resources/resources.qrc`
@@ -75,11 +78,13 @@ pytest src/agentic_bookkeeper/tests/test_gui_main_window.py -v
 ## IMPLEMENTATION NOTES
 
 ### Files Created
+
 - `src/gui/main_window.py` (main window implementation)
 - `resources/` (icons and resources)
 - Unit tests with 99% coverage
 
 ### Test Results
+
 - 14 unit tests, all passing
 - 99% code coverage
 - Test execution time: 3.92s

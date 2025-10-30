@@ -22,6 +22,7 @@ Implement document review dialog showing extracted transaction data alongside do
 ## REQUIREMENTS
 
 ### Functional Requirements
+
 - Display extracted transaction data in form
 - Show document preview (image or PDF)
 - Allow editing of all extracted fields
@@ -33,6 +34,7 @@ Implement document review dialog showing extracted transaction data alongside do
 - Split-pane layout (document preview + form)
 
 ### Non-Functional Requirements
+
 - Document preview must be clear
 - Form must be responsive
 - Validation must be comprehensive
@@ -54,6 +56,7 @@ Implement document review dialog showing extracted transaction data alongside do
 ## EXPECTED DELIVERABLES
 
 **Files Created:**
+
 - `src/agentic_bookkeeper/gui/document_review_dialog.py` (489 lines)
 - `src/agentic_bookkeeper/tests/test_gui_document_review_dialog.py` (547 lines)
 
@@ -71,16 +74,19 @@ pytest src/agentic_bookkeeper/tests/test_gui_document_review_dialog.py -v
 ## IMPLEMENTATION NOTES
 
 ### Files Created
+
 - Document review dialog with split-pane layout
 - Comprehensive test suite (33 tests)
 - 90% code coverage
 
 ### Test Results
+
 - 33 tests passing
 - 90% coverage for document_review_dialog.py
 - All acceptance criteria met
 
 ### Features Implemented
+
 - Split-pane layout with QSplitter (40/60 proportions)
 - Document preview (left pane) with zoom and scroll
 - Full transaction form (right pane)
@@ -94,6 +100,7 @@ pytest src/agentic_bookkeeper/tests/test_gui_document_review_dialog.py -v
 - Integration with TransactionManager and DocumentProcessor
 
 ### Implementation Details
+
 - QSplitter for resizable panes
 - QScrollArea for document preview
 - Full transaction form matching add/edit dialogs
@@ -112,6 +119,7 @@ pytest src/agentic_bookkeeper/tests/test_gui_document_review_dialog.py -v
 **Result:** Comprehensive document review dialog with split-pane layout, document preview, and full editing capabilities.
 
 **Key Features:**
+
 - Side-by-side document and data view
 - Full editing before acceptance
 - Smart category filtering

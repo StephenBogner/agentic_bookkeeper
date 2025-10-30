@@ -21,6 +21,7 @@ Create comprehensive documentation for Phase 1 including architecture diagrams, 
 ## REQUIREMENTS
 
 ### Functional Requirements
+
 - Document all public APIs with complete docstrings
 - Create architecture diagram showing component relationships
 - Document database schema with field descriptions
@@ -31,6 +32,7 @@ Create comprehensive documentation for Phase 1 including architecture diagrams, 
 - Document configuration options
 
 ### Non-Functional Requirements
+
 - Documentation must be clear and accurate
 - Examples must be functional and tested
 - Diagrams must reflect actual implementation
@@ -55,12 +57,14 @@ Create comprehensive documentation for Phase 1 including architecture diagrams, 
 ## EXPECTED DELIVERABLES
 
 **Files to Create:**
+
 - `docs/ARCHITECTURE.md`
 - `docs/DATABASE_SCHEMA.md`
 - `docs/DEVELOPER_SETUP.md`
 - `docs/LLM_PROVIDERS.md`
 
 **Files to Modify:**
+
 - All source files (improve docstrings)
 
 ---
@@ -79,7 +83,7 @@ pdoc --html --output-dir docs/api src/agentic_bookkeeper
 
 # Check for broken links in documentation
 markdown-link-check docs/*.md
-```
+```text
 
 ---
 
@@ -94,7 +98,8 @@ markdown-link-check docs/*.md
 High-level description of system architecture.
 
 ## Component Diagram
-```
+```text
+
 ┌─────────────────┐
 │   GUI (Phase 2)  │
 └────────┬─────────┘
@@ -113,7 +118,8 @@ High-level description of system architecture.
 │  - Anthropic   │    │                 │
 │  - Google      │    │                 │
 └────────────────┘    └─────────────────┘
-```
+
+```text
 
 ## Component Descriptions
 
@@ -158,7 +164,7 @@ SQLite database for transaction storage.
 - pypdf (PDF processing)
 - Pillow (image processing)
 - watchdog (file monitoring)
-```
+```text
 
 ### DATABASE_SCHEMA.md Template
 
@@ -221,7 +227,7 @@ CREATE TABLE config (
     key TEXT PRIMARY KEY,
     value TEXT NOT NULL
 );
-```
+```text
 
 ## Example Queries
 
@@ -243,8 +249,9 @@ FROM transactions
 WHERE type = 'expense'
 GROUP BY category
 ORDER BY total DESC;
-```
-```
+```text
+
+```text
 
 ### DEVELOPER_SETUP.md Template
 
@@ -263,45 +270,52 @@ ORDER BY total DESC;
 ```bash
 git clone <repository-url>
 cd agentic_bookkeeper_module
-```
+```text
 
 ### 2. Create Virtual Environment
+
 ```bash
 python3 -m venv venv
 source venv/bin/activate  # Linux/Mac
 venv\Scripts\activate     # Windows
-```
+```text
 
 ### 3. Install Dependencies
+
 ```bash
 pip install -r requirements.txt
 pip install -r requirements-dev.txt
-```
+```text
 
 ### 4. Configure Environment
+
 ```bash
 cp .env.example .env
 # Edit .env and add your API keys
-```
+```text
 
 ### 5. Initialize Database
+
 ```bash
 python -c "from src.agentic_bookkeeper.models.database import Database; db = Database(); db.initialize_schema()"
-```
+```text
 
 ### 6. Run Tests
+
 ```bash
 pytest
-```
+```text
 
 ### 7. Run Application
+
 ```bash
 python main.py
-```
+```text
 
 ## Development Workflow
 
 ### Running Tests
+
 ```bash
 # All tests
 pytest
@@ -311,9 +325,10 @@ pytest src/agentic_bookkeeper/tests/test_database.py
 
 # With coverage
 pytest --cov=src/agentic_bookkeeper
-```
+```text
 
 ### Code Quality
+
 ```bash
 # Format code
 black src/
@@ -323,7 +338,7 @@ flake8 src/
 
 # Type checking
 mypy src/
-```
+```text
 
 ### Adding New LLM Provider
 
@@ -332,7 +347,8 @@ mypy src/
 3. Add provider to factory
 4. Add tests
 5. Update documentation
-```
+
+```text
 
 ---
 
@@ -374,7 +390,7 @@ def process_document(file_path: str, provider: str = 'anthropic') -> dict:
         45.99
     """
     pass
-```
+```text
 
 ---
 

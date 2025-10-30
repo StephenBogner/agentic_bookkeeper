@@ -80,6 +80,7 @@ Variance: TBD
 ```
 
 **Analysis:**
+
 - PDF processing uses PyMuPDF (fitz) for extraction
 - Performance depends on document size and complexity
 - Mocked tests validate timing constraints
@@ -96,6 +97,7 @@ Variance: TBD
 ```
 
 **Analysis:**
+
 - Image processing uses PIL/Pillow for loading
 - LLM vision API call is the primary bottleneck
 - Performance varies by LLM provider (XAI fastest at ~1.76s average)
@@ -112,6 +114,7 @@ Total Time (10 documents): TBD
 ```
 
 **Analysis:**
+
 - Batch processing is sequential (no parallelization)
 - Performance scales linearly with document count
 - Opportunity for parallel processing in future
@@ -131,6 +134,7 @@ Result: TBD
 ```
 
 **Analysis:**
+
 - SQLite query by primary key (id)
 - Indexed lookup provides O(log n) performance
 - Well within target for production use
@@ -146,6 +150,7 @@ Filter: transaction_type = 'expense'
 ```
 
 **Analysis:**
+
 - Transaction type filtering is efficient
 - Consider adding database index on transaction_type column if performance degrades
 
@@ -160,6 +165,7 @@ Date Range: Full year (365 days)
 ```
 
 **Analysis:**
+
 - Date range queries use BETWEEN clause
 - Performance excellent for typical use cases (monthly/quarterly reports)
 - Consider index on date column for large datasets (>10K transactions)
@@ -175,6 +181,7 @@ Dataset Size: 1000 transactions
 ```
 
 **Analysis:**
+
 - Full table scan for retrieving all transactions
 - Performance acceptable for datasets up to 10,000 transactions
 - Pagination recommended for larger datasets in GUI
@@ -189,6 +196,7 @@ Target: <250ms
 ```
 
 **Analysis:**
+
 - Category-based filtering and aggregation
 - In-memory Python aggregation after query
 - Performance acceptable for current use case
@@ -209,6 +217,7 @@ Date Range: Full year
 ```
 
 **Analysis:**
+
 - Report generation includes:
   - Database query for date range
   - Category aggregation
@@ -229,6 +238,7 @@ Date Range: Full year
 ```
 
 **Analysis:**
+
 - Expense report includes tax code mapping
 - Tax code lookup adds minimal overhead (<100ms)
 - Performance comparable to income statement generation
@@ -247,6 +257,7 @@ Target Variance: <200% (max < 2x min)
 ```
 
 **Analysis:**
+
 - Consistent performance across multiple executions
 - No performance degradation over time
 - Cache warmup effect minimal
@@ -266,6 +277,7 @@ Target: <200MB
 ```
 
 **Analysis:**
+
 - Baseline includes:
   - Python interpreter
   - Database connection
@@ -284,6 +296,7 @@ Documents Processed: 10
 ```
 
 **Analysis:**
+
 - Document processing memory includes:
   - PDF/image file loading
   - Image data in memory
@@ -301,6 +314,7 @@ Reports Generated: 20 (10 income + 10 expense)
 ```
 
 **Analysis:**
+
 - Report generation memory includes:
   - Transaction data retrieval
   - In-memory aggregation
@@ -319,6 +333,7 @@ Snapshots: [TBD, TBD, TBD, TBD, TBD] MB
 ```
 
 **Analysis:**
+
 - No memory leaks detected
 - Memory usage remains stable across iterations
 - Slight variance due to Python garbage collection
@@ -343,6 +358,7 @@ Slowest Operation: TBD (TBD ms)
 ```
 
 **Analysis:**
+
 - Report generation operations are most time-consuming
 - Database queries optimized with date range filtering
 - No single operation exceeds performance targets
@@ -358,6 +374,7 @@ Top Functions by Cumulative Time:
 ```
 
 **Analysis:**
+
 - cProfile used for detailed CPU profiling
 - Primary time spent in:
   - Database queries
@@ -418,12 +435,14 @@ Top Functions by Cumulative Time:
 ### Version 0.1.0 (2025-10-29)
 
 **Baseline Metrics:**
+
 - Document Processing: TBD
 - Database Queries: TBD
 - Report Generation: TBD
 - Memory Usage: TBD
 
 **Notes:**
+
 - Initial performance baseline established
 - All targets met
 - No critical performance issues identified
@@ -468,6 +487,7 @@ pytest src/agentic_bookkeeper/tests/test_performance.py -v --durations=10
 ### Performance Targets Review
 
 Performance targets are reviewed and updated:
+
 - **Frequency:** Quarterly
 - **Trigger Events:** Major releases, architecture changes
 - **Review Process:** Analyze test results, user feedback, benchmark competitors

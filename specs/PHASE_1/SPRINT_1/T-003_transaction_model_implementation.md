@@ -17,6 +17,7 @@
 Implement the Transaction model class with comprehensive data validation, serialization methods, and business logic to represent individual financial transactions in the Agentic Bookkeeper application.
 
 **Success Criteria:**
+
 - Transaction model validates all fields correctly
 - Invalid data raises appropriate exceptions
 - Serialization/deserialization works correctly
@@ -49,13 +50,13 @@ Implement the Transaction model class with comprehensive data validation, serial
    - Implement from_json() for import compatibility
 
 4. **String Representation**
-   - Implement __str__() for human-readable output
-   - Implement __repr__() for debugging
+   - Implement **str**() for human-readable output
+   - Implement **repr**() for debugging
    - Include key fields in representations
 
 5. **Comparison Methods**
-   - Implement __eq__() for equality comparison
-   - Implement __lt__(), __le__(), __gt__(), __ge__() for sorting by date
+   - Implement **eq**() for equality comparison
+   - Implement **lt**(), **le**(), **gt**(), **ge**() for sorting by date
    - Support sorting by different fields
 
 6. **Business Logic Methods**
@@ -198,6 +199,7 @@ def validate_amount(amount: float, field_name: str = "amount") -> None:
 ## ACCEPTANCE CRITERIA
 
 ### Must Have
+
 - [ ] Transaction class implemented with all required fields
 - [ ] Data validation working for all fields
 - [ ] Invalid dates raise ValueError
@@ -205,18 +207,20 @@ def validate_amount(amount: float, field_name: str = "amount") -> None:
 - [ ] Negative amounts raise ValueError
 - [ ] to_dict() serialization working
 - [ ] from_dict() deserialization working
-- [ ] __str__() and __repr__() implemented
+- [ ] **str**() and **repr**() implemented
 - [ ] Comparison methods for sorting implemented
 - [ ] Type hints complete and accurate
 - [ ] Docstrings following Google style
 
 ### Should Have
+
 - [ ] Category validation against CRA/IRS lists
 - [ ] JSON serialization (to_json/from_json)
 - [ ] Timezone-aware datetime handling
 - [ ] Deep validation of all edge cases
 
 ### Nice to Have
+
 - [ ] Currency formatting methods
 - [ ] Transaction cloning method
 - [ ] Audit trail for changes
@@ -227,12 +231,14 @@ def validate_amount(amount: float, field_name: str = "amount") -> None:
 ## CONTEXT REQUIRED
 
 ### Information Needed
+
 - Database schema from T-002
 - CRA/IRS category lists (will be in config/)
 - Date format standards (ISO 8601)
 - Python dataclass patterns
 
 ### Artifacts from Previous Tasks
+
 - T-001: Project structure
 - T-002: Database schema definition
 
@@ -241,9 +247,11 @@ def validate_amount(amount: float, field_name: str = "amount") -> None:
 ## EXPECTED DELIVERABLES
 
 ### Files to Create
+
 - `src/agentic_bookkeeper/models/transaction.py` - Transaction model class
 
 ### Files to Modify
+
 - `src/agentic_bookkeeper/models/__init__.py` - Export Transaction class
 
 ---
@@ -306,11 +314,11 @@ print('Equal:', t == t2)
 1. **Create Transaction Class**
    - Use @dataclass decorator for simplicity
    - Define all fields with proper types
-   - Add __post_init__ for validation
+   - Add **post_init** for validation
 
 2. **Implement Validation**
    - Create validation helper functions
-   - Call validation in __post_init__
+   - Call validation in **post_init**
    - Raise ValueError with clear messages
 
 3. **Implement Serialization**
@@ -319,12 +327,12 @@ print('Equal:', t == t2)
    - Handle None values properly
 
 4. **Implement String Methods**
-   - __str__(): User-friendly format
-   - __repr__(): Developer format with all fields
+   - **str**(): User-friendly format
+   - **repr**(): Developer format with all fields
 
 5. **Implement Comparison Methods**
    - Use functools.total_ordering decorator
-   - Define __eq__ and __lt__
+   - Define **eq** and **lt**
    - Sort by date primarily
 
 6. **Add Business Logic**
@@ -396,7 +404,7 @@ def __repr__(self) -> str:
 - For critical financial applications, consider Decimal type
 - Timestamps stored in UTC as ISO 8601 strings
 - Validation happens at object creation (fail-fast principle)
-- Dataclass provides automatic __init__, __eq__, __hash__
+- Dataclass provides automatic **init**, **eq**, **hash**
 
 ### Potential Issues
 
@@ -419,7 +427,7 @@ def __repr__(self) -> str:
 - [ ] Transaction class created with all fields
 - [ ] Validation implemented and tested
 - [ ] Serialization methods working (to_dict/from_dict)
-- [ ] String methods implemented (__str__/__repr__)
+- [ ] String methods implemented (**str**/**repr**)
 - [ ] Comparison methods implemented for sorting
 - [ ] Business logic methods implemented
 - [ ] Type hints complete

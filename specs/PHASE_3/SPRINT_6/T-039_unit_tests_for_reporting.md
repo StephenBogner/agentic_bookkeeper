@@ -21,6 +21,7 @@ Create comprehensive unit tests for report generator, templates, exporters, and 
 ## REQUIREMENTS
 
 ### Functional Requirements
+
 - Test income statement generation
 - Test expense report generation
 - Test date range filtering
@@ -46,6 +47,7 @@ Create comprehensive unit tests for report generator, templates, exporters, and 
 ## EXPECTED DELIVERABLES
 
 **Files to Create:**
+
 - `src/agentic_bookkeeper/tests/test_report_generator.py`
 - `src/agentic_bookkeeper/tests/test_exporters.py`
 - `src/agentic_bookkeeper/tests/test_gui_reports.py`

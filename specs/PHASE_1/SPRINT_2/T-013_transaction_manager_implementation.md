@@ -21,6 +21,7 @@ Implement the transaction manager that provides CRUD operations, search, filteri
 ## REQUIREMENTS
 
 ### Functional Requirements
+
 - Create new transactions with validation
 - Retrieve transactions by ID
 - Update existing transactions
@@ -33,6 +34,7 @@ Implement the transaction manager that provides CRUD operations, search, filteri
 - Maintain transaction audit trail
 
 ### Non-Functional Requirements
+
 - Database queries must complete in <50ms average
 - Support efficient filtering on 10,000+ transactions
 - Transaction operations must be atomic
@@ -57,9 +59,11 @@ Implement the transaction manager that provides CRUD operations, search, filteri
 ## EXPECTED DELIVERABLES
 
 **Files to Create:**
+
 - `src/agentic_bookkeeper/core/transaction_manager.py`
 
 **Files to Modify:**
+
 - `src/agentic_bookkeeper/core/__init__.py` (export manager)
 
 ---

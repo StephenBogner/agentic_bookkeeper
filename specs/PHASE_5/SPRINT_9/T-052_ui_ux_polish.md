@@ -21,6 +21,7 @@ Polish UI/UX with consistent styling, improved labels, tooltips, better spacing,
 ## REQUIREMENTS
 
 ### Functional Requirements
+
 - Review UI consistency across application
 - Improve button labels for clarity
 - Add tooltips to all controls

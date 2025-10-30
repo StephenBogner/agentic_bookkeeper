@@ -21,6 +21,7 @@ Create Windows executable using PyInstaller with all dependencies, resources, in
 ## REQUIREMENTS
 
 ### Functional Requirements
+
 - Create PyInstaller spec file
 - Include all dependencies
 - Include resources (icons, configs)
@@ -46,6 +47,7 @@ Create Windows executable using PyInstaller with all dependencies, resources, in
 ## EXPECTED DELIVERABLES
 
 **Files to Create:**
+
 - `agentic_bookkeeper.spec`
 - `installer/windows_installer.nsi`
 - `build_windows.bat`

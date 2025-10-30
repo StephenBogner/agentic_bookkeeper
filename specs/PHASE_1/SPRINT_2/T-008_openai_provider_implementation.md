@@ -21,6 +21,7 @@ Implement the OpenAI LLM provider class that extracts transaction data from fina
 ## REQUIREMENTS
 
 ### Functional Requirements
+
 - Implement LLMProvider abstract base class
 - Authenticate with OpenAI API using API key
 - Create document extraction prompt optimized for receipts/invoices
@@ -31,6 +32,7 @@ Implement the OpenAI LLM provider class that extracts transaction data from fina
 - Support rate limiting
 
 ### Non-Functional Requirements
+
 - API calls must complete within 30 seconds
 - Retry with exponential backoff on transient failures
 - Log all API interactions for debugging
@@ -54,9 +56,11 @@ Implement the OpenAI LLM provider class that extracts transaction data from fina
 ## EXPECTED DELIVERABLES
 
 **Files to Create:**
+
 - `src/agentic_bookkeeper/llm/openai_provider.py`
 
 **Files to Modify:**
+
 - `src/agentic_bookkeeper/llm/__init__.py` (export provider)
 
 ---

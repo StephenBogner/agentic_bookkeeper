@@ -21,6 +21,7 @@ Prepare Linux package with setup.py for pip installation, wheel distribution, an
 ## REQUIREMENTS
 
 ### Functional Requirements
+
 - Create setup.py for pip installation
 - Test pip install from source
 - Create wheel distribution
@@ -44,6 +45,7 @@ Prepare Linux package with setup.py for pip installation, wheel distribution, an
 ## EXPECTED DELIVERABLES
 
 **Files to Create:**
+
 - `setup.py`
 - `MANIFEST.in`
 - `install.sh`

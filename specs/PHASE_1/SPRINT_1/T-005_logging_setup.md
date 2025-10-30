@@ -17,6 +17,7 @@
 Implement a comprehensive logging system with structured logging, multiple handlers, log rotation, and sensitive data filtering to support debugging and monitoring of the Agentic Bookkeeper application.
 
 **Success Criteria:**
+
 - Logs written to both file and console
 - Log rotation works correctly
 - Different log levels filter appropriately
@@ -257,6 +258,7 @@ class StructuredLogger:
 ## ACCEPTANCE CRITERIA
 
 ### Must Have
+
 - [ ] Logging module created in src/utils/logger.py
 - [ ] setup_logging() function working
 - [ ] Console handler outputs logs
@@ -268,12 +270,14 @@ class StructuredLogger:
 - [ ] Type hints and docstrings complete
 
 ### Should Have
+
 - [ ] Structured logging helper implemented
 - [ ] Context information in logs
 - [ ] Configurable via environment variables
 - [ ] Compressed log rotation
 
 ### Nice to Have
+
 - [ ] Color-coded console output
 - [ ] JSON log format option
 - [ ] Log analysis tools
@@ -284,11 +288,13 @@ class StructuredLogger:
 ## CONTEXT REQUIRED
 
 ### Information Needed
+
 - Log directory location (from config)
 - Default log level (from environment)
 - Python logging best practices
 
 ### Artifacts from Previous Tasks
+
 - T-001: Project structure
 - Directory for logs (create if not exists)
 
@@ -297,9 +303,11 @@ class StructuredLogger:
 ## EXPECTED DELIVERABLES
 
 ### Files to Create
+
 - `src/agentic_bookkeeper/utils/logger.py` - Logging setup and utilities
 
 ### Files to Modify
+
 - `src/agentic_bookkeeper/utils/__init__.py` - Export logging functions
 - `.env.example` - Add LOG_LEVEL and LOG_DIR variables
 

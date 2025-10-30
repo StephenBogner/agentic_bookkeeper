@@ -21,6 +21,7 @@ Implement core report generator with base report class, date range filtering, da
 ## REQUIREMENTS
 
 ### Functional Requirements
+
 - Create base report class
 - Implement date range filtering logic
 - Add data aggregation methods (sum, group by category)
@@ -30,6 +31,7 @@ Implement core report generator with base report class, date range filtering, da
 - Support multiple tax jurisdictions (CRA/IRS)
 
 ### Non-Functional Requirements
+
 - Report generation must be fast (<5 seconds for 1000 transactions)
 - Calculations must be accurate to 2 decimal places
 - Reports must handle edge cases (zero, negative, missing data)
@@ -51,6 +53,7 @@ Implement core report generator with base report class, date range filtering, da
 ## EXPECTED DELIVERABLES
 
 **Files to Create:**
+
 - `src/agentic_bookkeeper/core/report_generator.py`
 
 ---

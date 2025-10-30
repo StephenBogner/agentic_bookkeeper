@@ -21,6 +21,7 @@ Implement the document processor that detects document types, preprocesses files
 ## REQUIREMENTS
 
 ### Functional Requirements
+
 - Detect document type (PDF, JPG, PNG, JPEG)
 - Extract text from PDFs using pypdf
 - Preprocess images with Pillow (resize, enhance)
@@ -32,6 +33,7 @@ Implement the document processor that detects document types, preprocesses files
 - Support fallback to OCR if LLM fails
 
 ### Non-Functional Requirements
+
 - Document processing must complete within 30 seconds
 - Support images up to 20MB
 - Support multi-page PDFs
@@ -56,9 +58,11 @@ Implement the document processor that detects document types, preprocesses files
 ## EXPECTED DELIVERABLES
 
 **Files to Create:**
+
 - `src/agentic_bookkeeper/core/document_processor.py`
 
 **Files to Modify:**
+
 - `src/agentic_bookkeeper/core/__init__.py` (export processor)
 
 ---

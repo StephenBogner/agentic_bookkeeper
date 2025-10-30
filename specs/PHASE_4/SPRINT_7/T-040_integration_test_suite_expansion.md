@@ -21,6 +21,7 @@ Expand integration test suite to cover complete user workflows from setup throug
 ## REQUIREMENTS
 
 ### Functional Requirements
+
 - Test complete workflow: setup → document → review → report
 - Test all LLM providers in integration
 - Test error recovery scenarios
@@ -45,6 +46,7 @@ Expand integration test suite to cover complete user workflows from setup throug
 ## EXPECTED DELIVERABLES
 
 **Files to Modify:**
+
 - `src/agentic_bookkeeper/tests/test_integration.py`
 
 ---

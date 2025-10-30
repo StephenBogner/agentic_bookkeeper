@@ -17,6 +17,7 @@
 Implement the SQLite database schema with tables for transactions and configuration, including connection management, initialization, and basic CRUD operations.
 
 **Success Criteria:**
+
 - Database creates successfully with correct schema
 - Tables have proper constraints and indexes
 - Connection manager handles errors gracefully
@@ -138,6 +139,7 @@ class Database:
 ## ACCEPTANCE CRITERIA
 
 ### Must Have
+
 - [ ] Database class implemented in src/models/database.py
 - [ ] Transactions table created with all fields
 - [ ] Config table created with key-value structure
@@ -148,12 +150,14 @@ class Database:
 - [ ] Type hints and docstrings complete
 
 ### Should Have
+
 - [ ] Transaction support (commit/rollback)
 - [ ] Connection context manager (with statement)
 - [ ] Schema validation on startup
 - [ ] Database path configuration from environment
 
 ### Nice to Have
+
 - [ ] Migration framework foundation
 - [ ] Query logging for debugging
 - [ ] Connection pooling
@@ -164,11 +168,13 @@ class Database:
 ## CONTEXT REQUIRED
 
 ### Information Needed
+
 - Database file location (from .env or default)
 - Project coding standards (from CLAUDE.md)
 - Maximum file size limit (500 lines from CLAUDE.md)
 
 ### Artifacts from Previous Tasks
+
 - T-001: Project structure and configuration
 - Virtual environment setup
 - Dependencies installed (sqlite3 is built-in)
@@ -178,10 +184,12 @@ class Database:
 ## EXPECTED DELIVERABLES
 
 ### Files to Create
+
 - `src/agentic_bookkeeper/models/database.py` - Database connection manager
 - `src/agentic_bookkeeper/models/__init__.py` - Update with database export
 
 ### Files to Modify
+
 - None initially (new module)
 
 ---

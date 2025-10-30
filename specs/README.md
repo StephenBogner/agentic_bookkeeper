@@ -81,6 +81,7 @@ cp specs/PHASE_1/SPRINT_1/T-001_example_task.md specs/PHASE_X/SPRINT_Y/T-XXX_new
 ### Step 2: Update Task Metadata
 
 Edit the header section with:
+
 - New task ID (e.g., T-002, T-003, etc.)
 - Task name describing what it accomplishes
 - Correct phase and sprint
@@ -90,6 +91,7 @@ Edit the header section with:
 ### Step 3: Define Requirements
 
 Fill in:
+
 - **Objective**: What does this task accomplish?
 - **Functional Requirements**: What functionality must be implemented?
 - **Non-Functional Requirements**: Performance, security, maintainability, etc.
@@ -98,6 +100,7 @@ Fill in:
 ### Step 4: Create Implementation Plan
 
 Break the task into steps:
+
 1. Each step should have a clear objective
 2. List specific actions to take
 3. Define expected output
@@ -106,6 +109,7 @@ Break the task into steps:
 ### Step 5: Document Dependencies
 
 List:
+
 - External dependencies (libraries, tools, etc.)
 - Internal dependencies (other components)
 - Task dependencies (which tasks must complete first)
@@ -132,6 +136,7 @@ The simplest way to execute tasks:
 ```
 
 This command:
+
 1. Reads NEXT_TASK_SPEC from PROJECT_STATUS.md
 2. Loads the task specification
 3. Reads CONTEXT.md for cross-task knowledge
@@ -231,6 +236,7 @@ Tasks can be in one of these states:
 **Objective:** Establish project foundation
 
 #### Sprint 1: Initial Setup
+
 - Project scaffolding
 - Workflow initialization
 - Development environment
@@ -273,6 +279,7 @@ If a task is too large, break it into multiple smaller tasks.
 ### Dependencies
 
 Always document:
+
 - What this task depends on (must complete first)
 - What depends on this task (will be blocked until this completes)
 - External dependencies (libraries, tools, services)
@@ -280,6 +287,7 @@ Always document:
 ### Context Updates
 
 After each task:
+
 - Update CONTEXT.md with new patterns
 - Document gotchas or issues discovered
 - Add new utilities or helpers created
@@ -375,6 +383,7 @@ all sections filled in.
 **End of README.md**
 
 For more information:
+
 - See PROJECT_STATUS.md for current workflow state
 - See CONTEXT.md for cross-task context and patterns
 - See T-001_example_task.md for complete task spec example

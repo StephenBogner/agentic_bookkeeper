@@ -21,6 +21,7 @@ Create income statement template showing revenue, expenses by category, and net 
 ## REQUIREMENTS
 
 ### Functional Requirements
+
 - Revenue section with total income
 - Expense section grouped by category
 - Net income calculation (revenue - expenses)
@@ -43,6 +44,7 @@ Create income statement template showing revenue, expenses by category, and net 
 ## EXPECTED DELIVERABLES
 
 **Files to Create:**
+
 - Template methods in `report_generator.py`
 
 ---
@@ -58,6 +60,7 @@ pytest src/agentic_bookkeeper/tests/test_report_generator.py::test_income_statem
 ## NOTES
 
 Standard income statement format:
+
 - Revenue (total income)
 - Cost of Goods Sold
 - Operating Expenses (by category)

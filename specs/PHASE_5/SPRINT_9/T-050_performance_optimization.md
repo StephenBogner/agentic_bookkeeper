@@ -21,6 +21,7 @@ Final performance optimization based on profiling: optimize database queries, ad
 ## REQUIREMENTS
 
 ### Functional Requirements
+
 - Optimize database queries based on profiling
 - Add database indexes if needed
 - Optimize image preprocessing

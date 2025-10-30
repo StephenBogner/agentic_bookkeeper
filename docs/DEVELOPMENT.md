@@ -48,45 +48,51 @@ This guide helps developers set up their development environment and provides in
 # Clone from GitHub
 git clone https://github.com/your-org/agentic_bookkeeper.git
 cd agentic_bookkeeper
-```
+```text
 
 ### 2. Create Virtual Environment
 
 **Linux/macOS:**
+
 ```bash
 python3 -m venv venv
 source venv/bin/activate
-```
+```text
 
 **Windows:**
+
 ```cmd
 python -m venv venv
 venv\Scripts\activate
-```
+```text
 
 **Verify activation:**
+
 ```bash
 which python  # Linux/macOS
 where python  # Windows
 # Should show path to venv/bin/python
-```
+```text
 
 ### 3. Install Dependencies
 
 **Production Dependencies:**
+
 ```bash
 pip install -r requirements.txt
-```
+```text
 
 **Development Dependencies:**
+
 ```bash
 pip install -r requirements-dev.txt
-```
+```text
 
 **Verify installation:**
+
 ```bash
 pip list
-```
+```text
 
 ### 4. Configure Environment Variables
 
@@ -106,24 +112,26 @@ LOG_LEVEL=DEBUG
 
 # Database (optional, uses default if not set)
 DATABASE_PATH=~/.agentic_bookkeeper/bookkeeper.db
-```
+```text
 
 **Load environment variables:**
+
 ```bash
 # Automatically loaded by python-dotenv
-```
+```text
 
 ### 5. Initialize Database
 
 ```bash
 # Run database initialization
 python -c "from src.agentic_bookkeeper.models.database import Database; db = Database('~/.agentic_bookkeeper/bookkeeper.db'); db.connect(); db.initialize_schema()"
-```
+```text
 
 Or run the application once:
+
 ```bash
 python -m src.agentic_bookkeeper.main
-```
+```text
 
 ### 6. Verify Setup
 
@@ -136,13 +144,13 @@ pytest
 # collected 554 items
 # ...
 # ============================== 554 passed in 79.23s ==============================
-```
+```text
 
 ---
 
 ## Project Structure
 
-```
+text
 agentic_bookkeeper_module/
 ├── docs/                          # Documentation
 │   ├── ARCHITECTURE.md           # System architecture
@@ -204,7 +212,7 @@ agentic_bookkeeper_module/
 ├── CONTEXT.md                    # Persistent context
 ├── CLAUDE.md                     # Project memory
 └── README.md                     # Project overview
-```
+```text
 
 ---
 
@@ -213,22 +221,24 @@ agentic_bookkeeper_module/
 ### Running the Application
 
 **GUI Mode (default):**
+
 ```bash
 # From project root
 python -m src.agentic_bookkeeper.main
 
 # Or with Python path
 PYTHONPATH=src python -m agentic_bookkeeper.main
-```
+```text
 
 **CLI Mode (future feature):**
+
 ```bash
 # Process single document
 python -m src.agentic_bookkeeper.main process document.pdf
 
 # Generate report
 python -m src.agentic_bookkeeper.main report income-statement --start 2025-01-01 --end 2025-12-31
-```
+```text
 
 ### Running with Debug Logging
 
@@ -240,11 +250,12 @@ $env:LOG_LEVEL="DEBUG"  # Windows PowerShell
 
 # Run application
 python -m src.agentic_bookkeeper.main
-```
+```text
 
 ### Building Distribution
 
 **PyInstaller Executable (Windows):**
+
 ```bash
 # Install PyInstaller
 pip install pyinstaller
@@ -257,15 +268,16 @@ pyinstaller --name="Agentic Bookkeeper" \
             src/agentic_bookkeeper/main.py
 
 # Output: dist/Agentic Bookkeeper.exe
-```
+```text
 
 **Python Package:**
+
 ```bash
 # Build wheel and source distribution
 python -m build
 
 # Output: dist/agentic_bookkeeper-0.1.0-py3-none-any.whl
-```
+```text
 
 ---
 
@@ -274,16 +286,19 @@ python -m build
 ### Running Tests
 
 **All Tests:**
+
 ```bash
 pytest
-```
+```text
 
 **With Coverage:**
+
 ```bash
 pytest --cov=agentic_bookkeeper --cov-report=html
-```
+```text
 
 **Specific Test Categories:**
+
 ```bash
 # Unit tests only
 pytest tests/ -k "not integration and not performance"
@@ -296,31 +311,36 @@ pytest tests/test_performance.py
 
 # GUI tests only
 pytest tests/test_gui_*.py
-```
+```text
 
 **Specific Test File:**
+
 ```bash
 pytest tests/test_document_processor.py
-```
+```text
 
 **Specific Test Function:**
+
 ```bash
 pytest tests/test_document_processor.py::test_process_pdf
-```
+```text
 
 **Verbose Output:**
+
 ```bash
 pytest -v
-```
+```text
 
 **Show Print Statements:**
+
 ```bash
 pytest -s
-```
+```text
 
 ### Test Coverage
 
 **View Coverage Report:**
+
 ```bash
 # Generate HTML report
 pytest --cov=agentic_bookkeeper --cov-report=html
@@ -329,9 +349,10 @@ pytest --cov=agentic_bookkeeper --cov-report=html
 xdg-open htmlcov/index.html  # Linux
 open htmlcov/index.html      # macOS
 start htmlcov/index.html     # Windows
-```
+```text
 
 **Coverage Targets:**
+
 - Overall: >80% (currently 91%)
 - New code: >90%
 - Critical modules: >95%
@@ -339,6 +360,7 @@ start htmlcov/index.html     # Windows
 ### Writing Tests
 
 **Test File Structure:**
+
 ```python
 import pytest
 from agentic_bookkeeper.core.module import ClassName
@@ -360,9 +382,10 @@ class TestClassName:
         """Test method with invalid input raises error."""
         with pytest.raises(ValueError):
             instance.method(invalid_input)
-```
+```text
 
 **Using Fixtures:**
+
 ```python
 @pytest.fixture
 def sample_transaction():
@@ -379,9 +402,10 @@ def test_create_transaction(transaction_manager, sample_transaction):
     """Test transaction creation."""
     transaction_id = transaction_manager.create_transaction(sample_transaction)
     assert transaction_id > 0
-```
+```text
 
 **Mocking:**
+
 ```python
 def test_with_mock_llm(mocker):
     """Test with mocked LLM provider."""
@@ -396,7 +420,7 @@ def test_with_mock_llm(mocker):
 
     assert result is not None
     mock_provider.extract_transaction.assert_called_once()
-```
+```text
 
 ---
 
@@ -405,6 +429,7 @@ def test_with_mock_llm(mocker):
 ### VS Code Debugging
 
 **Launch Configuration** (`.vscode/launch.json`):
+
 ```json
 {
     "version": "0.2.0",
@@ -433,7 +458,7 @@ def test_with_mock_llm(mocker):
         }
     ]
 }
-```
+```text
 
 ### PyCharm Debugging
 
@@ -450,26 +475,29 @@ def test_with_mock_llm(mocker):
 ### Command Line Debugging
 
 **Using pdb:**
+
 ```python
 import pdb
 
 def problematic_function():
     pdb.set_trace()  # Breakpoint
     # Debug code here
-```
+```text
 
 **Using pytest debugger:**
+
 ```bash
 # Drop into debugger on failure
 pytest --pdb
 
 # Drop into debugger on first failure
 pytest -x --pdb
-```
+```text
 
 ### Logging for Debugging
 
 **Enable Debug Logging:**
+
 ```python
 import logging
 
@@ -480,16 +508,17 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 logger.debug("Debug message with variables: %s", variable)
-```
+```text
 
 **Log to File:**
+
 ```python
 logging.basicConfig(
     level=logging.DEBUG,
     filename='debug.log',
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
-```
+```text
 
 ---
 
@@ -498,6 +527,7 @@ logging.basicConfig(
 ### Adding a New Feature
 
 1. **Create Feature Branch**
+
    ```bash
    git checkout -b feature/new-feature
    ```
@@ -508,6 +538,7 @@ logging.basicConfig(
    - Write docstrings
 
 3. **Write Tests**
+
    ```bash
    # Create test file
    touch tests/test_new_feature.py
@@ -517,11 +548,13 @@ logging.basicConfig(
    ```
 
 4. **Run All Tests**
+
    ```bash
    pytest
    ```
 
 5. **Check Code Quality**
+
    ```bash
    black src/ tests/
    flake8 src/ tests/
@@ -534,6 +567,7 @@ logging.basicConfig(
    - Architecture if architectural change
 
 7. **Commit and Push**
+
    ```bash
    git add .
    git commit -m "feat: Add new feature"
@@ -545,11 +579,13 @@ logging.basicConfig(
 ### Fixing a Bug
 
 1. **Create Bug Fix Branch**
+
    ```bash
    git checkout -b bugfix/fix-issue-123
    ```
 
 2. **Write Failing Test**
+
    ```python
    def test_bug_reproduction():
        """Test that reproduces the bug."""
@@ -558,6 +594,7 @@ logging.basicConfig(
    ```
 
 3. **Fix the Bug**
+
    ```python
    def buggy_function():
        # Fixed implementation
@@ -565,16 +602,19 @@ logging.basicConfig(
    ```
 
 4. **Verify Test Passes**
+
    ```bash
    pytest tests/test_bugfix.py
    ```
 
 5. **Run Full Test Suite**
+
    ```bash
    pytest
    ```
 
 6. **Commit and Push**
+
    ```bash
    git add .
    git commit -m "fix: Fix issue with X (closes #123)"
@@ -584,11 +624,13 @@ logging.basicConfig(
 ### Adding a New LLM Provider
 
 1. **Create Provider File**
+
    ```bash
    touch src/agentic_bookkeeper/llm/newprovider_provider.py
    ```
 
 2. **Implement Provider**
+
    ```python
    from agentic_bookkeeper.llm.llm_provider import LLMProvider, ExtractionResult
 
@@ -607,11 +649,13 @@ logging.basicConfig(
    ```
 
 3. **Write Tests**
+
    ```bash
    touch tests/test_newprovider_provider.py
    ```
 
 4. **Add to Settings Dialog**
+
    ```python
    # In gui/settings_dialog.py
    self.provider_combo.addItem("New Provider")
@@ -624,6 +668,7 @@ logging.basicConfig(
 ### Database Migrations
 
 **Schema Changes:**
+
 ```python
 # In models/database.py
 
@@ -635,9 +680,10 @@ def _migrate_to_version_2(self):
 
         # Update version
         cursor.execute("PRAGMA user_version = 2")
-```
+```text
 
 **Testing Migrations:**
+
 ```python
 def test_migration_from_v1_to_v2():
     """Test database migration."""
@@ -649,7 +695,7 @@ def test_migration_from_v1_to_v2():
 
     # Verify schema
     assert has_column(db_v1, "transactions", "new_field")
-```
+```text
 
 ---
 
@@ -662,6 +708,7 @@ def test_migration_from_v1_to_v2():
 **Problem**: `ModuleNotFoundError: No module named 'agentic_bookkeeper'`
 
 **Solution**:
+
 ```bash
 # Add src to PYTHONPATH
 export PYTHONPATH="${PYTHONPATH}:${PWD}/src"  # Linux/macOS
@@ -669,13 +716,14 @@ set PYTHONPATH=%PYTHONPATH%;%CD%\src          # Windows CMD
 
 # Or run with Python path
 PYTHONPATH=src python -m agentic_bookkeeper.main
-```
+```text
 
 #### Database Locked
 
 **Problem**: `sqlite3.OperationalError: database is locked`
 
 **Solution**:
+
 ```bash
 # Close all connections to database
 # Delete lock files
@@ -683,26 +731,28 @@ rm ~/.agentic_bookkeeper/bookkeeper.db-shm
 rm ~/.agentic_bookkeeper/bookkeeper.db-wal
 
 # Restart application
-```
+```text
 
 #### Test Failures
 
 **Problem**: Tests fail with "Connection refused" or "Timeout"
 
 **Solution**:
+
 ```bash
 # Check if LLM API keys are set
 echo $OPENAI_API_KEY
 
 # Use mock providers for tests
 pytest tests/ --mock-llm
-```
+```text
 
 #### GUI Not Launching
 
 **Problem**: GUI doesn't appear on launch
 
 **Solution**:
+
 ```bash
 # Check Qt platform plugin
 export QT_DEBUG_PLUGINS=1  # Linux/macOS
@@ -713,21 +763,24 @@ sudo apt-get install libxcb-cursor0
 
 # Run application
 python -m src.agentic_bookkeeper.main
-```
+```text
 
 ### Performance Issues
 
 **Slow Document Processing:**
+
 - Check LLM API response times
 - Verify network connection
 - Consider using faster models (e.g., XAI Grok)
 
 **Slow Database Queries:**
+
 - Check if indexes exist: `PRAGMA index_list(transactions)`
 - Verify WAL mode enabled: `PRAGMA journal_mode`
 - Analyze query plan: `EXPLAIN QUERY PLAN SELECT ...`
 
 **High Memory Usage:**
+
 - Check for large result sets (use pagination)
 - Verify no circular references (memory leaks)
 - Use memory profiler: `pip install memory_profiler`
@@ -739,6 +792,7 @@ python -m src.agentic_bookkeeper.main
 ### Code Quality Tools
 
 **Black (Formatting):**
+
 ```bash
 # Format code
 black src/ tests/
@@ -747,32 +801,36 @@ black src/ tests/
 black --check src/ tests/
 
 # Configuration: pyproject.toml
-```
+```text
 
 **Flake8 (Linting):**
+
 ```bash
 # Lint code
 flake8 src/ tests/
 
 # Configuration: .flake8 or setup.cfg
-```
+```text
 
 **Mypy (Type Checking):**
+
 ```bash
 # Type check
 mypy src/
 
 # Configuration: mypy.ini or pyproject.toml
-```
+```text
 
 ### Database Tools
 
 **DB Browser for SQLite:**
+
 - Download: https://sqlitebrowser.org/
 - Open: `~/.agentic_bookkeeper/bookkeeper.db`
 - View schema, run queries, inspect data
 
 **SQLite CLI:**
+
 ```bash
 # Open database
 sqlite3 ~/.agentic_bookkeeper/bookkeeper.db
@@ -781,29 +839,32 @@ sqlite3 ~/.agentic_bookkeeper/bookkeeper.db
 SELECT * FROM transactions;
 .schema transactions
 .exit
-```
+```text
 
 ### Profiling Tools
 
 **cProfile (CPU Profiling):**
+
 ```bash
 python -m cProfile -o profile.stats -m agentic_bookkeeper.main
 
 # View results
 python -c "import pstats; p = pstats.Stats('profile.stats'); p.sort_stats('cumulative'); p.print_stats(20)"
-```
+```text
 
 **Memory Profiler:**
+
 ```bash
 pip install memory_profiler
 
 # Add @profile decorator to function
 python -m memory_profiler script.py
-```
+```text
 
 ### Git Hooks
 
 **Pre-Commit Hook** (`.git/hooks/pre-commit`):
+
 ```bash
 #!/bin/bash
 # Run tests before commit
@@ -826,12 +887,13 @@ if [ $? -ne 0 ]; then
 fi
 
 exit 0
-```
+```text
 
 Make executable:
+
 ```bash
 chmod +x .git/hooks/pre-commit
-```
+```text
 
 ---
 

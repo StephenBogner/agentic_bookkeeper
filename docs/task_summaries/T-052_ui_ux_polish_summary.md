@@ -91,7 +91,7 @@ Comprehensive UI/UX polish with tooltips, keyboard shortcuts, and improved navig
 
 ### Git Diff Statistics
 
-```
+text
  src/agentic_bookkeeper/gui/main_window.py               | 117 additions
  src/agentic_bookkeeper/gui/dashboard_widget.py          |  20 additions
  src/agentic_bookkeeper/gui/transactions_widget.py       |  35 additions
@@ -102,13 +102,15 @@ Comprehensive UI/UX polish with tooltips, keyboard shortcuts, and improved navig
  src/agentic_bookkeeper/gui/reports_widget.py            |  22 additions
  src/agentic_bookkeeper/tests/test_gui_main_window.py    |  12 additions
  9 files changed, 300 insertions(+)
-```
+
+```text
 
 ## Implementation Notes
 
 ### Keyboard Shortcuts Implemented
 
 **Global Shortcuts** (main_window.py):
+
 - **Ctrl+,**: Open Settings
 - **Ctrl+Q**: Exit Application
 - **Ctrl+1**: Switch to Dashboard tab
@@ -119,15 +121,18 @@ Comprehensive UI/UX polish with tooltips, keyboard shortcuts, and improved navig
 - **Ctrl+/**: Show Keyboard Shortcuts reference
 
 **Transactions View**:
+
 - **Ctrl+F**: Focus search box
 - **Ctrl+N**: Add new transaction
 - **Delete**: Delete selected transaction
 
 **Reports View**:
+
 - **Ctrl+G**: Generate report preview
 - **Ctrl+E**: Export report
 
 **Dialogs**:
+
 - **Ctrl+S**: Save/Accept (transaction edit, add, document review)
 - **Ctrl+R**: Reject (document review)
 - **Esc**: Cancel/Close (built-in Qt behavior)

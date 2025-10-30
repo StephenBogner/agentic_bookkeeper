@@ -17,6 +17,7 @@
 Create comprehensive unit tests for the database layer, transaction model, and configuration management to ensure >80% code coverage and validate all functionality with test fixtures for sample data.
 
 **Success Criteria:**
+
 - All tests pass
 - Coverage >80% for database and model modules
 - Test fixtures provide realistic data
@@ -42,7 +43,7 @@ Create comprehensive unit tests for the database layer, transaction model, and c
    - Test transaction creation with valid data
    - Test transaction validation (date, amount, type)
    - Test serialization (to_dict, from_dict)
-   - Test string representations (__str__, __repr__)
+   - Test string representations (**str**, **repr**)
    - Test comparison methods
    - Test business logic methods
    - Test edge cases (None values, boundaries)
@@ -135,6 +136,7 @@ class TestDatabase:
 ### pytest Configuration
 
 **conftest.py:**
+
 ```python
 """
 Shared pytest fixtures and configuration.
@@ -229,6 +231,7 @@ def temp_config_dir(tmp_path):
 ## ACCEPTANCE CRITERIA
 
 ### Must Have
+
 - [ ] test_database.py created with comprehensive tests
 - [ ] test_transaction.py created with validation tests
 - [ ] test_config.py created with configuration tests
@@ -241,12 +244,14 @@ def temp_config_dir(tmp_path):
 - [ ] Tests are isolated and clean up properly
 
 ### Should Have
+
 - [ ] Edge case testing (empty data, None values)
 - [ ] Error condition testing
 - [ ] Parametrized tests for multiple scenarios
 - [ ] Performance benchmarks
 
 ### Nice to Have
+
 - [ ] Integration tests between components
 - [ ] Property-based testing with hypothesis
 - [ ] Mutation testing
@@ -257,11 +262,13 @@ def temp_config_dir(tmp_path):
 ## CONTEXT REQUIRED
 
 ### Information Needed
+
 - pytest best practices
 - Coverage targets (80%)
 - Test fixture patterns
 
 ### Artifacts from Previous Tasks
+
 - T-002: Database module
 - T-003: Transaction model
 - T-004: Configuration management
@@ -271,12 +278,14 @@ def temp_config_dir(tmp_path):
 ## EXPECTED DELIVERABLES
 
 ### Files to Create
+
 - `src/agentic_bookkeeper/tests/test_database.py` - Database tests
 - `src/agentic_bookkeeper/tests/test_transaction.py` - Transaction model tests
 - `src/agentic_bookkeeper/tests/test_config.py` - Configuration tests
 - `src/agentic_bookkeeper/tests/conftest.py` - Shared fixtures
 
 ### Files to Modify
+
 - None (new test files)
 
 ---

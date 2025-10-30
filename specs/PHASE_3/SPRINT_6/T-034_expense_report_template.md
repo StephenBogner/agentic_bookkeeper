@@ -21,6 +21,7 @@ Create expense report template grouping expenses by category with totals and per
 ## REQUIREMENTS
 
 ### Functional Requirements
+
 - Group expenses by category
 - Calculate totals per category
 - Calculate percentage of total for each category
@@ -41,6 +42,7 @@ Create expense report template grouping expenses by category with totals and per
 ## EXPECTED DELIVERABLES
 
 **Files to Create:**
+
 - Template methods in `report_generator.py`
 
 ---

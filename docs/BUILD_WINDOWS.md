@@ -11,6 +11,7 @@
 This guide covers building a standalone Windows executable for Agentic Bookkeeper using PyInstaller and creating an installer using NSIS (Nullsoft Scriptable Install System).
 
 **Build Process:**
+
 1. Build executable with PyInstaller (.exe file)
 2. Create installer with NSIS (.exe installer)
 3. Test on clean Windows 10/11 system
@@ -44,6 +45,7 @@ This guide covers building a standalone Windows executable for Agentic Bookkeepe
 ### Required Python Packages
 
 All packages listed in `requirements.txt` plus:
+
 - `pyinstaller>=6.0.0` (automatically installed by build script)
 
 ### System Requirements
@@ -77,7 +79,7 @@ build_installer.bat
 
 REM 4. Test installer
 ..\dist\AgenticBookkeeper-0.1.0-Setup.exe
-```
+```text
 
 ### Option 2: Manual Build
 
@@ -90,22 +92,26 @@ See detailed instructions below.
 ### Step 1: Prepare Build Environment
 
 1. **Clone/Download Project**
+
    ```cmd
    git clone https://github.com/yourusername/agentic_bookkeeper.git
    cd agentic_bookkeeper
    ```
 
 2. **Create Virtual Environment**
+
    ```cmd
    python -m venv venv
    ```
 
 3. **Activate Virtual Environment**
+
    ```cmd
    venv\Scripts\activate
    ```
 
 4. **Install Dependencies**
+
    ```cmd
    python -m pip install --upgrade pip
    pip install -r requirements.txt
@@ -115,6 +121,7 @@ See detailed instructions below.
 ### Step 2: Build Executable with PyInstaller
 
 1. **Run Build Script** (recommended)
+
    ```cmd
    build_windows.bat
    ```
@@ -122,6 +129,7 @@ See detailed instructions below.
    OR
 
 2. **Build Manually**
+
    ```cmd
    REM Clean previous builds
    rmdir /s /q build
@@ -137,6 +145,7 @@ See detailed instructions below.
    - Supporting files: DLLs, Python libraries, PySide6 plugins
 
 4. **Test Executable**
+
    ```cmd
    dist\AgenticBookkeeper\AgenticBookkeeper.exe
    ```
@@ -150,11 +159,13 @@ See detailed instructions below.
 ### Step 3: Build Installer with NSIS
 
 1. **Navigate to Installer Directory**
+
    ```cmd
    cd installer
    ```
 
 2. **Run Installer Build Script** (recommended)
+
    ```cmd
    build_installer.bat
    ```
@@ -162,6 +173,7 @@ See detailed instructions below.
    OR
 
 3. **Build Manually**
+
    ```cmd
    makensis windows_installer.nsi
    ```
@@ -214,7 +226,9 @@ See detailed instructions below.
 **Symptom:** `pyinstaller` command fails with import errors
 
 **Solutions:**
+
 1. Ensure all dependencies are installed:
+
    ```cmd
    pip install -r requirements.txt
    pip install pyinstaller
@@ -224,6 +238,7 @@ See detailed instructions below.
    - Add missing modules to `hiddenimports` list
 
 3. Clear cache and rebuild:
+
    ```cmd
    pyinstaller --clean agentic_bookkeeper.spec
    ```
@@ -233,7 +248,9 @@ See detailed instructions below.
 **Symptom:** Double-clicking `AgenticBookkeeper.exe` does nothing
 
 **Solutions:**
+
 1. Run from command line to see errors:
+
    ```cmd
    dist\AgenticBookkeeper\AgenticBookkeeper.exe
    ```
@@ -251,12 +268,14 @@ See detailed instructions below.
 **Symptom:** Error message about missing DLL files
 
 **Solutions:**
+
 1. Install Visual C++ Redistributable:
    - Download: https://aka.ms/vs/17/release/vc_redist.x64.exe
 
 2. Add DLLs to PyInstaller:
    - Edit `agentic_bookkeeper.spec`
    - Add to `binaries` list:
+
      ```python
      binaries=[('path/to/missing.dll', '.')],
      ```
@@ -266,7 +285,9 @@ See detailed instructions below.
 **Symptom:** Executable is larger than 100 MB
 
 **Solutions:**
+
 1. Check excluded modules in `agentic_bookkeeper.spec`:
+
    ```python
    excludes=['tkinter', 'matplotlib', 'IPython', 'jupyter']
    ```
@@ -283,6 +304,7 @@ See detailed instructions below.
 **Symptom:** `makensis` command not recognized
 
 **Solutions:**
+
 1. Install NSIS from https://nsis.sourceforge.io/
 2. Add to PATH: `C:\Program Files (x86)\NSIS`
 3. Restart command prompt
@@ -292,12 +314,15 @@ See detailed instructions below.
 **Symptom:** NSIS compilation errors
 
 **Solutions:**
+
 1. Verify executable exists:
+
    ```cmd
    dir dist\AgenticBookkeeper\AgenticBookkeeper.exe
    ```
 
 2. Check LICENSE file exists:
+
    ```cmd
    dir LICENSE
    ```
@@ -309,6 +334,7 @@ See detailed instructions below.
 **Symptom:** Installer shows error during installation
 
 **Solutions:**
+
 1. Run installer as Administrator
 2. Disable antivirus temporarily
 3. Check disk space (requires 200+ MB)
@@ -321,15 +347,18 @@ See detailed instructions below.
 **Symptom:** Installed application fails to launch
 
 **Solutions:**
+
 1. Check event logs:
    - Event Viewer → Windows Logs → Application
 
 2. Verify all files installed:
+
    ```cmd
    dir "C:\Program Files\Agentic Bookkeeper"
    ```
 
 3. Run from command line:
+
    ```cmd
    cd "C:\Program Files\Agentic Bookkeeper"
    AgenticBookkeeper.exe
@@ -342,6 +371,7 @@ See detailed instructions below.
 **Symptom:** Application starts but features fail
 
 **Solutions:**
+
 1. Check `.env` configuration:
    - Location: `C:\Users\<username>\.agentic_bookkeeper\.env`
    - Verify API keys are set
@@ -362,22 +392,28 @@ See detailed instructions below.
 ### Code Signing (Optional)
 
 **Benefits:**
+
 - Removes "Unknown Publisher" warning
 - Increases user trust
 - Required for some enterprise deployments
 
 **Requirements:**
+
 - Code signing certificate (from CA like DigiCert, Sectigo)
 - SignTool.exe (included with Windows SDK)
 
 **Process:**
+
 1. Obtain code signing certificate
 2. Install certificate to Windows certificate store
 3. Sign executable:
+
    ```cmd
    signtool sign /a /t http://timestamp.digicert.com /fd SHA256 "dist\AgenticBookkeeper\AgenticBookkeeper.exe"
    ```
+
 4. Sign installer:
+
    ```cmd
    signtool sign /a /t http://timestamp.digicert.com /fd SHA256 "dist\AgenticBookkeeper-0.1.0-Setup.exe"
    ```
@@ -385,21 +421,27 @@ See detailed instructions below.
 ### Custom Icon
 
 **Adding an Application Icon:**
+
 1. Create/obtain `.ico` file (256x256, 48x48, 32x32, 16x16)
 2. Save as `resources/icon.ico`
 3. Edit `agentic_bookkeeper.spec`:
+
    ```python
    icon='resources/icon.ico'
    ```
+
 4. Edit `installer/windows_installer.nsi`:
-   ```
+
+   ```text
    !define MUI_ICON "resources\icon.ico"
    ```
+
 5. Rebuild
 
 ### Automated Build Pipeline
 
 **GitHub Actions Example:**
+
 ```yaml
 name: Build Windows Executable
 
@@ -427,11 +469,12 @@ jobs:
         with:
           name: windows-executable
           path: dist/AgenticBookkeeper/
-```
+```text
 
 ### Multi-Version Support
 
 **Building for Different Python Versions:**
+
 ```cmd
 REM Python 3.8
 py -3.8 -m venv venv38
@@ -444,19 +487,21 @@ py -3.11 -m venv venv311
 venv311\Scripts\activate
 pip install -r requirements.txt
 pyinstaller agentic_bookkeeper.spec --distpath dist311
-```
+```text
 
 ---
 
 ## Testing Checklist
 
 ### Pre-Build Testing
+
 - [ ] All unit tests pass: `pytest`
 - [ ] Application runs from source: `python src/agentic_bookkeeper/main.py`
 - [ ] All dependencies in requirements.txt
 - [ ] Version number updated in spec file
 
 ### Post-Build Testing
+
 - [ ] Executable runs without console window
 - [ ] All GUI elements render correctly
 - [ ] First-run setup wizard works
@@ -469,6 +514,7 @@ pyinstaller agentic_bookkeeper.spec --distpath dist311
 - [ ] Database is created and accessible
 
 ### Installation Testing
+
 - [ ] Installer runs without errors
 - [ ] Start Menu shortcuts created
 - [ ] Desktop shortcut created
@@ -479,6 +525,7 @@ pyinstaller agentic_bookkeeper.spec --distpath dist311
 - [ ] Uninstaller is registered
 
 ### Clean System Testing
+
 - [ ] Test on Windows 10 (version 21H2+)
 - [ ] Test on Windows 11
 - [ ] Test with no Python installed
@@ -502,6 +549,7 @@ pyinstaller agentic_bookkeeper.spec --distpath dist311
 | Installer (NSIS) | ~80-100 MB | Compressed installer |
 
 **Size Reduction Tips:**
+
 1. Enable UPX compression in PyInstaller
 2. Exclude unused modules in spec file
 3. Remove test files from distribution
@@ -530,11 +578,13 @@ Before releasing to users:
 ## Support and Resources
 
 ### Documentation
+
 - User Guide: `docs/USER_GUIDE.md`
 - Developer Guide: `docs/DEVELOPMENT.md`
 - Architecture: `docs/ARCHITECTURE.md`
 
 ### External Resources
+
 - PyInstaller Documentation: https://pyinstaller.org/en/stable/
 - NSIS Documentation: https://nsis.sourceforge.io/Docs/
 - Windows Code Signing: https://learn.microsoft.com/en-us/windows/win32/seccrypto/cryptography-tools
@@ -559,7 +609,7 @@ pip list
 
 REM Update dependencies
 pip install --upgrade -r requirements.txt
-```
+```text
 
 ---
 
@@ -586,7 +636,7 @@ excludes=['tkinter', 'matplotlib']
 # Executable configuration
 console=False  # No console window
 name='AgenticBookkeeper'  # Output name
-```
+```text
 
 ---
 
@@ -607,13 +657,14 @@ CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk"
 
 ; Registry keys
 WriteRegStr HKLM "${PRODUCT_DIR_REGKEY}" ""
-```
+```text
 
 ---
 
 ## Changelog
 
 ### Version 0.1.0 (2025-10-29)
+
 - Initial Windows build documentation
 - PyInstaller configuration
 - NSIS installer script

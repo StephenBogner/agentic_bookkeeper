@@ -21,6 +21,7 @@ Create comprehensive integration tests that validate the complete workflow from 
 ## REQUIREMENTS
 
 ### Functional Requirements
+
 - Test complete workflow: document → extraction → review → storage
 - Test monitoring → processing → archiving pipeline
 - Test provider switching between LLM providers
@@ -31,6 +32,7 @@ Create comprehensive integration tests that validate the complete workflow from 
 - Test configuration changes during runtime
 
 ### Non-Functional Requirements
+
 - Integration tests complete in <2 minutes
 - Test realistic usage scenarios
 - Use actual database (not mocks)
@@ -54,9 +56,11 @@ Create comprehensive integration tests that validate the complete workflow from 
 ## EXPECTED DELIVERABLES
 
 **Files to Create:**
+
 - `src/agentic_bookkeeper/tests/test_integration.py`
 
 **Files to Modify:**
+
 - None
 
 ---
@@ -176,6 +180,7 @@ class TestIntegration:
 ### Test Scenarios
 
 **Scenario 1: Happy Path**
+
 ```python
 def test_happy_path(integration_env):
     """Test complete successful workflow."""
@@ -189,6 +194,7 @@ def test_happy_path(integration_env):
 ```
 
 **Scenario 2: Error Handling**
+
 ```python
 def test_error_scenarios(integration_env):
     """Test various error conditions."""
@@ -200,6 +206,7 @@ def test_error_scenarios(integration_env):
 ```
 
 **Scenario 3: Data Integrity**
+
 ```python
 def test_data_integrity(integration_env):
     """Validate data integrity through pipeline."""

@@ -18,6 +18,7 @@ during comprehensive testing (Phase 4, Sprint 7). The testing phase included:
 - Security testing (T-043): Comprehensive security audit
 
 **Test Results:**
+
 - ✅ 554 tests passing (100% pass rate)
 - ✅ 91% test coverage (exceeds 80% target)
 - ✅ 0 Critical (P0) issues
@@ -70,6 +71,7 @@ effect immediately without confirmation. This could lead to confusion if clicked
 as all existing transaction amounts would display with the new currency symbol.
 
 **Current Behavior:**
+
 1. User selects new currency from dropdown in Settings
 2. Currency changes immediately
 3. All transaction displays update to new currency symbol
@@ -77,6 +79,7 @@ as all existing transaction amounts would display with the new currency symbol.
 
 **Requested Enhancement:**
 Show a confirmation dialog when currency is changed:
+
 - Message: "Changing currency will update the display of all transaction amounts. This does
   not convert values, only changes the symbol. Continue?"
 - Buttons: "Continue" / "Cancel"
@@ -89,6 +92,7 @@ Show a confirmation dialog when currency is changed:
 **Target Version:** v1.1 (Post-MVP enhancement)
 
 **Estimated Effort:** 2 hours
+
 - Add confirmation dialog to settings_dialog.py
 - Implement "don't show again" preference
 - Add unit tests for dialog behavior
@@ -106,12 +110,14 @@ The date range picker in the Reports widget works well with mouse/click interact
 but lacks keyboard shortcuts for power users who prefer keyboard navigation.
 
 **Current Behavior:**
+
 - Date pickers require mouse clicks to open calendar
 - Preset buttons (This Month, Last Quarter, etc.) require mouse clicks
 - Keyboard users must tab through all controls
 
 **Requested Enhancement:**
 Add keyboard shortcuts for common date operations:
+
 - `Ctrl+T`: This Month
 - `Ctrl+Q`: This Quarter
 - `Ctrl+Y`: This Year
@@ -128,6 +134,7 @@ Add keyboard shortcuts for common date operations:
 **Target Version:** v1.2 (Future enhancement)
 
 **Estimated Effort:** 4 hours
+
 - Implement keyboard event handlers in reports_widget.py
 - Add keyboard shortcuts to UI (tooltip hints)
 - Update user documentation with keyboard shortcuts
@@ -146,12 +153,14 @@ While the application maintains data integrity correctly, there is no automatic 
 feature. Users must manually back up the database file if they want recovery points.
 
 **Current Behavior:**
+
 - Database stored in `data/bookkeeper.db`
 - Manual backup: Users can copy the file themselves
 - No automated backup schedule or rotation
 
 **Requested Enhancement:**
 Implement automatic backup system:
+
 - Scheduled backups (daily, weekly options)
 - Backup rotation (keep last N backups)
 - Backup location configuration
@@ -159,6 +168,7 @@ Implement automatic backup system:
 - Backup verification (integrity check)
 
 **Benefits:**
+
 - Protects against data loss from file corruption
 - Enables recovery from user errors (accidental deletions)
 - Provides peace of mind for users
@@ -170,6 +180,7 @@ Implement automatic backup system:
 **Target Version:** v1.1 (High priority for production deployment)
 
 **Estimated Effort:** 8 hours
+
 - Create backup manager class
 - Add scheduled backup functionality
 - Implement backup rotation logic
@@ -194,12 +205,14 @@ First-run initialization defaults to CRA (Canada) tax jurisdiction. US users mus
 change to IRS, which is an extra step during setup.
 
 **Current Behavior:**
+
 - Default jurisdiction: CRA (Canada)
 - Default currency: USD
 - Users must manually select IRS if in United States
 
 **Requested Enhancement:**
 Auto-detect user location and set appropriate defaults:
+
 - Use system locale or IP geolocation to detect country
 - Set jurisdiction automatically (CRA for Canada, IRS for US)
 - Set currency based on country (CAD for Canada, USD for US)
@@ -212,6 +225,7 @@ Auto-detect user location and set appropriate defaults:
 **Target Version:** v1.3 (Future enhancement)
 
 **Estimated Effort:** 4 hours
+
 - Implement locale detection
 - Add country-to-jurisdiction mapping
 - Add confirmation dialog
@@ -231,6 +245,7 @@ When LLM providers extract transaction data from documents, they don't provide c
 scores. Users cannot easily identify which extractions might need verification.
 
 **Current Behavior:**
+
 - LLM extracts: date, vendor, amount, category, description
 - All extracted fields treated equally
 - No indication of extraction confidence
@@ -238,6 +253,7 @@ scores. Users cannot easily identify which extractions might need verification.
 
 **Requested Enhancement:**
 Display confidence scores for extracted data:
+
 - Request confidence scores from LLM (if provider supports it)
 - Show confidence indicators in Document Review Dialog:
   - 🟢 High confidence (>90%): Green indicator
@@ -247,6 +263,7 @@ Display confidence scores for extracted data:
 - Sort by confidence in review list
 
 **Benefits:**
+
 - Focus user attention on uncertain extractions
 - Improve data quality through targeted verification
 - Build user trust through transparency
@@ -258,6 +275,7 @@ Display confidence scores for extracted data:
 **Target Version:** v2.0 (Requires LLM provider API changes)
 
 **Estimated Effort:** 12 hours
+
 - Update LLM provider interface to return confidence scores
 - Modify extraction response structure
 - Add confidence display to Document Review Dialog
@@ -279,12 +297,14 @@ The Transactions widget supports filtering by type, category, date range, and se
 All filters use AND logic. Users cannot easily find "all Meals OR Entertainment expenses".
 
 **Current Behavior:**
+
 - Multiple category selections use AND logic (must match all - not useful)
 - Cannot filter "Type=Expense AND (Category=Meals OR Category=Entertainment)"
 - Workaround: Apply filters multiple times and combine results manually
 
 **Requested Enhancement:**
 Add OR logic option for category filters:
+
 - Radio buttons: "Match ALL categories (AND)" / "Match ANY category (OR)"
 - Enable multi-select for categories with OR logic
 - Example: Select "Meals" + "Entertainment" + OR = show all Meals or Entertainment expenses
@@ -296,6 +316,7 @@ Add OR logic option for category filters:
 **Target Version:** v1.4 (Future enhancement)
 
 **Estimated Effort:** 6 hours
+
 - Add logic selector to Transactions widget UI
 - Update filter logic in transaction manager
 - Update query builder for OR conditions
@@ -316,6 +337,7 @@ the user is not actively notified. Users must check the dashboard or logs to dis
 failed documents.
 
 **Current Behavior:**
+
 - Failed documents are logged: "Failed to process PDF: File appears corrupted"
 - Error logged with timestamp and details
 - No pop-up notification or visual alert
@@ -323,12 +345,14 @@ failed documents.
 
 **Requested Enhancement:**
 Add user notifications for failed documents:
+
 - Desktop notification (system tray) for processing failures
 - In-app notification badge on Dashboard tab
 - Failed documents list in Dashboard with "Retry" option
 - Email notification (optional, for unattended monitoring)
 
 **Benefits:**
+
 - Immediate awareness of processing failures
 - Faster response to issues
 - Better user experience during automated monitoring
@@ -340,6 +364,7 @@ Add user notifications for failed documents:
 **Target Version:** v1.2 (Future enhancement)
 
 **Estimated Effort:** 8 hours
+
 - Implement desktop notification system (platform-specific)
 - Add notification badge to Dashboard tab
 - Create failed documents list UI
@@ -363,18 +388,21 @@ The encryption key derivation uses MACHINE_ID environment variable. If not set, 
 back to a default value, reducing security for multi-installation scenarios.
 
 **Current Behavior:**
+
 - MACHINE_ID environment variable optional
 - Falls back to default if not set
 - Works correctly but reduces isolation between installations
 
 **Recommendation:**
 For production deployments:
+
 1. Require MACHINE_ID environment variable
 2. Fail startup if MACHINE_ID not set in production mode
 3. Generate unique MACHINE_ID during installation
 4. Document in deployment guide
 
 **Implementation Plan:**
+
 ```python
 # In utils/config.py
 def _get_machine_id() -> str:
@@ -393,6 +421,7 @@ def _get_machine_id() -> str:
 **Target Version:** v1.0 (Before production release)
 
 **Estimated Effort:** 2 hours
+
 - Add production mode detection
 - Add MACHINE_ID requirement in production
 - Update deployment documentation
@@ -412,12 +441,14 @@ If implementing encrypted API key storage on disk (not currently active), the ke
 derivation uses a static salt. Unique salt per installation would enhance security.
 
 **Current Status:**
+
 - Encrypted storage not actively used (API keys from environment variables)
 - Static salt defined in config.py
 - Issue only relevant if storing keys on disk
 
 **Recommendation:**
 If implementing encrypted storage at rest:
+
 1. Generate unique salt during first installation
 2. Store salt in separate secure location (not in .env)
 3. Use salt for key derivation with PBKDF2
@@ -427,6 +458,7 @@ If implementing encrypted storage at rest:
 **Target Version:** v2.0 (If encrypted storage feature added)
 
 **Estimated Effort:** 4 hours
+
 - Salt generation on first run
 - Secure salt storage mechanism
 - Update encryption implementation
@@ -451,6 +483,7 @@ should be checked for known security vulnerabilities before each release.
 Implement automated dependency scanning:
 
 1. **Tool Selection:** Use `pip-audit` or `safety`
+
    ```bash
    pip install pip-audit
    pip-audit
@@ -459,6 +492,7 @@ Implement automated dependency scanning:
 2. **Schedule:** Run before every release and periodically
 
 3. **CI/CD Integration:** Add to GitHub Actions workflow
+
    ```yaml
    - name: Security Scan
      run: |
@@ -473,6 +507,7 @@ Implement automated dependency scanning:
    - Low: Document and monitor
 
 **Benefits:**
+
 - Early detection of vulnerable dependencies
 - Proactive security posture
 - Compliance with security best practices
@@ -480,6 +515,7 @@ Implement automated dependency scanning:
 **Target Version:** v1.0 (Before production release)
 
 **Estimated Effort:** 4 hours
+
 - Install and configure pip-audit
 - Create scanning script
 - Add to CI/CD pipeline (if applicable)
@@ -501,12 +537,14 @@ to protect sensitive financial data.
 
 **Recommendation:**
 When implementing automatic backup (P2-003):
+
 1. Encrypt backups using Fernet (same as API key encryption)
 2. Use MACHINE_ID for key derivation
 3. Store encrypted backups separate from main database
 4. Implement secure backup rotation (delete old backups securely)
 
 **Implementation:**
+
 ```python
 # Encrypt backup before saving
 encrypted_backup = self.config.encrypt_api_key(backup_data)
@@ -570,6 +608,7 @@ with ThreadPoolExecutor(max_workers=4) as executor:
 **Expected Improvement:** 2-4x speedup for batch processing
 
 **Considerations:**
+
 - LLM provider rate limits
 - API cost implications (faster = more API calls per minute)
 - Memory usage (multiple documents in memory)

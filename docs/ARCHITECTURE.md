@@ -74,7 +74,7 @@ Agentic Bookkeeper is an intelligent bookkeeping automation system that leverage
 
 ### High-Level Architecture
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                     User Interface Layer                     │
 │  ┌────────────────────────────────────────────────────────┐ │
@@ -110,7 +110,7 @@ Agentic Bookkeeper is an intelligent bookkeeping automation system that leverage
 │  │   Database     │  │     Model      │  │  Management  │  │
 │  └────────────────┘  └────────────────┘  └──────────────┘  │
 └─────────────────────────────────────────────────────────────┘
-```
+```text
 
 ### Component Breakdown
 
@@ -119,6 +119,7 @@ Agentic Bookkeeper is an intelligent bookkeeping automation system that leverage
 **Purpose**: Provides PySide6-based desktop GUI for user interaction.
 
 **Components**:
+
 - `main_window.py`: Main application window with tabbed interface
 - `dashboard_widget.py`: Overview dashboard with statistics and monitoring controls
 - `transactions_widget.py`: Transaction list with filtering and search
@@ -131,6 +132,7 @@ Agentic Bookkeeper is an intelligent bookkeeping automation system that leverage
 **Design Pattern**: Model-View-Controller (MVC) with Qt signals/slots
 
 **Key Features**:
+
 - Tabbed interface for different functions
 - Real-time statistics and monitoring
 - Document folder monitoring controls
@@ -145,12 +147,14 @@ Agentic Bookkeeper is an intelligent bookkeeping automation system that leverage
 **Components**:
 
 **Document Processing**:
+
 - `document_processor.py`: Processes PDF and image documents using LLM vision APIs
   - Extracts: date, vendor, amount, category, description
   - Validates extracted data
   - Creates transactions from documents
 
 **Transaction Management**:
+
 - `transaction_manager.py`: CRUD operations for transactions
   - Create, read, update, delete transactions
   - Filter by type, category, date range
@@ -158,6 +162,7 @@ Agentic Bookkeeper is an intelligent bookkeeping automation system that leverage
   - Calculate aggregates and statistics
 
 **Monitoring**:
+
 - `document_monitor.py`: Watches directory for new documents
   - File system monitoring with watchdog library
   - Automatic processing of new documents
@@ -165,6 +170,7 @@ Agentic Bookkeeper is an intelligent bookkeeping automation system that leverage
   - Error handling and retry logic
 
 **Reporting**:
+
 - `report_generator.py`: Generates financial reports
   - Income statements (revenue, expenses, net income)
   - Expense reports (category breakdown with tax codes)
@@ -173,6 +179,7 @@ Agentic Bookkeeper is an intelligent bookkeeping automation system that leverage
   - Tax jurisdiction support (CRA/IRS)
 
 **Export** (`core/exporters/`):
+
 - `pdf_exporter.py`: Professional PDF export using ReportLab
 - `csv_exporter.py`: Excel-compatible CSV export using pandas
 - `json_exporter.py`: Structured JSON export with schema versioning
@@ -182,6 +189,7 @@ Agentic Bookkeeper is an intelligent bookkeeping automation system that leverage
 **Purpose**: Abstract LLM provider integration for flexibility and vendor independence.
 
 **Components**:
+
 - `llm_provider.py`: Abstract base class defining provider interface
 - `openai_provider.py`: OpenAI GPT-4 Vision implementation
 - `anthropic_provider.py`: Anthropic Claude Vision implementation
@@ -191,6 +199,7 @@ Agentic Bookkeeper is an intelligent bookkeeping automation system that leverage
 **Design Pattern**: Strategy Pattern (pluggable providers)
 
 **Key Features**:
+
 - Unified interface for all providers
 - Automatic JSON parsing from LLM responses
 - Error handling and retry logic
@@ -202,6 +211,7 @@ Agentic Bookkeeper is an intelligent bookkeeping automation system that leverage
 **Purpose**: Data persistence and models.
 
 **Components**:
+
 - `database.py`: SQLite database connection manager
   - WAL mode for concurrent access
   - Connection pooling (single connection, thread-safe)
@@ -217,6 +227,7 @@ Agentic Bookkeeper is an intelligent bookkeeping automation system that leverage
 **Purpose**: Cross-cutting concerns and utilities.
 
 **Components**:
+
 - `config.py`: Configuration management
   - API key encryption/decryption
   - Settings persistence
@@ -232,7 +243,7 @@ Agentic Bookkeeper is an intelligent bookkeeping automation system that leverage
 
 ### Document Processing Flow
 
-```
+```text
 1. User drops document in watch folder
    │
    ├─> Document Monitor detects new file
@@ -250,11 +261,11 @@ Agentic Bookkeeper is an intelligent bookkeeping automation system that leverage
    ├─> GUI shows Document Review Dialog
    │
    └─> User accepts/rejects or edits transaction
-```
+```text
 
 ### Report Generation Flow
 
-```
+```text
 1. User selects report type and date range
    │
    ├─> Report Generator queries Transaction Manager
@@ -276,11 +287,11 @@ Agentic Bookkeeper is an intelligent bookkeeping automation system that leverage
        ├─> PDF Exporter: generates PDF file
        ├─> CSV Exporter: generates CSV file
        └─> JSON Exporter: generates JSON file
-```
+```text
 
 ### Configuration Flow
 
-```
+```text
 1. First run: No config file exists
    │
    ├─> Config Manager creates default config
@@ -300,7 +311,7 @@ Agentic Bookkeeper is an intelligent bookkeeping automation system that leverage
    ├─> API keys decrypted as needed
    │
    └─> Application initialized with settings
-```
+```text
 
 ---
 
@@ -330,17 +341,19 @@ CREATE TABLE IF NOT EXISTS transactions (
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL
 );
-```
+```text
 
 **Indexes**:
+
 ```sql
 CREATE INDEX IF NOT EXISTS idx_transactions_date ON transactions(date);
 CREATE INDEX IF NOT EXISTS idx_transactions_type ON transactions(type);
 CREATE INDEX IF NOT EXISTS idx_transactions_category ON transactions(category);
 CREATE INDEX IF NOT EXISTS idx_transactions_vendor ON transactions(vendor);
-```
+```text
 
 **Field Descriptions**:
+
 - `id`: Auto-incrementing primary key
 - `date`: Transaction date (ISO format: YYYY-MM-DD)
 - `vendor`: Vendor/payer name
@@ -355,6 +368,7 @@ CREATE INDEX IF NOT EXISTS idx_transactions_vendor ON transactions(vendor);
 ### Data Access Patterns
 
 **Common Queries**:
+
 1. Get all transactions: `SELECT * FROM transactions ORDER BY date DESC`
 2. Filter by type: `SELECT * FROM transactions WHERE type = ? ORDER BY date DESC`
 3. Filter by date range: `SELECT * FROM transactions WHERE date BETWEEN ? AND ? ORDER BY date`
@@ -363,6 +377,7 @@ CREATE INDEX IF NOT EXISTS idx_transactions_vendor ON transactions(vendor);
 6. Aggregate by category: `SELECT category, SUM(amount) FROM transactions WHERE type = ? GROUP BY category`
 
 **Performance**:
+
 - Single transaction query: ~2-5ms
 - Filtered queries: ~10-20ms
 - Aggregations (1000 transactions): ~50-100ms
@@ -377,46 +392,56 @@ CREATE INDEX IF NOT EXISTS idx_transactions_vendor ON transactions(vendor);
 **Language**: Python 3.8+
 
 **GUI Framework**:
+
 - PySide6 6.5.0+ (Qt6 Python bindings)
 - Cross-platform desktop UI
 
 **Database**:
+
 - SQLite 3 (embedded, file-based)
 - WAL mode for concurrency
 
 **LLM Integration**:
+
 - OpenAI Python SDK (GPT-4 Vision)
 - Anthropic Python SDK (Claude Vision)
 - XAI API (Grok Vision)
 - Google Generative AI SDK (Gemini Vision)
 
 **Document Processing**:
+
 - pypdf 4.0.0+ (PDF reading, replacing deprecated PyPDF2)
 - Pillow (PIL) 10.0.0+ (image processing)
 - Base64 encoding for LLM vision APIs
 
 **Reporting & Export**:
+
 - ReportLab 4.0.0+ (PDF generation)
 - pandas 2.0.0+ (CSV export and data manipulation)
 - json (standard library, JSON export)
 
 **File System Monitoring**:
+
 - watchdog 3.0.0+ (cross-platform file system events)
 
 **Security**:
+
 - cryptography 41.0.0+ (Fernet symmetric encryption, PBKDF2)
 
 **Configuration**:
+
 - python-dotenv 1.0.0+ (environment variable loading)
 - JSON configuration files
 
 **Testing**:
+
 - pytest 7.4.0+ (test framework)
 - pytest-cov 4.1.0+ (coverage reporting)
 - pytest-qt 4.2.0+ (Qt testing)
 - pytest-mock 3.11.0+ (mocking)
 
 **Code Quality**:
+
 - black 23.7.0+ (code formatting)
 - flake8 6.1.0+ (linting)
 - mypy 1.5.0+ (type checking)
@@ -434,6 +459,7 @@ See `requirements.txt` and `requirements-dev.txt` for complete dependency list w
 **Purpose**: Allow runtime selection of LLM provider without changing client code.
 
 **Implementation**:
+
 ```python
 # Abstract base class
 class LLMProvider(ABC):
@@ -450,9 +476,10 @@ class OpenAIProvider(LLMProvider):
 # Usage
 provider = OpenAIProvider(api_key)  # or AnthropicProvider, XAIProvider, GoogleProvider
 result = provider.extract_transaction(image_data, "png")
-```
+```text
 
 **Benefits**:
+
 - Easy to add new providers
 - Client code doesn't depend on specific provider
 - Providers are independently testable
@@ -462,6 +489,7 @@ result = provider.extract_transaction(image_data, "png")
 **Purpose**: Abstract database access to decouple business logic from data storage.
 
 **Implementation**:
+
 ```python
 class TransactionManager:
     def __init__(self, db_path: str):
@@ -474,9 +502,10 @@ class TransactionManager:
     def add_transaction(self, transaction: Transaction) -> int:
         # Validation and business logic
         pass
-```
+```text
 
 **Benefits**:
+
 - Business logic isolated from database details
 - Easy to test with mock database
 - Single point for data access logic
@@ -486,6 +515,7 @@ class TransactionManager:
 **Purpose**: Separate UI presentation from business logic.
 
 **Implementation**:
+
 ```python
 # Model
 class TransactionManager:
@@ -503,9 +533,10 @@ class MainWindow(QMainWindow):
         self.transaction_manager = TransactionManager()  # Model
         self.transactions_widget = TransactionsWidget(self.transaction_manager)  # View
         # Signals/slots connect view to model
-```
+```text
 
 **Benefits**:
+
 - UI can change without affecting business logic
 - Business logic testable without GUI
 - Multiple views can use same model
@@ -515,6 +546,7 @@ class MainWindow(QMainWindow):
 **Purpose**: Ensure single database connection throughout application lifecycle.
 
 **Implementation**:
+
 ```python
 class Database:
     def __init__(self, db_path: str):
@@ -525,9 +557,10 @@ class Database:
         if self.conn is None:
             self.conn = sqlite3.connect(self.db_path, check_same_thread=False)
         return self.conn
-```
+```text
 
 **Benefits**:
+
 - Prevents connection pool exhaustion
 - Consistent state across application
 - Proper resource management
@@ -537,6 +570,7 @@ class Database:
 **Purpose**: React to file system events asynchronously.
 
 **Implementation**:
+
 ```python
 class DocumentMonitor:
     def __init__(self, watch_folder: str, processor: DocumentProcessor):
@@ -551,9 +585,10 @@ class DocumentHandler(FileSystemEventHandler):
     def on_created(self, event):
         # React to new file
         self.processor.process_document(event.src_path)
-```
+```text
 
 **Benefits**:
+
 - Decoupled file detection from processing
 - Asynchronous processing
 - Easy to add new event handlers
@@ -565,6 +600,7 @@ class DocumentHandler(FileSystemEventHandler):
 ### 1. Adding New LLM Providers
 
 **Steps**:
+
 1. Create new file: `src/agentic_bookkeeper/llm/newprovider_provider.py`
 2. Inherit from `LLMProvider` abstract base class
 3. Implement `extract_transaction(image_data, image_format)` method
@@ -572,6 +608,7 @@ class DocumentHandler(FileSystemEventHandler):
 5. Add to provider selection in settings dialog
 
 **Example**:
+
 ```python
 from agentic_bookkeeper.llm.llm_provider import LLMProvider
 
@@ -593,11 +630,12 @@ class NewProviderProvider(LLMProvider):
             "type": "expense",
             "description": "Office supplies purchase"
         }
-```
+```text
 
 ### 2. Adding New Export Formats
 
 **Steps**:
+
 1. Create new file: `src/agentic_bookkeeper/core/exporters/newformat_exporter.py`
 2. Implement similar interface to existing exporters (PDF, CSV, JSON)
 3. Accept `report_data` dictionary from ReportGenerator
@@ -605,6 +643,7 @@ class NewProviderProvider(LLMProvider):
 5. Add format to Reports Widget selector
 
 **Example**:
+
 ```python
 class NewFormatExporter:
     def __init__(self, jurisdiction: str = "CRA", currency: str = "CAD"):
@@ -616,17 +655,19 @@ class NewFormatExporter:
         # Write to output_path
         # Return success/failure
         pass
-```
+```text
 
 ### 3. Adding New Report Templates
 
 **Steps**:
+
 1. Add new method to `ReportGenerator` class
 2. Follow existing pattern: filter → aggregate → format
 3. Return standardized report dictionary
 4. Add report type to Reports Widget selector
 
 **Example**:
+
 ```python
 def generate_balance_sheet(self, as_of_date: str) -> dict:
     # Filter transactions up to as_of_date
@@ -640,17 +681,19 @@ def generate_balance_sheet(self, as_of_date: str) -> dict:
         "equity": { ... },
         "metadata": { ... }
     }
-```
+```text
 
 ### 4. Adding New Tax Jurisdictions
 
 **Steps**:
+
 1. Add jurisdiction to configuration options
 2. Add tax code mapping in `ReportGenerator._add_tax_codes_to_categories()`
 3. Update jurisdiction label in exporters
 4. Add to Settings Dialog jurisdiction selector
 
 **Example**:
+
 ```python
 # In ReportGenerator
 TAX_CODES = {
@@ -660,17 +703,19 @@ TAX_CODES = {
         # ... more categories
     }
 }
-```
+```text
 
 ### 5. Customizing GUI Widgets
 
 **Steps**:
+
 1. Inherit from existing widget class or create new QWidget subclass
 2. Follow PySide6 patterns (signals, slots, layouts)
 3. Use dependency injection for business logic (TransactionManager, etc.)
 4. Add to MainWindow tabs if needed
 
 **Example**:
+
 ```python
 from PySide6.QtWidgets import QWidget
 from agentic_bookkeeper.core.transaction_manager import TransactionManager
@@ -680,7 +725,7 @@ class CustomWidget(QWidget):
         super().__init__()
         self.transaction_manager = transaction_manager
         self._init_ui()
-```
+```text
 
 ---
 
@@ -689,12 +734,14 @@ class CustomWidget(QWidget):
 ### API Key Security
 
 **Encryption**:
+
 - Algorithm: Fernet (symmetric encryption, AES-128-CBC)
 - Key derivation: PBKDF2-HMAC-SHA256 (100,000 iterations)
 - Password: Machine ID + static salt
 - Storage: Encrypted keys in JSON config file
 
 **Best Practices**:
+
 - API keys never stored in plaintext
 - Keys encrypted at rest
 - Keys decrypted only when needed
@@ -703,22 +750,25 @@ class CustomWidget(QWidget):
 ### SQL Injection Prevention
 
 **Protection**:
+
 - 100% parameterized queries (no string concatenation)
 - SQLite parameter binding (?, ?, ?)
 - Input validation on all user inputs
 
 **Example**:
+
 ```python
 # Safe (parameterized)
 cursor.execute("SELECT * FROM transactions WHERE vendor = ?", (vendor,))
 
 # Unsafe (NEVER DO THIS)
 # cursor.execute(f"SELECT * FROM transactions WHERE vendor = '{vendor}'")
-```
+```text
 
 ### File System Security
 
 **Protection**:
+
 - Path normalization with `pathlib.Path`
 - Sandboxing to specific directories
 - No execution of uploaded files
@@ -727,6 +777,7 @@ cursor.execute("SELECT * FROM transactions WHERE vendor = ?", (vendor,))
 ### Logging Security
 
 **Protection**:
+
 - `SensitiveDataFilter` removes API keys from logs
 - Pattern matching: `api[_-]?key`, `token`, etc.
 - Replacement: `[REDACTED]`
@@ -739,11 +790,13 @@ cursor.execute("SELECT * FROM transactions WHERE vendor = ?", (vendor,))
 ### Document Processing
 
 **Performance Targets**:
+
 - PDF processing: <30 seconds per document
 - Image processing: <30 seconds per document
 - Batch processing: 10 documents in <5 minutes
 
 **Optimizations**:
+
 - Efficient PDF parsing with pypdf (vs deprecated PyPDF2)
 - Image compression before sending to LLM
 - Async processing capability (future enhancement)
@@ -751,12 +804,14 @@ cursor.execute("SELECT * FROM transactions WHERE vendor = ?", (vendor,))
 ### Database Queries
 
 **Performance Targets**:
+
 - Single transaction query: <50ms
 - Filtered query: <50ms
 - All transactions (1000 records): <250ms
 - Category aggregation: <250ms
 
 **Optimizations**:
+
 - Indexes on date, type, category, vendor
 - WAL mode for concurrent reads
 - Connection reuse (no connection pooling overhead)
@@ -764,6 +819,7 @@ cursor.execute("SELECT * FROM transactions WHERE vendor = ?", (vendor,))
 ### Report Generation
 
 **Performance Targets**:
+
 - Income statement (1000 transactions): <5 seconds
 - Expense report (1000 transactions): <5 seconds
 - PDF export: <2 seconds
@@ -771,6 +827,7 @@ cursor.execute("SELECT * FROM transactions WHERE vendor = ?", (vendor,))
 - JSON export: <1 second
 
 **Optimizations**:
+
 - Efficient aggregation with pandas
 - Decimal precision for monetary calculations
 - Streaming for large reports (future enhancement)
@@ -778,12 +835,14 @@ cursor.execute("SELECT * FROM transactions WHERE vendor = ?", (vendor,))
 ### Memory Usage
 
 **Targets**:
+
 - Baseline: <200MB
 - Document processing: <200MB
 - Report generation: <200MB
 - No memory leaks
 
 **Optimizations**:
+
 - File streaming for large PDFs
 - Pagination for large result sets (GUI)
 - Garbage collection friendly (no circular references)
@@ -795,15 +854,18 @@ cursor.execute("SELECT * FROM transactions WHERE vendor = ?", (vendor,))
 ### Desktop Application
 
 **Platforms**:
+
 - Windows 10/11 (x64)
 - Linux (Ubuntu 20.04+, other distros)
 
 **Distribution**:
+
 - PyInstaller executable (Windows)
 - Python package (Linux)
 - pip installable (all platforms)
 
 **Installation Locations**:
+
 - Application: System-dependent (Program Files, /usr/local/bin, etc.)
 - Database: `~/.agentic_bookkeeper/bookkeeper.db`
 - Config: `~/.agentic_bookkeeper/config.json`
@@ -813,6 +875,7 @@ cursor.execute("SELECT * FROM transactions WHERE vendor = ?", (vendor,))
 ### Future: Cloud Deployment (Not in MVP)
 
 **Potential Architecture**:
+
 - Web frontend (React/Vue)
 - REST API backend (FastAPI/Flask)
 - PostgreSQL database
@@ -825,6 +888,7 @@ cursor.execute("SELECT * FROM transactions WHERE vendor = ?", (vendor,))
 ## Conclusion
 
 The Agentic Bookkeeper architecture is designed for:
+
 - **Modularity**: Clear separation of concerns
 - **Extensibility**: Easy to add providers, exporters, reports
 - **Testability**: High test coverage with isolated components
@@ -833,6 +897,7 @@ The Agentic Bookkeeper architecture is designed for:
 - **Cross-Platform**: Works on Windows and Linux
 
 For more information, see:
+
 - [API Reference](API_REFERENCE.md) - Complete API documentation
 - [Development Guide](DEVELOPMENT.md) - Development environment setup
 - [Contributing Guide](CONTRIBUTING.md) - Contribution guidelines
