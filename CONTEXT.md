@@ -9,7 +9,7 @@
 ## PURPOSE
 
 This file maintains persistent context that should be carried across all tasks
-in the /next-task workflow. It serves as the project's "living memory" that
+in the /run-all-tasks workflow. It serves as the project's "living memory" that
 agents can reference to understand:
 
 - Common patterns and conventions used in the codebase
@@ -1264,4 +1264,4 @@ pytest tests/test_module.py::test_function_name
 **End of CONTEXT.md**
 
 **Note:** This is a living document. Keep it updated to maximize the effectiveness
-of the /next-task workflow automation.
+of the /run-all-tasks workflow automation.

@@ -105,7 +105,8 @@ PyMuPDF is licensed under AGPL v3, which requires:
 - Network use is considered distribution
 - Same license for derivative works
 
-Note: Agentic Bookkeeper uses PyMuPDF as a library without modification. For commercial applications distributed over a network, consult PyMuPDF's commercial licensing options at https://artifex.com/licensing/.
+Note: Agentic Bookkeeper uses PyMuPDF as a library without modification. For commercial applications distributed over a
+network, consult PyMuPDF's commercial licensing options at https://artifex.com/licensing/.
 
 ### requests (Apache 2.0)
 
@@ -173,7 +174,9 @@ Two dependencies use copyleft licenses that require special consideration:
 
 1. **PySide6 (LGPL v3):** Used as a library without modification. LGPL v3 permits this usage in proprietary applications.
 
-2. **PyMuPDF (AGPL v3):** Used as a library without modification. AGPL v3 requires source disclosure if the application is distributed over a network. For network-based distribution of Agentic Bookkeeper, consider PyMuPDF's commercial license or alternative PDF libraries.
+2. **PyMuPDF (AGPL v3):** Used as a library without modification. AGPL v3 requires source disclosure if the application
+is distributed over a network. For network-based distribution of Agentic Bookkeeper, consider PyMuPDF's commercial license
+or alternative PDF libraries.
 
 ### Permissive Licenses
 
@@ -194,7 +197,8 @@ With minimal requirements:
 
 ## Attribution
 
-We gratefully acknowledge the authors and maintainers of these open-source libraries. Their contributions make Agentic Bookkeeper possible.
+We gratefully acknowledge the authors and maintainers of these open-source libraries. Their contributions make
+Agentic Bookkeeper possible.
 
 ---
 
@@ -221,7 +225,8 @@ Full license texts for each dependency can be obtained:
 
 ## License Text Locations
 
-When distributing Agentic Bookkeeper, include this file (THIRD_PARTY_LICENSES.md) to comply with attribution requirements. Full license texts are available in the installed Python packages.
+When distributing Agentic Bookkeeper, include this file (THIRD_PARTY_LICENSES.md) to comply with attribution
+requirements. Full license texts are available in the installed Python packages.
 
 ---
 
@@ -234,4 +239,5 @@ Email: stephenbogner@stephenbogner.com
 
 ---
 
-**Note:** This document reflects the licenses as of the last update date. License information may change with package updates. Always verify current license information from the package maintainers.
+**Note:** This document reflects the licenses as of the last update date. License information may change with package
+updates. Always verify current license information from the package maintainers.

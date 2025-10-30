@@ -9,7 +9,8 @@
 
 ## Executive Summary
 
-This security review assesses the Agentic Bookkeeper application for common security vulnerabilities including API key management, log sanitization, SQL injection prevention, input validation, and file system security.
+This security review assesses the Agentic Bookkeeper application for common security vulnerabilities including API key
+management, log sanitization, SQL injection prevention, input validation, and file system security.
 
 **Overall Assessment:** ✅ **PASS**
 
@@ -64,7 +65,8 @@ def _init_encryption(self) -> None:
 - `decrypt_api_key()` - Decrypts encrypted API keys (config.py:247-265)
 - `get_api_key()` - Retrieves API keys securely (config.py:210-220)
 
-**Current Implementation:** API keys are loaded from environment variables (not stored encrypted at rest yet). The infrastructure is in place but not actively used for file storage.
+**Current Implementation:** API keys are loaded from environment variables (not stored encrypted at rest yet).
+The infrastructure is in place but not actively used for file storage.
 
 ### 1.2 Access Controls
 
@@ -478,11 +480,13 @@ salt = b'agentic_bookkeeper_salt_2025'  # Static salt (not ideal for production)
 
 **Risk Level:** LOW
 
-**Impact:** In the current implementation (environment variable storage), this has minimal impact. If encrypted storage at rest is implemented, a static salt reduces the security benefit of PBKDF2.
+**Impact:** In the current implementation (environment variable storage), this has minimal impact. If encrypted storage
+at rest is implemented, a static salt reduces the security benefit of PBKDF2.
 
 **Recommendation:** Generate a unique salt per installation and store it securely (e.g., in a protected config file).
 
-**Workaround:** Current implementation uses environment variables, so encrypted storage is not actively used. Issue only applies if encrypted file storage is implemented.
+**Workaround:** Current implementation uses environment variables, so encrypted storage is not actively used. Issue
+only applies if encrypted file storage is implemented.
 
 #### Issue 2: Machine ID Fallback (Low Risk)
 
@@ -506,7 +510,8 @@ machine_id = os.environ.get('MACHINE_ID', 'default_machine_id')
 
 **Location:** `src/agentic_bookkeeper/utils/config.py:320-323`
 
-**Description:** Config export masks API keys with '***' but doesn't mask other potentially sensitive fields (database paths, log files).
+**Description:** Config export masks API keys with '***' but doesn't mask other potentially sensitive
+fields (database paths, log files).
 
 **Risk Level:** VERY LOW (Informational)
 
@@ -764,4 +769,4 @@ git check-ignore data/bookkeeper.db
 
 ---
 
-**End of Security Review**
+--End of Security Review--

@@ -44,6 +44,9 @@ env/
 
 # Claude Code specific files (developer-specific)
 CLAUDE.md
+CONTEXT.md
+PROJECT_STATUS.md
+DEVELOPER.md
 
 # Testing
 .pytest_cache/
