@@ -24,7 +24,10 @@
 
 ### What is Agentic Bookkeeper?
 
-Agentic Bookkeeper is an intelligent bookkeeping automation system that uses AI/LLM technology to automatically process receipts, invoices, and other financial documents. The application extracts transaction information from your documents and maintains organized financial records suitable for tax filing and business management.
+Agentic Bookkeeper is an intelligent bookkeeping automation system that uses AI/LLM technology to
+automatically process receipts, invoices, and other financial documents. The application extracts
+transaction information from your documents and maintains organized financial records suitable for
+tax filing and business management.
 
 ### Key Features
 
@@ -89,6 +92,7 @@ You'll need at least one API key from:
 2. Run the installer
 3. **Important**: Check "Add Python to PATH" during installation
 4. Verify installation:
+
    ```cmd
    python --version
    ```
@@ -103,6 +107,7 @@ You'll need at least one API key from:
    - Under "System variables", select "Path" → Edit
    - Add: `C:\Program Files\Tesseract-OCR`
 4. Verify installation:
+
    ```cmd
    tesseract --version
    ```
@@ -111,20 +116,27 @@ You'll need at least one API key from:
 
 1. Open Command Prompt
 2. Create a directory for the application:
+
    ```cmd
    mkdir C:\AgenticBookkeeper
    cd C:\AgenticBookkeeper
    ```
+
 3. Download or clone the application (or extract from ZIP)
 4. Create virtual environment:
+
    ```cmd
    python -m venv venv
    ```
+
 5. Activate virtual environment:
+
    ```cmd
    venv\Scripts\activate
    ```
+
 6. Install dependencies:
+
    ```cmd
    pip install -r requirements.txt
    ```
@@ -227,8 +239,7 @@ On first launch, the application will:
 
 ### Step 3: Configure Settings
 
-1. Click the **Settings** tab
-2. Configure the following:
+**Configure the following settings:**
 
 #### API Keys
 
@@ -253,7 +264,7 @@ Add at least one LLM provider API key:
 - **LLM Provider**: Choose your preferred AI provider
 - **Auto-start Monitoring**: Whether to start document monitoring on launch
 
-3. Click **Save Settings**
+**Save your settings** by clicking the **Save Settings** button.
 
 ### Step 4: Test Document Processing
 
@@ -724,19 +735,23 @@ python src/agentic_bookkeeper/main.py
 
 **Q: Is my financial data secure?**
 
-A: Yes. All API keys are encrypted with AES-256, and the database is stored locally on your computer. Data is never sent anywhere except to the LLM provider during document processing.
+A: Yes. All API keys are encrypted with AES-256, and the database is stored locally on your computer.
+Data is never sent anywhere except to the LLM provider during document processing.
 
 **Q: Can I use this for personal and business finances?**
 
-A: Yes, but we recommend using separate databases (different database paths in Settings) to keep them separate.
+A: Yes, but we recommend using separate databases (different database paths in Settings) to keep them
+separate.
 
 **Q: Does this replace my accountant?**
 
-A: No. This tool helps organize your financial records, but you should still consult with a qualified accountant for tax advice and filing.
+A: No. This tool helps organize your financial records, but you should still consult with a qualified
+accountant for tax advice and filing.
 
 **Q: How much does it cost?**
 
-A: The application is free, but you'll pay for LLM API usage. Cost is typically $0.01-0.05 per document, depending on the provider.
+A: The application is free, but you'll pay for LLM API usage. Cost is typically $0.01-0.05 per
+document, depending on the provider.
 
 ### Features
 
@@ -764,29 +779,35 @@ A: XAI is recommended for speed and cost. OpenAI and Anthropic are also excellen
 
 **Q: How much disk space do I need?**
 
-A: The application itself is ~50MB. Your database and processed documents will require additional space (typically 100-500MB for a year's worth of documents).
+A: The application itself is ~50MB. Your database and processed documents will require additional
+space (typically 100-500MB for a year's worth of documents).
 
 **Q: Can I run this on a network drive?**
 
-A: Not recommended. SQLite databases should be on local disk for best performance and reliability.
+A: Not recommended. SQLite databases should be on local disk for best performance and
+reliability.
 
 **Q: Can multiple users share a database?**
 
-A: No. The application is designed for single-user operation. Database locking will prevent concurrent access.
+A: No. The application is designed for single-user operation. Database locking will prevent
+concurrent access.
 
 ### Troubleshooting
 
 **Q: What if the AI extracts wrong information?**
 
-A: Simply edit the transaction and correct the fields. The AI is typically 80-100% accurate, but mistakes happen.
+A: Simply edit the transaction and correct the fields. The AI is typically 80-100% accurate, but
+mistakes happen.
 
 **Q: Why is document processing slow?**
 
-A: Most time is spent in LLM API calls (1.8-3 seconds per document). Try switching to XAI for fastest processing.
+A: Most time is spent in LLM API calls (1.8-3 seconds per document). Try switching to XAI for
+fastest processing.
 
 **Q: Can I use this offline?**
 
-A: No. Document processing requires internet for LLM API calls. However, you can view transactions and generate reports offline from already-processed data.
+A: No. Document processing requires internet for LLM API calls. However, you can view transactions
+and generate reports offline from already-processed data.
 
 ---
 
@@ -945,7 +966,7 @@ See `docs/KNOWN_ISSUES.md` for complete list. Key limitations:
 
 ---
 
-**End of User Guide**
+## Additional Resources
 
 For additional help, please refer to:
 

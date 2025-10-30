@@ -47,6 +47,7 @@ CLAUDE.md
 
 # Testing
 .pytest_cache/
+.mytest_cache/
 .coverage
 htmlcov/
 *.cover

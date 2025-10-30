@@ -39,7 +39,7 @@ self-employed individuals.
 - **Performance Optimized**: Document processing <30s, database queries <50ms,
   report generation <5s
 - **Security Audited**: Strong security posture with comprehensive audit
-  (see [SECURITY_REVIEW.md](docs/SECURITY_REVIEW.md))
+  (see [SECURITY_REVIEW.md](docs/developer/SECURITY_REVIEW.md))
 - **Well Documented**: Complete user and developer documentation
 
 ---
@@ -179,27 +179,40 @@ The application provides an intuitive graphical interface for all bookkeeping ta
 
 ## Documentation
 
-### User Documentation
+**Complete Documentation**: See [docs/README.md](docs/README.md) for full documentation navigation
 
-- **[User Guide](docs/USER_GUIDE.md)** - Complete guide for end users
-- **[UAT Scenarios](docs/UAT_SCENARIOS.md)** - User acceptance test scenarios
-- **[UAT Results](docs/UAT_RESULTS.md)** - Testing results and validation
+### 📖 User Documentation
 
-### Developer Documentation
+Documentation for end users:
 
-- **[Architecture](docs/ARCHITECTURE.md)** - System architecture and design patterns
-- **[API Reference](docs/API_REFERENCE.md)** - Complete API documentation
-- **[Development Guide](docs/DEVELOPMENT.md)** - Development environment setup and workflows
-- **[Contributing Guidelines](docs/CONTRIBUTING.md)** - How to contribute to the project
+- **[User Guide](docs/user/USER_GUIDE.md)** - Complete guide for end users
+- **[Quick Start](docs/user/QUICK_START.md)** - Get started quickly
+- **[Environment Setup](docs/user/ENV_SETUP_GUIDE.md)** - Configure API keys and settings
+- **[Release Notes](docs/user/RELEASE_NOTES.md)** - Version history and changes
 
-### Technical Documentation
+### 🔧 Developer Documentation
+
+Documentation for developers and contributors:
+
+- **[Architecture](docs/developer/ARCHITECTURE.md)** - System architecture and design patterns
+- **[API Reference](docs/developer/API_REFERENCE.md)** - Complete API documentation
+- **[Development Guide](docs/developer/DEVELOPMENT.md)** - Development setup and workflows
+- **[Contributing](docs/developer/CONTRIBUTING.md)** - How to contribute to the project
+- **[Build for Windows](docs/developer/BUILD_WINDOWS.md)** - Windows executable creation
+- **[Build for Linux](docs/developer/BUILD_LINUX.md)** - Linux package preparation
+
+### 📊 Testing & Quality
+
+- **[UAT Scenarios](docs/developer/UAT_SCENARIOS.md)** - User acceptance test scenarios
+- **[UAT Results](docs/developer/UAT_RESULTS.md)** - Testing results and validation
+- **[Performance Metrics](docs/developer/PERFORMANCE_METRICS.md)** - Performance benchmarks
+- **[Security Review](docs/developer/SECURITY_REVIEW.md)** - Security audit and recommendations
+- **[Known Issues](docs/developer/KNOWN_ISSUES.md)** - Known limitations and enhancements
+
+### 📋 Project Management
 
 - **[Project Status](PROJECT_STATUS.md)** - Current development status and progress
 - **[Context](CONTEXT.md)** - Project context and architectural decisions
-- **[Performance Metrics](docs/PERFORMANCE_METRICS.md)** - Performance benchmarks and optimization
-- **[Security Review](docs/SECURITY_REVIEW.md)** - Security audit and recommendations
-- **[Known Issues](docs/KNOWN_ISSUES.md)** - Known limitations and enhancement
-  opportunities
 
 ---
 
@@ -305,13 +318,13 @@ mypy src/
 - **Test Coverage**: Minimum 80% required
 - **Documentation**: Google-style docstrings required
 
-See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for complete development guidelines.
+See [CONTRIBUTING.md](docs/developer/CONTRIBUTING.md) for complete development guidelines.
 
 ---
 
 ## Contributing
 
-Contributions are welcome! Please see [CONTRIBUTING.md](docs/CONTRIBUTING.md) for:
+Contributions are welcome! Please see [CONTRIBUTING.md](docs/developer/CONTRIBUTING.md) for:
 
 - Code of conduct
 - Development workflow
@@ -340,17 +353,17 @@ This project uses several open-source libraries. See [THIRD_PARTY_LICENSES.md](T
 
 ### Getting Help
 
-- **User Guide**: See [docs/USER_GUIDE.md](docs/USER_GUIDE.md)
-- **Troubleshooting**: See [docs/USER_GUIDE.md#troubleshooting](docs/USER_GUIDE.md#troubleshooting)
-- **Known Issues**: See [docs/KNOWN_ISSUES.md](docs/KNOWN_ISSUES.md)
+- **User Guide**: See [docs/user/USER_GUIDE.md](docs/user/USER_GUIDE.md)
+- **Troubleshooting**: See [docs/user/USER_GUIDE.md#troubleshooting](docs/user/USER_GUIDE.md#troubleshooting)
+- **Known Issues**: See [docs/developer/KNOWN_ISSUES.md](docs/developer/KNOWN_ISSUES.md)
 
 ### Reporting Issues
 
 Found a bug or have a feature request? Please check:
 
-1. [Known Issues](docs/KNOWN_ISSUES.md) - Check if already documented
+1. [Known Issues](docs/developer/KNOWN_ISSUES.md) - Check if already documented
 2. [GitHub Issues](https://github.com/StephenBogner/agentic_bookkeeper/issues) - Search existing issues
-3. Create a new issue with detailed information (see [CONTRIBUTING.md](docs/CONTRIBUTING.md))
+3. Create a new issue with detailed information (see [CONTRIBUTING.md](docs/developer/CONTRIBUTING.md))
 
 ---
 
