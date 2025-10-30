@@ -92,10 +92,7 @@ class TestTransactionManager:
             tm.create_transaction(trans)
 
         # Query date range
-        results = tm.query_transactions(
-            start_date="2025-01-15",
-            end_date="2025-01-25"
-        )
+        results = tm.query_transactions(start_date="2025-01-15", end_date="2025-01-25")
 
         assert len(results) == 3  # Should get Jan 15, Jan 20, and Jan 25 transactions
 
@@ -107,14 +104,14 @@ class TestTransactionManager:
             tm.create_transaction(trans)
 
         # Query expenses only
-        expenses = tm.query_transactions(transaction_type='expense')
+        expenses = tm.query_transactions(transaction_type="expense")
         assert len(expenses) == 3
-        assert all(t.type == 'expense' for t in expenses)
+        assert all(t.type == "expense" for t in expenses)
 
         # Query income only
-        income = tm.query_transactions(transaction_type='income')
+        income = tm.query_transactions(transaction_type="income")
         assert len(income) == 1
-        assert all(t.type == 'income' for t in income)
+        assert all(t.type == "income" for t in income)
 
     def test_query_transactions_by_amount_range(self, database, multiple_transactions):
         """Test querying by amount range."""
@@ -151,21 +148,25 @@ class TestTransactionManager:
         tm = TransactionManager(database)
 
         # Create transactions with specific descriptions
-        tm.create_transaction(Transaction(
-            date="2025-01-01",
-            type="expense",
-            category="Office",
-            description="Office supplies from Staples",
-            amount=100.00
-        ))
+        tm.create_transaction(
+            Transaction(
+                date="2025-01-01",
+                type="expense",
+                category="Office",
+                description="Office supplies from Staples",
+                amount=100.00,
+            )
+        )
 
-        tm.create_transaction(Transaction(
-            date="2025-01-02",
-            type="expense",
-            category="Office",
-            description="Printer paper",
-            amount=50.00
-        ))
+        tm.create_transaction(
+            Transaction(
+                date="2025-01-02",
+                type="expense",
+                category="Office",
+                description="Printer paper",
+                amount=50.00,
+            )
+        )
 
         # Search
         results = tm.search_transactions("supplies")
@@ -192,20 +193,20 @@ class TestTransactionManager:
 
         stats = tm.get_transaction_statistics()
 
-        assert 'income' in stats
-        assert 'expense' in stats
-        assert 'net' in stats
+        assert "income" in stats
+        assert "expense" in stats
+        assert "net" in stats
 
         # Check income stats
-        assert stats['income']['count'] == 1
-        assert stats['income']['total'] == 2000.00
+        assert stats["income"]["count"] == 1
+        assert stats["income"]["total"] == 2000.00
 
         # Check expense stats
-        assert stats['expense']['count'] == 3
-        assert stats['expense']['total'] == 850.00  # 250 + 100 + 500
+        assert stats["expense"]["count"] == 3
+        assert stats["expense"]["total"] == 850.00  # 250 + 100 + 500
 
         # Check net
-        assert stats['net'] == 1150.00  # 2000 - 850
+        assert stats["net"] == 1150.00  # 2000 - 850
 
     def test_get_category_summary(self, database, multiple_transactions):
         """Test getting category summary."""
@@ -214,15 +215,15 @@ class TestTransactionManager:
         for trans in multiple_transactions:
             tm.create_transaction(trans)
 
-        summary = tm.get_category_summary(transaction_type='expense')
+        summary = tm.get_category_summary(transaction_type="expense")
 
-        assert 'Advertising' in summary
-        assert 'Office expenses' in summary
-        assert 'Travel' in summary
+        assert "Advertising" in summary
+        assert "Office expenses" in summary
+        assert "Travel" in summary
 
-        assert summary['Advertising'] == 250.00
-        assert summary['Office expenses'] == 100.00
-        assert summary['Travel'] == 500.00
+        assert summary["Advertising"] == 250.00
+        assert summary["Office expenses"] == 100.00
+        assert summary["Travel"] == 500.00
 
     def test_detect_duplicates(self, database):
         """Test duplicate detection."""
@@ -234,7 +235,7 @@ class TestTransactionManager:
             type="expense",
             category="Office",
             vendor_customer="Office Depot",
-            amount=100.00
+            amount=100.00,
         )
         tm.create_transaction(trans1)
 
@@ -244,7 +245,7 @@ class TestTransactionManager:
             type="expense",
             category="Office",
             vendor_customer="Office Depot",
-            amount=100.00
+            amount=100.00,
         )
 
         duplicates = tm.detect_duplicates(trans2, time_window_days=7)

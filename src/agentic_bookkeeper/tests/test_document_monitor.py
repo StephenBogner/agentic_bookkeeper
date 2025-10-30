@@ -23,17 +23,17 @@ class TestDocumentHandler:
         handler = DocumentHandler(callback)
 
         assert handler.callback == callback
-        assert '.pdf' in handler.supported_extensions
-        assert '.jpg' in handler.supported_extensions
+        assert ".pdf" in handler.supported_extensions
+        assert ".jpg" in handler.supported_extensions
 
     def test_custom_extensions(self):
         """Test handler with custom extensions."""
         callback = Mock()
-        handler = DocumentHandler(callback, supported_extensions=['.pdf', '.png'])
+        handler = DocumentHandler(callback, supported_extensions=[".pdf", ".png"])
 
-        assert '.pdf' in handler.supported_extensions
-        assert '.png' in handler.supported_extensions
-        assert '.jpg' not in handler.supported_extensions
+        assert ".pdf" in handler.supported_extensions
+        assert ".png" in handler.supported_extensions
+        assert ".jpg" not in handler.supported_extensions
 
 
 @pytest.mark.unit
@@ -49,7 +49,7 @@ class TestDocumentMonitor:
         monitor = DocumentMonitor(
             watch_directory=str(watch_dir),
             processed_directory=str(processed_dir),
-            on_document_callback=callback
+            on_document_callback=callback,
         )
 
         assert monitor.watch_directory == watch_dir
@@ -66,7 +66,7 @@ class TestDocumentMonitor:
         monitor = DocumentMonitor(
             watch_directory=str(watch_dir),
             processed_directory=str(processed_dir),
-            on_document_callback=callback
+            on_document_callback=callback,
         )
 
         # Create a test file
@@ -104,7 +104,7 @@ class TestDocumentMonitor:
         monitor = DocumentMonitor(
             watch_directory=str(watch_dir),
             processed_directory=str(processed_dir),
-            on_document_callback=callback
+            on_document_callback=callback,
         )
 
         # Process existing files
@@ -123,15 +123,15 @@ class TestDocumentMonitor:
         monitor = DocumentMonitor(
             watch_directory=str(watch_dir),
             processed_directory=str(processed_dir),
-            on_document_callback=callback
+            on_document_callback=callback,
         )
 
         status = monitor.get_status()
 
-        assert status['is_running'] is False
-        assert status['watch_directory'] == str(watch_dir)
-        assert status['processed_directory'] == str(processed_dir)
-        assert '.pdf' in status['supported_extensions']
+        assert status["is_running"] is False
+        assert status["watch_directory"] == str(watch_dir)
+        assert status["processed_directory"] == str(processed_dir)
+        assert ".pdf" in status["supported_extensions"]
 
     def test_start_stop_monitor(self, temp_dir):
         """Test starting and stopping the monitor."""
@@ -142,7 +142,7 @@ class TestDocumentMonitor:
         monitor = DocumentMonitor(
             watch_directory=str(watch_dir),
             processed_directory=str(processed_dir),
-            on_document_callback=callback
+            on_document_callback=callback,
         )
 
         # Start
@@ -162,7 +162,7 @@ class TestDocumentMonitor:
         monitor = DocumentMonitor(
             watch_directory=str(watch_dir),
             processed_directory=str(processed_dir),
-            on_document_callback=callback
+            on_document_callback=callback,
         )
 
         assert monitor.is_running() is False

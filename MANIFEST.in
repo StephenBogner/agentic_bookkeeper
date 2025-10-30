@@ -1,0 +1,52 @@
+# MANIFEST.in - Files to include in source distribution
+# Package Name: agentic_bookkeeper
+# Description: Specifies additional files to include in sdist
+# Author: Stephen Bogner, P.Eng.
+# Created: 2025-10-29
+
+# Core documentation
+include README.md
+include LICENSE
+include CHANGELOG.md
+
+# Configuration files
+include requirements.txt
+include requirements-dev.txt
+include pyproject.toml
+
+# Sample configuration
+include samples/config/.env.sample
+include samples/config/README.md
+
+# Sample documents
+recursive-include samples/invoices *.pdf
+recursive-include samples/receipts *.pdf
+include samples/README.md
+
+# Documentation
+recursive-include docs *.md
+recursive-include docs/screenshots *.png *.jpg
+
+# Tests (optional - include if you want tests in sdist)
+recursive-include src/agentic_bookkeeper/tests *.py
+
+# Type hints
+recursive-include src/agentic_bookkeeper *.pyi py.typed
+
+# Exclude compiled Python files
+global-exclude *.pyc
+global-exclude *.pyo
+global-exclude __pycache__
+global-exclude *.so
+global-exclude *.dylib
+
+# Exclude development files
+exclude .gitignore
+exclude .env
+exclude *.db
+exclude *.log
+prune .git
+prune venv
+prune dist
+prune build
+prune *.egg-info

@@ -31,9 +31,7 @@ class TestDatabase:
             assert cursor.fetchone() is not None
 
             # Check config table exists
-            cursor.execute(
-                "SELECT name FROM sqlite_master WHERE type='table' AND name='config'"
-            )
+            cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='config'")
             assert cursor.fetchone() is not None
 
             # Check schema version is set

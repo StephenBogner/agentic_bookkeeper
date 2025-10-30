@@ -12,7 +12,7 @@ from agentic_bookkeeper.models.transaction import (
     validate_category,
     get_categories_for_jurisdiction,
     CRA_CATEGORIES,
-    IRS_CATEGORIES
+    IRS_CATEGORIES,
 )
 
 
@@ -34,27 +34,21 @@ class TestTransaction:
                 date="01/15/2025",  # Wrong format
                 type="expense",
                 category="Office expenses",
-                amount=100.00
+                amount=100.00,
             )
 
     def test_invalid_type(self):
         """Test that invalid type raises ValueError."""
         with pytest.raises(ValueError, match="Invalid transaction type"):
             Transaction(
-                date="2025-01-15",
-                type="invalid_type",
-                category="Office expenses",
-                amount=100.00
+                date="2025-01-15", type="invalid_type", category="Office expenses", amount=100.00
             )
 
     def test_negative_amount(self):
         """Test that negative amount raises ValueError."""
         with pytest.raises(ValueError, match="Amount must be >= 0"):
             Transaction(
-                date="2025-01-15",
-                type="expense",
-                category="Office expenses",
-                amount=-100.00
+                date="2025-01-15", type="expense", category="Office expenses", amount=-100.00
             )
 
     def test_negative_tax_amount(self):
@@ -65,7 +59,7 @@ class TestTransaction:
                 type="expense",
                 category="Office expenses",
                 amount=100.00,
-                tax_amount=-10.00
+                tax_amount=-10.00,
             )
 
     def test_amount_rounding(self):
@@ -75,7 +69,7 @@ class TestTransaction:
             type="expense",
             category="Office expenses",
             amount=100.999,
-            tax_amount=13.005
+            tax_amount=13.005,
         )
         assert trans.amount == 101.00
         assert trans.tax_amount == 13.01
@@ -84,21 +78,21 @@ class TestTransaction:
         """Test converting transaction to dictionary."""
         data = sample_transaction.to_dict()
 
-        assert data['date'] == "2025-01-15"
-        assert data['type'] == "expense"
-        assert data['amount'] == 125.50
-        assert 'created_at' in data
-        assert 'modified_at' in data
+        assert data["date"] == "2025-01-15"
+        assert data["type"] == "expense"
+        assert data["amount"] == 125.50
+        assert "created_at" in data
+        assert "modified_at" in data
 
     def test_from_dict(self):
         """Test creating transaction from dictionary."""
         data = {
-            'date': '2025-01-15',
-            'type': 'expense',
-            'category': 'Office expenses',
-            'amount': 125.50,
-            'tax_amount': 16.32,
-            'vendor_customer': 'Test Vendor'
+            "date": "2025-01-15",
+            "type": "expense",
+            "category": "Office expenses",
+            "amount": 125.50,
+            "tax_amount": 16.32,
+            "vendor_customer": "Test Vendor",
         }
 
         trans = Transaction.from_dict(data)
@@ -109,17 +103,11 @@ class TestTransaction:
     def test_transaction_equality(self):
         """Test transaction equality comparison."""
         trans1 = Transaction(
-            date="2025-01-15",
-            type="expense",
-            category="Office expenses",
-            amount=100.00
+            date="2025-01-15", type="expense", category="Office expenses", amount=100.00
         )
 
         trans2 = Transaction(
-            date="2025-01-15",
-            type="expense",
-            category="Office expenses",
-            amount=100.00
+            date="2025-01-15", type="expense", category="Office expenses", amount=100.00
         )
 
         assert trans1 == trans2
@@ -157,6 +145,7 @@ class TestTransaction:
         original_time = sample_transaction.modified_at
         # Small delay
         import time
+
         time.sleep(0.01)
 
         sample_transaction.update_modified_timestamp()

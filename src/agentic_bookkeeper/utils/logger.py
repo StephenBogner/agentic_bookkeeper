@@ -12,7 +12,7 @@ import logging
 import logging.handlers
 import sys
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Any
 import re
 
 
@@ -29,10 +29,19 @@ class SensitiveDataFilter(logging.Filter):
 
     # Patterns for sensitive data
     PATTERNS = [
-        (re.compile(r'(api[_-]?key|token|password|secret)["\']?\s*[:=]\s*["\']?([^"\'\s,}]+)', re.IGNORECASE), r'\1=***'),
-        (re.compile(r'Bearer\s+[A-Za-z0-9\-._~+/]+=*', re.IGNORECASE), 'Bearer ***'),
-        (re.compile(r'sk-[A-Za-z0-9]{48}'), 'sk-***'),  # OpenAI API key pattern
-        (re.compile(r'\b\d{4}[-\s]?\d{4}[-\s]?\d{4}[-\s]?\d{4}\b'), '****-****-****-****'),  # Credit card
+        (
+            re.compile(
+                r'(api[_-]?key|token|password|secret)["\']?\s*[:=]\s*["\']?([^"\'\s,}]+)',
+                re.IGNORECASE,
+            ),
+            r"\1=***",
+        ),
+        (re.compile(r"Bearer\s+[A-Za-z0-9\-._~+/]+=*", re.IGNORECASE), "Bearer ***"),
+        (re.compile(r"sk-[A-Za-z0-9]{48}"), "sk-***"),  # OpenAI API key pattern
+        (
+            re.compile(r"\b\d{4}[-\s]?\d{4}[-\s]?\d{4}[-\s]?\d{4}\b"),
+            "****-****-****-****",
+        ),  # Credit card
     ]
 
     def filter(self, record: logging.LogRecord) -> bool:
@@ -82,7 +91,7 @@ class LoggerSetup:
         log_level: str = "INFO",
         max_bytes: int = 10 * 1024 * 1024,  # 10MB
         backup_count: int = 5,
-        console_output: bool = True
+        console_output: bool = True,
     ):
         """
         Initialize logger configuration.
@@ -119,13 +128,12 @@ class LoggerSetup:
 
         # Create formatters
         detailed_formatter = logging.Formatter(
-            '%(asctime)s - %(name)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s',
-            datefmt='%Y-%m-%d %H:%M:%S'
+            "%(asctime)s - %(name)s - %(levelname)s - %(filename)s:%(lineno)d - %(message)s",
+            datefmt="%Y-%m-%d %H:%M:%S",
         )
 
         simple_formatter = logging.Formatter(
-            '%(asctime)s - %(levelname)s - %(message)s',
-            datefmt='%H:%M:%S'
+            "%(asctime)s - %(levelname)s - %(message)s", datefmt="%H:%M:%S"
         )
 
         # File handler with rotation
@@ -133,7 +141,7 @@ class LoggerSetup:
             filename=str(self.log_file),
             maxBytes=self.max_bytes,
             backupCount=self.backup_count,
-            encoding='utf-8'
+            encoding="utf-8",
         )
         file_handler.setLevel(self.log_level)
         file_handler.setFormatter(detailed_formatter)
@@ -149,11 +157,11 @@ class LoggerSetup:
             logger.addHandler(console_handler)
 
         # Log initialization
-        logger.info("="*60)
+        logger.info("=" * 60)
         logger.info("Agentic Bookkeeper - Logging Initialized")
         logger.info(f"Log Level: {logging.getLevelName(self.log_level)}")
         logger.info(f"Log File: {self.log_file}")
-        logger.info("="*60)
+        logger.info("=" * 60)
 
         return logger
 
@@ -171,13 +179,68 @@ def get_logger(name: str) -> logging.Logger:
     return logging.getLogger(name)
 
 
-def setup_logging(
-    log_file: Optional[str] = None,
-    log_level: Optional[str] = None,
-    console_output: bool = True
-) -> logging.Logger:
+def log_operation_start(logger_instance: logging.Logger, operation: str, **context: Any) -> None:
     """
-    Convenience function to set up logging.
+    Log the start of an operation with structured context.
+
+    Args:
+        logger_instance: Logger instance to use
+        operation: Name of the operation being started
+        **context: Additional context key-value pairs
+    """
+    context_str = " ".join([f"{k}={v}" for k, v in context.items()])
+    logger_instance.info(f"Operation started: {operation} {context_str}".strip())
+
+
+def log_operation_success(
+    logger_instance: logging.Logger,
+    operation: str,
+    duration_ms: Optional[float] = None,
+    **context: Any,
+) -> None:
+    """
+    Log successful completion of an operation.
+
+    Args:
+        logger_instance: Logger instance to use
+        operation: Name of the operation that completed
+        duration_ms: Operation duration in milliseconds (optional)
+        **context: Additional context key-value pairs
+    """
+    context_items = list(context.items())
+    if duration_ms is not None:
+        context_items.append(("duration_ms", f"{duration_ms:.2f}"))
+
+    context_str = " ".join([f"{k}={v}" for k, v in context_items])
+    logger_instance.info(f"Operation succeeded: {operation} {context_str}".strip())
+
+
+def log_operation_failure(
+    logger_instance: logging.Logger,
+    operation: str,
+    error: Exception,
+    **context: Any,
+) -> None:
+    """
+    Log operation failure with error details.
+
+    Args:
+        logger_instance: Logger instance to use
+        operation: Name of the operation that failed
+        error: Exception that occurred
+        **context: Additional context key-value pairs
+    """
+    context_str = " ".join([f"{k}={v}" for k, v in context.items()])
+    logger_instance.error(
+        f"Operation failed: {operation} error={type(error).__name__} "
+        f"message={str(error)} {context_str}".strip()
+    )
+
+
+def setup_logging(
+    log_file: Optional[str] = None, log_level: Optional[str] = None, console_output: bool = True
+) -> logging.Logger:
+    """Set up logging with specified parameters.
 
     Args:
         log_file: Path to log file (defaults to config value)
@@ -199,9 +262,7 @@ def setup_logging(
 
     # Set up logger
     logger_setup = LoggerSetup(
-        log_file=log_file,
-        log_level=log_level,
-        console_output=console_output
+        log_file=log_file, log_level=log_level, console_output=console_output
     )
 
     return logger_setup.setup()
@@ -227,9 +288,9 @@ class temporary_log_level:
             level: Temporary logging level
         """
         self.level = level
-        self.original_level = None
+        self.original_level: Optional[int] = None
 
-    def __enter__(self):
+    def __enter__(self) -> "temporary_log_level":
         """Set temporary log level."""
         logger = logging.getLogger()
         self.original_level = logger.level
@@ -238,10 +299,10 @@ class temporary_log_level:
             handler.setLevel(self.level)
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
         """Restore original log level."""
         logger = logging.getLogger()
-        logger.setLevel(self.original_level)
-        for handler in logger.handlers:
-            handler.setLevel(self.original_level)
-        return False
+        if self.original_level is not None:
+            logger.setLevel(self.original_level)
+            for handler in logger.handlers:
+                handler.setLevel(self.original_level)

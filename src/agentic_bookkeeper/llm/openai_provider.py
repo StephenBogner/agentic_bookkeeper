@@ -20,11 +20,12 @@ from .llm_provider import (
     APIKeyError,
     RateLimitError,
     ExtractionError,
-    create_standard_prompt
+    create_standard_prompt,
 )
 
 try:
     from openai import OpenAI
+
     OPENAI_AVAILABLE = True
 except ImportError:
     OPENAI_AVAILABLE = False
@@ -40,11 +41,7 @@ class OpenAIProvider(LLMProvider):
     """
 
     def __init__(
-        self,
-        api_key: str,
-        model: str = "gpt-4o",
-        max_retries: int = 3,
-        timeout: int = 30
+        self, api_key: str, model: str = "gpt-4o", max_retries: int = 3, timeout: int = 30
     ):
         """
         Initialize OpenAI provider.
@@ -56,10 +53,7 @@ class OpenAIProvider(LLMProvider):
             timeout: Request timeout in seconds
         """
         if not OPENAI_AVAILABLE:
-            raise ImportError(
-                "OpenAI package not installed. "
-                "Install with: pip install openai"
-            )
+            raise ImportError("OpenAI package not installed. " "Install with: pip install openai")
 
         super().__init__(api_key, max_retries, timeout)
         self.model = model
@@ -71,11 +65,7 @@ class OpenAIProvider(LLMProvider):
         """Get provider name."""
         return "OpenAI"
 
-    def extract_transaction(
-        self,
-        document_path: str,
-        categories: List[str]
-    ) -> ExtractionResult:
+    def extract_transaction(self, document_path: str, categories: List[str]) -> ExtractionResult:
         """
         Extract transaction data from document using OpenAI.
 
@@ -94,11 +84,7 @@ class OpenAIProvider(LLMProvider):
             prompt = self._prepare_prompt(categories)
 
             # Make API call with retry logic
-            response = self.retry_with_backoff(
-                self._make_api_call,
-                document_path,
-                prompt
-            )
+            response = self.retry_with_backoff(self._make_api_call, document_path, prompt)
 
             # Parse response
             transaction_data = self._parse_response(response)
@@ -109,7 +95,7 @@ class OpenAIProvider(LLMProvider):
                     success=False,
                     error_message="Response validation failed",
                     provider=self.provider_name,
-                    processing_time=time.time() - start_time
+                    processing_time=time.time() - start_time,
                 )
 
             # Calculate confidence (simple heuristic based on field completeness)
@@ -120,7 +106,7 @@ class OpenAIProvider(LLMProvider):
                 transaction_data=transaction_data,
                 confidence=confidence,
                 provider=self.provider_name,
-                processing_time=time.time() - start_time
+                processing_time=time.time() - start_time,
             )
 
         except Exception as e:
@@ -129,7 +115,7 @@ class OpenAIProvider(LLMProvider):
                 success=False,
                 error_message=str(e),
                 provider=self.provider_name,
-                processing_time=time.time() - start_time
+                processing_time=time.time() - start_time,
             )
 
     def _prepare_prompt(self, categories: List[str]) -> str:
@@ -144,11 +130,7 @@ class OpenAIProvider(LLMProvider):
         """
         return create_standard_prompt(categories)
 
-    def _make_api_call(
-        self,
-        document_path: str,
-        prompt: str
-    ) -> Dict[str, Any]:
+    def _make_api_call(self, document_path: str, prompt: str) -> Dict[str, Any]:
         """
         Make API call to OpenAI.
 
@@ -173,17 +155,12 @@ class OpenAIProvider(LLMProvider):
                 {
                     "role": "user",
                     "content": [
-                        {
-                            "type": "text",
-                            "text": prompt
-                        },
+                        {"type": "text", "text": prompt},
                         {
                             "type": "image_url",
-                            "image_url": {
-                                "url": f"data:image/jpeg;base64,{image_data}"
-                            }
-                        }
-                    ]
+                            "image_url": {"url": f"data:image/jpeg;base64,{image_data}"},
+                        },
+                    ],
                 }
             ]
 
@@ -192,7 +169,7 @@ class OpenAIProvider(LLMProvider):
                 model=self.model,
                 messages=messages,
                 max_tokens=500,
-                temperature=0.0  # Deterministic output
+                temperature=0.0,  # Deterministic output
             )
 
             return response
@@ -218,7 +195,7 @@ class OpenAIProvider(LLMProvider):
             Base64 encoded image string
         """
         with open(image_path, "rb") as image_file:
-            return base64.b64encode(image_file.read()).decode('utf-8')
+            return base64.b64encode(image_file.read()).decode("utf-8")
 
     def _parse_response(self, response) -> Dict[str, Any]:
         """
@@ -282,13 +259,13 @@ class OpenAIProvider(LLMProvider):
         """
         # Fields and their weights
         fields = {
-            'date': 0.2,
-            'transaction_type': 0.15,
-            'amount': 0.2,
-            'vendor_customer': 0.15,
-            'description': 0.1,
-            'category': 0.15,
-            'tax_amount': 0.05
+            "date": 0.2,
+            "transaction_type": 0.15,
+            "amount": 0.2,
+            "vendor_customer": 0.15,
+            "description": 0.1,
+            "category": 0.15,
+            "tax_amount": 0.05,
         }
 
         score = 0.0

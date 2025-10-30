@@ -9,7 +9,7 @@ Date: 2025-10-24
 
 import logging
 from pathlib import Path
-from typing import Callable, List, Optional
+from typing import Callable, List, Optional, Any
 import shutil
 from datetime import datetime
 
@@ -26,12 +26,10 @@ class DocumentHandler(FileSystemEventHandler):
     Handles new file creation events and filters for supported file types.
     """
 
-    SUPPORTED_EXTENSIONS = {'.pdf', '.png', '.jpg', '.jpeg'}
+    SUPPORTED_EXTENSIONS = {".pdf", ".png", ".jpg", ".jpeg"}
 
     def __init__(
-        self,
-        callback: Callable[[str], None],
-        supported_extensions: Optional[List[str]] = None
+        self, callback: Callable[[str], None], supported_extensions: Optional[List[str]] = None
     ):
         """
         Initialize document handler.
@@ -50,7 +48,7 @@ class DocumentHandler(FileSystemEventHandler):
 
         logger.info(f"Document handler initialized for extensions: {self.supported_extensions}")
 
-    def on_created(self, event):
+    def on_created(self, event: Any) -> None:
         """
         Handle file creation event.
 
@@ -81,7 +79,7 @@ class DocumentMonitor:
         watch_directory: str,
         processed_directory: str,
         on_document_callback: Callable[[str], None],
-        supported_extensions: Optional[List[str]] = None
+        supported_extensions: Optional[List[str]] = None,
     ):
         """
         Initialize document monitor.
@@ -102,17 +100,12 @@ class DocumentMonitor:
 
         # Create event handler
         self.event_handler = DocumentHandler(
-            callback=self._handle_document,
-            supported_extensions=supported_extensions
+            callback=self._handle_document, supported_extensions=supported_extensions
         )
 
         # Create observer
         self.observer = Observer()
-        self.observer.schedule(
-            self.event_handler,
-            str(self.watch_directory),
-            recursive=False
-        )
+        self.observer.schedule(self.event_handler, str(self.watch_directory), recursive=False)
 
         self._is_running = False
         logger.info(f"Document monitor initialized - watching: {self.watch_directory}")
@@ -229,24 +222,23 @@ class DocumentMonitor:
             Dictionary with status information
         """
         return {
-            'is_running': self._is_running,
-            'watch_directory': str(self.watch_directory),
-            'processed_directory': str(self.processed_directory),
-            'supported_extensions': list(self.event_handler.supported_extensions),
-            'observer_alive': self.observer.is_alive() if self._is_running else False
+            "is_running": self._is_running,
+            "watch_directory": str(self.watch_directory),
+            "processed_directory": str(self.processed_directory),
+            "supported_extensions": list(self.event_handler.supported_extensions),
+            "observer_alive": self.observer.is_alive() if self._is_running else False,
         }
 
-    def __enter__(self):
+    def __enter__(self) -> "DocumentMonitor":
         """Context manager entry."""
         self.start()
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
         """Context manager exit."""
         self.stop()
-        return False
 
-    def __del__(self):
+    def __del__(self) -> None:
         """Cleanup on deletion."""
         if self._is_running:
             self.stop()

@@ -19,12 +19,13 @@ from .llm_provider import (
     APIKeyError,
     RateLimitError,
     ExtractionError,
-    create_standard_prompt
+    create_standard_prompt,
 )
 
 try:
     import google.generativeai as genai
     from google.generativeai.types import HarmCategory, HarmBlockThreshold
+
     GOOGLE_AVAILABLE = True
 except ImportError:
     GOOGLE_AVAILABLE = False
@@ -40,11 +41,7 @@ class GoogleProvider(LLMProvider):
     """
 
     def __init__(
-        self,
-        api_key: str,
-        model: str = "gemini-1.5-pro",
-        max_retries: int = 3,
-        timeout: int = 30
+        self, api_key: str, model: str = "gemini-1.5-pro", max_retries: int = 3, timeout: int = 30
     ):
         """
         Initialize Google Gemini provider.
@@ -75,7 +72,7 @@ class GoogleProvider(LLMProvider):
                 HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_NONE,
                 HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_NONE,
                 HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE,
-            }
+            },
         )
 
         logger.info(f"Initialized Google Gemini provider with model: {model}")
@@ -85,11 +82,7 @@ class GoogleProvider(LLMProvider):
         """Get provider name."""
         return "Google"
 
-    def extract_transaction(
-        self,
-        document_path: str,
-        categories: List[str]
-    ) -> ExtractionResult:
+    def extract_transaction(self, document_path: str, categories: List[str]) -> ExtractionResult:
         """
         Extract transaction data from document using Google Gemini.
 
@@ -108,11 +101,7 @@ class GoogleProvider(LLMProvider):
             prompt = self._prepare_prompt(categories)
 
             # Make API call with retry logic
-            response = self.retry_with_backoff(
-                self._make_api_call,
-                document_path,
-                prompt
-            )
+            response = self.retry_with_backoff(self._make_api_call, document_path, prompt)
 
             # Parse response
             transaction_data = self._parse_response(response)
@@ -123,7 +112,7 @@ class GoogleProvider(LLMProvider):
                     success=False,
                     error_message="Response validation failed",
                     provider=self.provider_name,
-                    processing_time=time.time() - start_time
+                    processing_time=time.time() - start_time,
                 )
 
             # Calculate confidence (simple heuristic based on field completeness)
@@ -134,7 +123,7 @@ class GoogleProvider(LLMProvider):
                 transaction_data=transaction_data,
                 confidence=confidence,
                 provider=self.provider_name,
-                processing_time=time.time() - start_time
+                processing_time=time.time() - start_time,
             )
 
         except Exception as e:
@@ -143,7 +132,7 @@ class GoogleProvider(LLMProvider):
                 success=False,
                 error_message=str(e),
                 provider=self.provider_name,
-                processing_time=time.time() - start_time
+                processing_time=time.time() - start_time,
             )
 
     def _prepare_prompt(self, categories: List[str]) -> str:
@@ -158,11 +147,7 @@ class GoogleProvider(LLMProvider):
         """
         return create_standard_prompt(categories)
 
-    def _make_api_call(
-        self,
-        document_path: str,
-        prompt: str
-    ) -> Dict[str, Any]:
+    def _make_api_call(self, document_path: str, prompt: str) -> Dict[str, Any]:
         """
         Make API call to Google Gemini.
 
@@ -184,10 +169,7 @@ class GoogleProvider(LLMProvider):
                 image_data = image_file.read()
 
             # Prepare image part
-            image_part = {
-                "mime_type": "image/png",
-                "data": image_data
-            }
+            image_part = {"mime_type": "image/png", "data": image_data}
 
             # Make API call
             response = self.client.generate_content(
@@ -195,7 +177,7 @@ class GoogleProvider(LLMProvider):
                 generation_config={
                     "temperature": 0.0,  # Deterministic output
                     "max_output_tokens": 1000,
-                }
+                },
             )
 
             return response
@@ -272,13 +254,13 @@ class GoogleProvider(LLMProvider):
         """
         # Fields and their weights
         fields = {
-            'date': 0.2,
-            'transaction_type': 0.15,
-            'amount': 0.2,
-            'vendor_customer': 0.15,
-            'description': 0.1,
-            'category': 0.15,
-            'tax_amount': 0.05
+            "date": 0.2,
+            "transaction_type": 0.15,
+            "amount": 0.2,
+            "vendor_customer": 0.15,
+            "description": 0.1,
+            "category": 0.15,
+            "tax_amount": 0.05,
         }
 
         score = 0.0
@@ -300,8 +282,7 @@ class GoogleProvider(LLMProvider):
         try:
             # Make a simple API call to test connection
             response = self.client.generate_content(
-                "Test",
-                generation_config={"max_output_tokens": 10}
+                "Test", generation_config={"max_output_tokens": 10}
             )
             return True
         except Exception as e:

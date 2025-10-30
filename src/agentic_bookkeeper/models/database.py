@@ -51,7 +51,10 @@ class Database:
         "CREATE INDEX IF NOT EXISTS idx_transactions_date ON transactions(date);",
         "CREATE INDEX IF NOT EXISTS idx_transactions_type ON transactions(type);",
         "CREATE INDEX IF NOT EXISTS idx_transactions_category ON transactions(category);",
-        "CREATE INDEX IF NOT EXISTS idx_transactions_created_at ON transactions(created_at);"
+        "CREATE INDEX IF NOT EXISTS idx_transactions_created_at ON transactions(created_at);",
+        # Composite indexes for common queries (optimizes filtering by date+type)
+        "CREATE INDEX IF NOT EXISTS idx_transactions_date_type ON transactions(date, type);",
+        "CREATE INDEX IF NOT EXISTS idx_transactions_date_category ON transactions(date, category);",
     ]
 
     CONFIG_TABLE_SQL = """
@@ -87,10 +90,13 @@ class Database:
         if self._connection is None:
             self._connection = sqlite3.connect(
                 str(self.db_path),
-                check_same_thread=False
+                check_same_thread=False,
+                timeout=30.0,  # 30 second timeout for concurrent operations
             )
             # Enable foreign keys
             self._connection.execute("PRAGMA foreign_keys = ON;")
+            # Enable WAL mode for better concurrent write performance
+            self._connection.execute("PRAGMA journal_mode = WAL;")
             # Return rows as dictionaries
             self._connection.row_factory = sqlite3.Row
             logger.debug("Database connection established")
@@ -98,7 +104,7 @@ class Database:
         return self._connection
 
     @contextmanager
-    def get_cursor(self):
+    def get_cursor(self):  # type: ignore[no-untyped-def]
         """
         Context manager for database cursor.
 
@@ -148,7 +154,7 @@ class Database:
                 # Set schema version
                 cursor.execute(
                     "INSERT OR REPLACE INTO config (key, value) VALUES (?, ?)",
-                    ("schema_version", str(self.SCHEMA_VERSION))
+                    ("schema_version", str(self.SCHEMA_VERSION)),
                 )
 
                 logger.info("Database schema initialized successfully")
@@ -169,10 +175,7 @@ class Database:
         """
         try:
             with self.get_cursor() as cursor:
-                cursor.execute(
-                    "SELECT value FROM config WHERE key = ?",
-                    (key,)
-                )
+                cursor.execute("SELECT value FROM config WHERE key = ?", (key,))
                 result = cursor.fetchone()
                 return result["value"] if result else None
         except Exception as e:
@@ -190,8 +193,7 @@ class Database:
         try:
             with self.get_cursor() as cursor:
                 cursor.execute(
-                    "INSERT OR REPLACE INTO config (key, value) VALUES (?, ?)",
-                    (key, value)
+                    "INSERT OR REPLACE INTO config (key, value) VALUES (?, ?)", (key, value)
                 )
                 logger.debug(f"Config value set: {key}")
         except Exception as e:
@@ -200,7 +202,9 @@ class Database:
 
     def backup(self, backup_path: Optional[str] = None) -> str:
         """
-        Create a backup of the database.
+        Create a backup of the database using SQLite's backup API.
+
+        This properly handles WAL mode and ensures a consistent backup.
 
         Args:
             backup_path: Optional custom backup path
@@ -213,7 +217,11 @@ class Database:
             backup_path = str(self.db_path.parent / f"bookkeeper_backup_{timestamp}.db")
 
         try:
-            shutil.copy2(str(self.db_path), backup_path)
+            # Use SQLite's backup API for proper WAL handling
+            conn = self.connect()
+            backup_conn = sqlite3.connect(backup_path)
+            conn.backup(backup_conn)
+            backup_conn.close()
             logger.info(f"Database backup created at {backup_path}")
             return backup_path
         except Exception as e:
@@ -243,7 +251,9 @@ class Database:
         """
         stats = {
             "db_path": str(self.db_path),
-            "db_size_mb": self.db_path.stat().st_size / (1024 * 1024) if self.db_path.exists() else 0,
+            "db_size_mb": (
+                self.db_path.stat().st_size / (1024 * 1024) if self.db_path.exists() else 0
+            ),
             "schema_version": self.get_config_value("schema_version"),
         }
 
@@ -274,12 +284,11 @@ class Database:
             self._connection = None
             logger.info("Database connection closed")
 
-    def __enter__(self):
+    def __enter__(self) -> "Database":
         """Context manager entry."""
         self.connect()
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
         """Context manager exit."""
         self.close()
-        return False

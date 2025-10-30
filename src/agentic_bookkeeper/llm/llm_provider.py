@@ -31,6 +31,7 @@ class ExtractionResult:
         provider: Name of LLM provider used
         processing_time: Time taken in seconds
     """
+
     success: bool
     transaction_data: Optional[Dict[str, Any]] = None
     confidence: float = 0.0
@@ -72,11 +73,7 @@ class LLMProvider(ABC):
         pass
 
     @abstractmethod
-    def extract_transaction(
-        self,
-        document_path: str,
-        categories: List[str]
-    ) -> ExtractionResult:
+    def extract_transaction(self, document_path: str, categories: List[str]) -> ExtractionResult:
         """
         Extract transaction data from a document.
 
@@ -103,11 +100,7 @@ class LLMProvider(ABC):
         pass
 
     @abstractmethod
-    def _make_api_call(
-        self,
-        document_path: str,
-        prompt: str
-    ) -> Dict[str, Any]:
+    def _make_api_call(self, document_path: str, prompt: str) -> Dict[str, Any]:
         """
         Make API call to LLM provider.
 
@@ -133,9 +126,7 @@ class LLMProvider(ABC):
         Returns:
             True if valid, False otherwise
         """
-        required_fields = [
-            'date', 'transaction_type', 'amount'
-        ]
+        required_fields = ["date", "transaction_type", "amount"]
 
         for field in required_fields:
             if field not in response_data or response_data[field] is None:
@@ -143,21 +134,21 @@ class LLMProvider(ABC):
                 return False
 
         # Validate transaction_type
-        valid_types = ['income', 'expense']
-        if response_data.get('transaction_type') not in valid_types:
+        valid_types = ["income", "expense"]
+        if response_data.get("transaction_type") not in valid_types:
             logger.warning(f"Invalid transaction type: {response_data.get('transaction_type')}")
             return False
 
         # Validate amount is numeric
         try:
-            float(response_data['amount'])
+            float(response_data["amount"])
         except (ValueError, TypeError):
             logger.warning(f"Invalid amount: {response_data.get('amount')}")
             return False
 
         return True
 
-    def retry_with_backoff(self, func, *args, **kwargs):
+    def retry_with_backoff(self, func: Any, *args: Any, **kwargs: Any) -> Any:
         """
         Execute function with exponential backoff retry logic.
 
@@ -182,7 +173,7 @@ class LLMProvider(ABC):
                 self._error_count += 1
 
                 if attempt < self.max_retries - 1:
-                    wait_time = (2 ** attempt) * 1  # Exponential backoff: 1s, 2s, 4s
+                    wait_time = (2**attempt) * 1  # Exponential backoff: 1s, 2s, 4s
                     logger.warning(
                         f"Attempt {attempt + 1}/{self.max_retries} failed: {e}. "
                         f"Retrying in {wait_time}s..."
@@ -201,13 +192,14 @@ class LLMProvider(ABC):
             Dictionary with usage statistics
         """
         return {
-            'provider': self.provider_name,
-            'request_count': self._request_count,
-            'error_count': self._error_count,
-            'success_rate': (
+            "provider": self.provider_name,
+            "request_count": self._request_count,
+            "error_count": self._error_count,
+            "success_rate": (
                 (self._request_count - self._error_count) / self._request_count
-                if self._request_count > 0 else 0.0
-            )
+                if self._request_count > 0
+                else 0.0
+            ),
         }
 
     def reset_stats(self) -> None:
@@ -216,27 +208,31 @@ class LLMProvider(ABC):
         self._error_count = 0
 
     def __str__(self) -> str:
-        """String representation."""
+        """Return string representation of provider."""
         return f"{self.provider_name}Provider(requests={self._request_count}, errors={self._error_count})"
 
 
 class LLMProviderError(Exception):
     """Base exception for LLM provider errors."""
+
     pass
 
 
 class APIKeyError(LLMProviderError):
     """Exception raised for API key issues."""
+
     pass
 
 
 class RateLimitError(LLMProviderError):
     """Exception raised when rate limit is exceeded."""
+
     pass
 
 
 class ExtractionError(LLMProviderError):
     """Exception raised when extraction fails."""
+
     pass
 
 

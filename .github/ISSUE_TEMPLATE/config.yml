@@ -1,0 +1,14 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Documentation
+    url: https://github.com/StephenBogner/agentic_bookkeeper/blob/main/docs/USER_GUIDE.md
+    about: Read the user guide for help and instructions
+  - name: Troubleshooting
+    url: https://github.com/StephenBogner/agentic_bookkeeper/blob/main/docs/USER_GUIDE.md#7-troubleshooting
+    about: Check common issues and solutions
+  - name: Known Issues
+    url: https://github.com/StephenBogner/agentic_bookkeeper/blob/main/docs/KNOWN_ISSUES.md
+    about: Review known issues and workarounds
+  - name: Development Guide
+    url: https://github.com/StephenBogner/agentic_bookkeeper/blob/main/docs/DEVELOPMENT.md
+    about: Setup guide for developers and contributors

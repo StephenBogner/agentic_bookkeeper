@@ -53,7 +53,7 @@ def sample_transaction():
         description="Printer paper and ink",
         amount=125.50,
         tax_amount=16.32,
-        document_filename="receipt_20250115.pdf"
+        document_filename="receipt_20250115.pdf",
     )
 
 
@@ -68,7 +68,7 @@ def sample_income_transaction():
         description="Software consulting - January 2025",
         amount=5000.00,
         tax_amount=650.00,
-        document_filename="invoice_20250120.pdf"
+        document_filename="invoice_20250120.pdf",
     )
 
 
@@ -82,27 +82,23 @@ def multiple_transactions():
             category="Advertising",
             vendor_customer="Google Ads",
             amount=250.00,
-            tax_amount=32.50
+            tax_amount=32.50,
         ),
         Transaction(
             date="2025-01-15",
             type="expense",
             category="Office expenses",
             amount=100.00,
-            tax_amount=13.00
+            tax_amount=13.00,
         ),
         Transaction(
             date="2025-01-20",
             type="income",
             category="Consulting",
             amount=2000.00,
-            tax_amount=260.00
+            tax_amount=260.00,
         ),
         Transaction(
-            date="2025-01-25",
-            type="expense",
-            category="Travel",
-            amount=500.00,
-            tax_amount=65.00
+            date="2025-01-25", type="expense", category="Travel", amount=500.00, tax_amount=65.00
         ),
     ]

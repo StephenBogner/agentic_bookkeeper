@@ -16,12 +16,17 @@ import pypdf
 
 try:
     import fitz  # PyMuPDF
+
     PYMUPDF_AVAILABLE = True
 except ImportError:
     PYMUPDF_AVAILABLE = False
 
 from ..llm.llm_provider import LLMProvider, ExtractionResult
 from ..models.transaction import Transaction
+from ..utils.exceptions import DocumentError, ValidationError
+from ..utils.error_handler import log_error_with_context, create_error_context
+from ..utils.logger import log_operation_start, log_operation_success, log_operation_failure
+import time
 
 logger = logging.getLogger(__name__)
 
@@ -33,7 +38,7 @@ class DocumentProcessor:
     Handles document type detection, preprocessing, and LLM extraction.
     """
 
-    SUPPORTED_FORMATS = {'.pdf', '.png', '.jpg', '.jpeg'}
+    SUPPORTED_FORMATS = {".pdf", ".png", ".jpg", ".jpeg"}
 
     def __init__(self, llm_provider: LLMProvider, categories: List[str]):
         """
@@ -47,11 +52,7 @@ class DocumentProcessor:
         self.categories = categories
         logger.info(f"Document processor initialized with {llm_provider.provider_name}")
 
-    def process_document(
-        self,
-        document_path: str,
-        validate: bool = True
-    ) -> Optional[Transaction]:
+    def process_document(self, document_path: str, validate: bool = True) -> Optional[Transaction]:
         """
         Process a document and extract transaction data.
 
@@ -61,63 +62,151 @@ class DocumentProcessor:
 
         Returns:
             Transaction object or None if extraction fails
+
+        Raises:
+            DocumentError: If document processing fails
         """
+        start_time = time.time()
+        context = create_error_context(
+            operation="process_document",
+            file_path=document_path,
+        )
+
         try:
             path = Path(document_path)
 
             # Validate file exists
             if not path.exists():
-                logger.error(f"Document not found: {document_path}")
-                return None
+                error = DocumentError(
+                    user_message=f"Document not found: {path.name}",
+                    document_path=document_path,
+                    tech_message=f"FileNotFoundError: {document_path}",
+                    recovery_suggestions=[
+                        "Verify the file path is correct",
+                        "Check that the file hasn't been moved or deleted",
+                        "Ensure you have permission to access the file",
+                        "Try browsing to the file location manually",
+                    ],
+                )
+                log_error_with_context(error, context, severity="warning")
+                raise error
 
             # Validate file format
             if path.suffix.lower() not in self.SUPPORTED_FORMATS:
-                logger.error(f"Unsupported format: {path.suffix}")
-                return None
+                supported = ", ".join(self.SUPPORTED_FORMATS)
+                error = DocumentError(
+                    user_message=f"Unsupported file format: {path.suffix}",
+                    document_path=document_path,
+                    document_format=path.suffix,
+                    tech_message=f"File format {path.suffix} not in supported formats: {supported}",
+                    recovery_suggestions=[
+                        f"Use a supported format: {supported}",
+                        "Convert the document to PDF, PNG, or JPEG",
+                        "Try re-scanning the document in a supported format",
+                    ],
+                )
+                log_error_with_context(error, context, severity="warning")
+                raise error
 
-            logger.info(f"Processing document: {path.name}")
+            log_operation_start(
+                logger,
+                "document_processing",
+                document=path.name,
+                provider=self.llm_provider.provider_name,
+            )
 
             # Detect and preprocess document
             preprocessed_path = self._preprocess_document(document_path)
 
             # Extract transaction data using LLM
-            result = self.llm_provider.extract_transaction(
-                preprocessed_path,
-                self.categories
-            )
+            result = self.llm_provider.extract_transaction(preprocessed_path, self.categories)
 
             # Check if extraction was successful
             if not result.success:
-                logger.error(f"Extraction failed: {result.error_message}")
-                return None
+                error = DocumentError(
+                    user_message=f"Failed to extract data from {path.name}",
+                    document_path=document_path,
+                    tech_message=f"LLM extraction failed: {result.error_message}",
+                    recovery_suggestions=[
+                        "Ensure the document is clear and readable",
+                        "Try re-scanning the document with better quality",
+                        "Check that the document contains financial information",
+                        "Manually enter the transaction if automated extraction fails",
+                    ],
+                )
+                log_error_with_context(error, context, severity="warning")
+                raise error
 
             # Validate document type vs transaction type consistency
             self._validate_document_transaction_consistency(result.transaction_data)
 
             # Convert to Transaction object
-            transaction = self._create_transaction_from_result(
-                result,
-                path.name
-            )
+            transaction = self._create_transaction_from_result(result, path.name)
 
             # Validate if requested
             if validate and transaction:
                 try:
                     transaction.validate()
                 except ValueError as e:
-                    logger.error(f"Transaction validation failed: {e}")
-                    return None
+                    error = ValidationError(
+                        user_message=f"Extracted transaction data is invalid: {str(e)}",
+                        field="transaction",
+                        value=transaction,
+                        tech_message=str(e),
+                        recovery_suggestions=[
+                            "Review the extracted data in the document review dialog",
+                            "Correct any incorrect values before saving",
+                            "Ensure the document contains all required information (date, amount, vendor)",
+                        ],
+                    )
+                    log_error_with_context(error, context, severity="warning")
+                    raise error
 
-            logger.info(
-                f"Successfully extracted transaction from {path.name} "
-                f"(confidence: {result.confidence:.2f})"
+            duration_ms = (time.time() - start_time) * 1000
+            log_operation_success(
+                logger,
+                "document_processing",
+                duration_ms=duration_ms,
+                document=path.name,
+                confidence=f"{result.confidence:.2f}",
             )
 
             return transaction
 
+        except (DocumentError, ValidationError) as e:
+            # Re-raise our custom exceptions after logging
+            duration_ms = (time.time() - start_time) * 1000
+            log_operation_failure(
+                logger,
+                "document_processing",
+                e,
+                document=Path(document_path).name,
+                duration_ms=duration_ms,
+            )
+            raise
         except Exception as e:
-            logger.error(f"Document processing failed: {e}")
-            return None
+            # Wrap unexpected errors
+            duration_ms = (time.time() - start_time) * 1000
+            log_operation_failure(
+                logger,
+                "document_processing",
+                e,
+                document=Path(document_path).name,
+                duration_ms=duration_ms,
+            )
+            error = DocumentError(
+                user_message=f"An unexpected error occurred while processing {Path(document_path).name}",
+                document_path=document_path,
+                tech_message=f"Unexpected error: {type(e).__name__}: {str(e)}",
+                recovery_suggestions=[
+                    "Try processing the document again",
+                    "Restart the application if the problem persists",
+                    "Check the log file for detailed error information",
+                    "Contact support if you need assistance",
+                ],
+            )
+            log_error_with_context(error, context, severity="error")
+            raise error from e
 
     def _preprocess_document(self, document_path: str) -> str:
         """
@@ -139,7 +228,7 @@ class DocumentProcessor:
         suffix = path.suffix.lower()
 
         try:
-            if suffix == '.pdf':
+            if suffix == ".pdf":
                 # Convert PDF to image
                 if not PYMUPDF_AVAILABLE:
                     raise ImportError(
@@ -154,17 +243,17 @@ class DocumentProcessor:
                 if len(pdf_document) == 0:
                     raise ValueError(f"PDF has no pages: {path.name}")
 
-                # Render first page to pixmap (high resolution for OCR)
+                # Render first page to pixmap (optimized resolution)
                 page = pdf_document[0]
-                # Use 300 DPI for good quality (matrix zoom factor of 4.17 = 300/72)
-                mat = fitz.Matrix(4.17, 4.17)
+                # Use 200 DPI for good quality with better performance (matrix zoom factor = 200/72)
+                # This provides a good balance between quality and file size
+                # LLM vision models work well with 2048x2048 or smaller images
+                mat = fitz.Matrix(2.78, 2.78)  # 200 DPI
                 pix = page.get_pixmap(matrix=mat)
 
                 # Create temporary file for the converted image
                 temp_file = tempfile.NamedTemporaryFile(
-                    delete=False,
-                    suffix='.png',
-                    prefix=f"pdf_convert_{path.stem}_"
+                    delete=False, suffix=".png", prefix=f"pdf_convert_{path.stem}_"
                 )
                 temp_path = temp_file.name
                 temp_file.close()
@@ -180,12 +269,41 @@ class DocumentProcessor:
 
                 return temp_path
 
-            elif suffix in {'.png', '.jpg', '.jpeg'}:
-                # Validate image can be opened
+            elif suffix in {".png", ".jpg", ".jpeg"}:
+                # Validate and optimize image
                 with Image.open(document_path) as img:
-                    logger.debug(f"Image document: {path.name} ({img.size})")
+                    width, height = img.size
+                    logger.debug(f"Image document: {path.name} ({width}x{height})")
 
-                # Could add image preprocessing here (resize, enhance, etc.)
+                    # Optimize if image is too large (reduces memory and API payload)
+                    max_dimension = 2048  # Max dimension for LLM vision models
+                    if width > max_dimension or height > max_dimension:
+                        # Calculate scaling factor to fit within max_dimension
+                        scale = min(max_dimension / width, max_dimension / height)
+                        new_width = int(width * scale)
+                        new_height = int(height * scale)
+
+                        # Resize image
+                        img_resized = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
+
+                        # Create temporary file for optimized image
+                        temp_file = tempfile.NamedTemporaryFile(
+                            delete=False, suffix=".jpg", prefix=f"img_optimized_{path.stem}_"
+                        )
+                        temp_path = temp_file.name
+                        temp_file.close()
+
+                        # Save as JPEG with quality 85 (good balance of quality/size)
+                        img_resized.save(temp_path, "JPEG", quality=85, optimize=True)
+
+                        logger.debug(
+                            f"Optimized image {path.name}: "
+                            f"{width}x{height} → {new_width}x{new_height} (saved to {temp_path})"
+                        )
+
+                        return temp_path
+
+                # Image is already optimal size, use as-is
                 return document_path
 
             else:
@@ -196,9 +314,7 @@ class DocumentProcessor:
             raise
 
     def _create_transaction_from_result(
-        self,
-        result: ExtractionResult,
-        document_filename: str
+        self, result: ExtractionResult, document_filename: str
     ) -> Optional[Transaction]:
         """
         Create Transaction object from extraction result.
@@ -216,7 +332,7 @@ class DocumentProcessor:
             # Helper function to safely convert to float, handling None values
             def safe_float(value, default=0.0):
                 """Convert value to float, handling None and empty strings."""
-                if value is None or value == '':
+                if value is None or value == "":
                     return default
                 try:
                     return float(value)
@@ -226,14 +342,14 @@ class DocumentProcessor:
 
             # Create transaction with safe type conversion
             transaction = Transaction(
-                date=data.get('date'),
-                type=data.get('transaction_type'),
-                category=data.get('category', 'Other expenses'),
-                vendor_customer=data.get('vendor_customer'),
-                description=data.get('description'),
-                amount=safe_float(data.get('amount'), 0.0),
-                tax_amount=safe_float(data.get('tax_amount'), 0.0),
-                document_filename=document_filename
+                date=data.get("date"),
+                type=data.get("transaction_type"),
+                category=data.get("category", "Other expenses"),
+                vendor_customer=data.get("vendor_customer"),
+                description=data.get("description"),
+                amount=safe_float(data.get("amount"), 0.0),
+                tax_amount=safe_float(data.get("tax_amount"), 0.0),
+                document_filename=document_filename,
             )
 
             return transaction
@@ -242,10 +358,7 @@ class DocumentProcessor:
             logger.error(f"Failed to create transaction from result: {e}")
             return None
 
-    def _validate_document_transaction_consistency(
-        self,
-        transaction_data: Dict[str, Any]
-    ) -> None:
+    def _validate_document_transaction_consistency(self, transaction_data: Dict[str, Any]) -> None:
         """
         Validate that document type matches expected transaction type.
 
@@ -258,11 +371,11 @@ class DocumentProcessor:
         if not transaction_data:
             return
 
-        document_type = transaction_data.get('document_type', '').lower()
-        transaction_type = transaction_data.get('transaction_type', '').lower()
+        document_type = transaction_data.get("document_type", "").lower()
+        transaction_type = transaction_data.get("transaction_type", "").lower()
 
         # Check for inconsistencies
-        if document_type == 'invoice' and transaction_type != 'income':
+        if document_type == "invoice" and transaction_type != "income":
             logger.warning(
                 f"⚠️  INCONSISTENT CLASSIFICATION: Document is an INVOICE but "
                 f"transaction type is '{transaction_type}'. "
@@ -270,7 +383,7 @@ class DocumentProcessor:
                 f"This may indicate an extraction error."
             )
 
-        elif document_type == 'receipt' and transaction_type != 'expense':
+        elif document_type == "receipt" and transaction_type != "expense":
             logger.warning(
                 f"⚠️  INCONSISTENT CLASSIFICATION: Document is a RECEIPT but "
                 f"transaction type is '{transaction_type}'. "
@@ -279,10 +392,8 @@ class DocumentProcessor:
             )
 
         # Log successful consistent classification
-        elif document_type in ['invoice', 'receipt']:
-            logger.debug(
-                f"✓ Consistent classification: {document_type} → {transaction_type}"
-            )
+        elif document_type in ["invoice", "receipt"]:
+            logger.debug(f"✓ Consistent classification: {document_type} → {transaction_type}")
 
     def extract_pdf_text(self, pdf_path: str) -> str:
         """
@@ -295,7 +406,7 @@ class DocumentProcessor:
             Extracted text
         """
         try:
-            with open(pdf_path, 'rb') as file:
+            with open(pdf_path, "rb") as file:
                 pdf_reader = pypdf.PdfReader(file)
                 text = ""
 
@@ -309,9 +420,7 @@ class DocumentProcessor:
             return ""
 
     def validate_extraction(
-        self,
-        transaction: Transaction,
-        confidence_threshold: float = 0.7
+        self, transaction: Transaction, confidence_threshold: float = 0.7
     ) -> tuple:
         """
         Validate extracted transaction data.
@@ -341,9 +450,7 @@ class DocumentProcessor:
 
         # Check category is valid
         if transaction.category and transaction.category not in self.categories:
-            validation_messages.append(
-                f"Category '{transaction.category}' not in valid categories"
-            )
+            validation_messages.append(f"Category '{transaction.category}' not in valid categories")
             # Not a critical error, just a warning
 
         return is_valid, validation_messages

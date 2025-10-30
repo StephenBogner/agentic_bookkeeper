@@ -48,7 +48,7 @@ class Transaction:
     created_at: Optional[str] = None
     modified_at: Optional[str] = None
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """Validate transaction data after initialization."""
         self.validate()
 
@@ -72,8 +72,10 @@ class Transaction:
             raise ValueError(f"Invalid date format: {self.date}. Expected YYYY-MM-DD")
 
         # Validate type
-        if self.type not in ('income', 'expense'):
-            raise ValueError(f"Invalid transaction type: {self.type}. Must be 'income' or 'expense'")
+        if self.type not in ("income", "expense"):
+            raise ValueError(
+                f"Invalid transaction type: {self.type}. Must be 'income' or 'expense'"
+            )
 
         # Validate category (non-empty string)
         if not self.category or not isinstance(self.category, str):
@@ -99,21 +101,21 @@ class Transaction:
             Dictionary representation of transaction
         """
         return {
-            'id': self.id,
-            'date': self.date,
-            'type': self.type,
-            'category': self.category,
-            'vendor_customer': self.vendor_customer,
-            'description': self.description,
-            'amount': self.amount,
-            'tax_amount': self.tax_amount,
-            'document_filename': self.document_filename,
-            'created_at': self.created_at,
-            'modified_at': self.modified_at
+            "id": self.id,
+            "date": self.date,
+            "type": self.type,
+            "category": self.category,
+            "vendor_customer": self.vendor_customer,
+            "description": self.description,
+            "amount": self.amount,
+            "tax_amount": self.tax_amount,
+            "document_filename": self.document_filename,
+            "created_at": self.created_at,
+            "modified_at": self.modified_at,
         }
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'Transaction':
+    def from_dict(cls, data: Dict[str, Any]) -> "Transaction":
         """
         Create transaction from dictionary.
 
@@ -124,21 +126,21 @@ class Transaction:
             Transaction instance
         """
         return cls(
-            id=data.get('id'),
-            date=data['date'],
-            type=data['type'],
-            category=data['category'],
-            vendor_customer=data.get('vendor_customer'),
-            description=data.get('description'),
-            amount=float(data['amount']),
-            tax_amount=float(data.get('tax_amount', 0.0)),
-            document_filename=data.get('document_filename'),
-            created_at=data.get('created_at'),
-            modified_at=data.get('modified_at')
+            id=data.get("id"),
+            date=data["date"],
+            type=data["type"],
+            category=data["category"],
+            vendor_customer=data.get("vendor_customer"),
+            description=data.get("description"),
+            amount=float(data["amount"]),
+            tax_amount=float(data.get("tax_amount", 0.0)),
+            document_filename=data.get("document_filename"),
+            created_at=data.get("created_at"),
+            modified_at=data.get("modified_at"),
         )
 
     @classmethod
-    def from_db_row(cls, row) -> 'Transaction':
+    def from_db_row(cls, row: Any) -> "Transaction":
         """
         Create transaction from database row (sqlite3.Row).
 
@@ -149,17 +151,17 @@ class Transaction:
             Transaction instance
         """
         return cls(
-            id=row['id'],
-            date=row['date'],
-            type=row['type'],
-            category=row['category'],
-            vendor_customer=row['vendor_customer'],
-            description=row['description'],
-            amount=float(row['amount']),
-            tax_amount=float(row['tax_amount']),
-            document_filename=row['document_filename'],
-            created_at=row['created_at'],
-            modified_at=row['modified_at']
+            id=row["id"],
+            date=row["date"],
+            type=row["type"],
+            category=row["category"],
+            vendor_customer=row["vendor_customer"],
+            description=row["description"],
+            amount=float(row["amount"]),
+            tax_amount=float(row["tax_amount"]),
+            document_filename=row["document_filename"],
+            created_at=row["created_at"],
+            modified_at=row["modified_at"],
         )
 
     def update_modified_timestamp(self) -> None:
@@ -167,8 +169,7 @@ class Transaction:
         self.modified_at = datetime.now().isoformat()
 
     def __str__(self) -> str:
-        """
-        String representation of transaction.
+        """Return string representation of transaction.
 
         Returns:
             Human-readable string
@@ -192,7 +193,7 @@ class Transaction:
             f"document='{self.document_filename}')"
         )
 
-    def __eq__(self, other) -> bool:
+    def __eq__(self, other: Any) -> bool:
         """
         Compare transactions for equality (excluding timestamps).
 
@@ -206,17 +207,17 @@ class Transaction:
             return False
 
         return (
-            self.date == other.date and
-            self.type == other.type and
-            self.category == other.category and
-            self.vendor_customer == other.vendor_customer and
-            self.description == other.description and
-            abs(self.amount - other.amount) < 0.01 and  # Float comparison tolerance
-            abs(self.tax_amount - other.tax_amount) < 0.01 and
-            self.document_filename == other.document_filename
+            self.date == other.date
+            and self.type == other.type
+            and self.category == other.category
+            and self.vendor_customer == other.vendor_customer
+            and self.description == other.description
+            and abs(self.amount - other.amount) < 0.01  # Float comparison tolerance
+            and abs(self.tax_amount - other.tax_amount) < 0.01
+            and self.document_filename == other.document_filename
         )
 
-    def __lt__(self, other) -> bool:
+    def __lt__(self, other: Any) -> bool:
         """
         Compare transactions for sorting (by date, then amount).
 
@@ -235,11 +236,11 @@ class Transaction:
 
     def is_income(self) -> bool:
         """Check if transaction is income."""
-        return self.type == 'income'
+        return self.type == "income"
 
     def is_expense(self) -> bool:
         """Check if transaction is expense."""
-        return self.type == 'expense'
+        return self.type == "expense"
 
     def get_total_with_tax(self) -> float:
         """
@@ -266,7 +267,7 @@ CRA_CATEGORIES = [
     "Salaries and wages",
     "Telephone and utilities",
     "Travel",
-    "Other expenses"
+    "Other expenses",
 ]
 
 IRS_CATEGORIES = [
@@ -289,7 +290,7 @@ IRS_CATEGORIES = [
     "Travel and meals",
     "Utilities",
     "Wages",
-    "Other expenses"
+    "Other expenses",
 ]
 
 
@@ -307,9 +308,9 @@ def validate_category(category: str, jurisdiction: str) -> bool:
     Raises:
         ValueError: If jurisdiction is invalid
     """
-    if jurisdiction == 'CRA':
+    if jurisdiction == "CRA":
         return category in CRA_CATEGORIES
-    elif jurisdiction == 'IRS':
+    elif jurisdiction == "IRS":
         return category in IRS_CATEGORIES
     else:
         raise ValueError(f"Invalid jurisdiction: {jurisdiction}. Must be 'CRA' or 'IRS'")
@@ -328,9 +329,9 @@ def get_categories_for_jurisdiction(jurisdiction: str) -> list:
     Raises:
         ValueError: If jurisdiction is invalid
     """
-    if jurisdiction == 'CRA':
+    if jurisdiction == "CRA":
         return CRA_CATEGORIES.copy()
-    elif jurisdiction == 'IRS':
+    elif jurisdiction == "IRS":
         return IRS_CATEGORIES.copy()
     else:
         raise ValueError(f"Invalid jurisdiction: {jurisdiction}. Must be 'CRA' or 'IRS'")

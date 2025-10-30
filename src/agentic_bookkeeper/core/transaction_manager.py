@@ -66,8 +66,8 @@ class TransactionManager:
                         transaction.tax_amount,
                         transaction.document_filename,
                         transaction.created_at,
-                        transaction.modified_at
-                    )
+                        transaction.modified_at,
+                    ),
                 )
 
                 transaction_id = cursor.lastrowid
@@ -90,10 +90,7 @@ class TransactionManager:
         """
         try:
             with self.database.get_cursor() as cursor:
-                cursor.execute(
-                    "SELECT * FROM transactions WHERE id = ?",
-                    (transaction_id,)
-                )
+                cursor.execute("SELECT * FROM transactions WHERE id = ?", (transaction_id,))
 
                 row = cursor.fetchone()
                 if row:
@@ -143,8 +140,8 @@ class TransactionManager:
                         transaction.tax_amount,
                         transaction.document_filename,
                         transaction.modified_at,
-                        transaction.id
-                    )
+                        transaction.id,
+                    ),
                 )
 
                 if cursor.rowcount > 0:
@@ -170,10 +167,7 @@ class TransactionManager:
         """
         try:
             with self.database.get_cursor() as cursor:
-                cursor.execute(
-                    "DELETE FROM transactions WHERE id = ?",
-                    (transaction_id,)
-                )
+                cursor.execute("DELETE FROM transactions WHERE id = ?", (transaction_id,))
 
                 if cursor.rowcount > 0:
                     logger.info(f"Deleted transaction ID: {transaction_id}")
@@ -197,7 +191,7 @@ class TransactionManager:
         max_amount: Optional[float] = None,
         limit: Optional[int] = None,
         offset: int = 0,
-        order_by: str = "date DESC"
+        order_by: str = "date DESC",
     ) -> List[Transaction]:
         """
         Query transactions with filters.
@@ -288,7 +282,7 @@ class TransactionManager:
                     WHERE description LIKE ? OR vendor_customer LIKE ?
                     ORDER BY date DESC
                     """,
-                    (f"%{search_term}%", f"%{search_term}%")
+                    (f"%{search_term}%", f"%{search_term}%"),
                 )
 
                 rows = cursor.fetchall()
@@ -313,9 +307,7 @@ class TransactionManager:
         return self.query_transactions(limit=limit, order_by="date DESC")
 
     def detect_duplicates(
-        self,
-        transaction: Transaction,
-        time_window_days: int = 7
+        self, transaction: Transaction, time_window_days: int = 7
     ) -> List[Transaction]:
         """
         Detect potential duplicate transactions.
@@ -339,7 +331,7 @@ class TransactionManager:
                 end_date=end_date,
                 transaction_type=transaction.type,
                 min_amount=transaction.amount * 0.95,  # 5% tolerance
-                max_amount=transaction.amount * 1.05
+                max_amount=transaction.amount * 1.05,
             )
 
             # Filter for exact or very similar matches
@@ -349,8 +341,10 @@ class TransactionManager:
                     # Check if amounts are very close
                     if abs(candidate.amount - transaction.amount) < 0.01:
                         # Check if same vendor or similar description
-                        if (candidate.vendor_customer == transaction.vendor_customer or
-                            candidate.description == transaction.description):
+                        if (
+                            candidate.vendor_customer == transaction.vendor_customer
+                            or candidate.description == transaction.description
+                        ):
                             duplicates.append(candidate)
 
             return duplicates
@@ -360,9 +354,7 @@ class TransactionManager:
             return []
 
     def get_transaction_statistics(
-        self,
-        start_date: Optional[str] = None,
-        end_date: Optional[str] = None
+        self, start_date: Optional[str] = None, end_date: Optional[str] = None
     ) -> Dict[str, Any]:
         """
         Get transaction statistics for a date range.
@@ -403,25 +395,22 @@ class TransactionManager:
                 rows = cursor.fetchall()
 
                 stats = {
-                    'income': {'count': 0, 'total': 0.0, 'avg': 0.0, 'min': 0.0, 'max': 0.0},
-                    'expense': {'count': 0, 'total': 0.0, 'avg': 0.0, 'min': 0.0, 'max': 0.0}
+                    "income": {"count": 0, "total": 0.0, "avg": 0.0, "min": 0.0, "max": 0.0},
+                    "expense": {"count": 0, "total": 0.0, "avg": 0.0, "min": 0.0, "max": 0.0},
                 }
 
                 for row in rows:
-                    trans_type = row['type']
+                    trans_type = row["type"]
                     stats[trans_type] = {
-                        'count': row['count'],
-                        'total': round(row['total_amount'], 2),
-                        'avg': round(row['avg_amount'], 2),
-                        'min': round(row['min_amount'], 2),
-                        'max': round(row['max_amount'], 2)
+                        "count": row["count"],
+                        "total": round(row["total_amount"], 2),
+                        "avg": round(row["avg_amount"], 2),
+                        "min": round(row["min_amount"], 2),
+                        "max": round(row["max_amount"], 2),
                     }
 
                 # Calculate net
-                stats['net'] = round(
-                    stats['income']['total'] - stats['expense']['total'],
-                    2
-                )
+                stats["net"] = round(stats["income"]["total"] - stats["expense"]["total"], 2)
 
                 return stats
 
@@ -433,7 +422,7 @@ class TransactionManager:
         self,
         start_date: Optional[str] = None,
         end_date: Optional[str] = None,
-        transaction_type: Optional[str] = None
+        transaction_type: Optional[str] = None,
     ) -> Dict[str, float]:
         """
         Get summary of amounts by category.
@@ -472,10 +461,7 @@ class TransactionManager:
                 cursor.execute(query, params)
                 rows = cursor.fetchall()
 
-                return {
-                    row['category']: round(row['total'], 2)
-                    for row in rows
-                }
+                return {row["category"]: round(row["total"], 2) for row in rows}
 
         except Exception as e:
             logger.error(f"Failed to get category summary: {e}")

@@ -1,7 +1,7 @@
-"""
+"""Package initialization module.
+
 Package Name: agentic_bookkeeper
 File Name: __init__.py
-Description: Package initialization module
 Author: Stephen Bogner, P.Eng.
 LLM: claude-sonnet-4-5-20250929
 Ownership: Stephen Bogner - All Rights Reserved.  See LICENSE.md

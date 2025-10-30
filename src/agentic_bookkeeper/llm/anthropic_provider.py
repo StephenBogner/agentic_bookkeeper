@@ -20,11 +20,12 @@ from .llm_provider import (
     APIKeyError,
     RateLimitError,
     ExtractionError,
-    create_standard_prompt
+    create_standard_prompt,
 )
 
 try:
     from anthropic import Anthropic
+
     ANTHROPIC_AVAILABLE = True
 except ImportError:
     ANTHROPIC_AVAILABLE = False
@@ -44,7 +45,7 @@ class AnthropicProvider(LLMProvider):
         api_key: str,
         model: str = "claude-3-5-sonnet-20241022",
         max_retries: int = 3,
-        timeout: int = 30
+        timeout: int = 30,
     ):
         """
         Initialize Anthropic provider.
@@ -57,8 +58,7 @@ class AnthropicProvider(LLMProvider):
         """
         if not ANTHROPIC_AVAILABLE:
             raise ImportError(
-                "Anthropic package not installed. "
-                "Install with: pip install anthropic"
+                "Anthropic package not installed. " "Install with: pip install anthropic"
             )
 
         super().__init__(api_key, max_retries, timeout)
@@ -71,11 +71,7 @@ class AnthropicProvider(LLMProvider):
         """Get provider name."""
         return "Anthropic"
 
-    def extract_transaction(
-        self,
-        document_path: str,
-        categories: List[str]
-    ) -> ExtractionResult:
+    def extract_transaction(self, document_path: str, categories: List[str]) -> ExtractionResult:
         """
         Extract transaction data from document using Anthropic Claude.
 
@@ -94,11 +90,7 @@ class AnthropicProvider(LLMProvider):
             prompt = self._prepare_prompt(categories)
 
             # Make API call with retry logic
-            response = self.retry_with_backoff(
-                self._make_api_call,
-                document_path,
-                prompt
-            )
+            response = self.retry_with_backoff(self._make_api_call, document_path, prompt)
 
             # Parse response
             transaction_data = self._parse_response(response)
@@ -109,7 +101,7 @@ class AnthropicProvider(LLMProvider):
                     success=False,
                     error_message="Response validation failed",
                     provider=self.provider_name,
-                    processing_time=time.time() - start_time
+                    processing_time=time.time() - start_time,
                 )
 
             # Calculate confidence
@@ -120,7 +112,7 @@ class AnthropicProvider(LLMProvider):
                 transaction_data=transaction_data,
                 confidence=confidence,
                 provider=self.provider_name,
-                processing_time=time.time() - start_time
+                processing_time=time.time() - start_time,
             )
 
         except Exception as e:
@@ -129,7 +121,7 @@ class AnthropicProvider(LLMProvider):
                 success=False,
                 error_message=str(e),
                 provider=self.provider_name,
-                processing_time=time.time() - start_time
+                processing_time=time.time() - start_time,
             )
 
     def _prepare_prompt(self, categories: List[str]) -> str:
@@ -144,11 +136,7 @@ class AnthropicProvider(LLMProvider):
         """
         return create_standard_prompt(categories)
 
-    def _make_api_call(
-        self,
-        document_path: str,
-        prompt: str
-    ) -> Dict[str, Any]:
+    def _make_api_call(self, document_path: str, prompt: str) -> Dict[str, Any]:
         """
         Make API call to Anthropic.
 
@@ -184,10 +172,7 @@ class AnthropicProvider(LLMProvider):
                                     "data": image_data,
                                 },
                             },
-                            {
-                                "type": "text",
-                                "text": prompt
-                            }
+                            {"type": "text", "text": prompt},
                         ],
                     }
                 ],
@@ -220,18 +205,18 @@ class AnthropicProvider(LLMProvider):
 
         # Determine media type
         media_types = {
-            '.jpg': 'image/jpeg',
-            '.jpeg': 'image/jpeg',
-            '.png': 'image/png',
-            '.gif': 'image/gif',
-            '.webp': 'image/webp'
+            ".jpg": "image/jpeg",
+            ".jpeg": "image/jpeg",
+            ".png": "image/png",
+            ".gif": "image/gif",
+            ".webp": "image/webp",
         }
 
-        media_type = media_types.get(suffix, 'image/jpeg')
+        media_type = media_types.get(suffix, "image/jpeg")
 
         # Encode image
         with open(image_path, "rb") as image_file:
-            image_data = base64.standard_b64encode(image_file.read()).decode('utf-8')
+            image_data = base64.standard_b64encode(image_file.read()).decode("utf-8")
 
         return image_data, media_type
 
@@ -294,13 +279,13 @@ class AnthropicProvider(LLMProvider):
             Confidence score (0.0 to 1.0)
         """
         fields = {
-            'date': 0.2,
-            'transaction_type': 0.15,
-            'amount': 0.2,
-            'vendor_customer': 0.15,
-            'description': 0.1,
-            'category': 0.15,
-            'tax_amount': 0.05
+            "date": 0.2,
+            "transaction_type": 0.15,
+            "amount": 0.2,
+            "vendor_customer": 0.15,
+            "description": 0.1,
+            "category": 0.15,
+            "tax_amount": 0.05,
         }
 
         score = 0.0
