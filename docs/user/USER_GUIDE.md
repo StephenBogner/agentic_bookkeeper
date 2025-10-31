@@ -230,6 +230,9 @@ source venv/bin/activate
 python src/agentic_bookkeeper/main.py
 ```
 
+![Main Window](../screenshots/01_main_window.png)
+*Figure 1: Main application window with tabbed interface*
+
 ### Step 2: First-Run Initialization
 
 On first launch, the application will:
@@ -240,6 +243,9 @@ On first launch, the application will:
 4. Display the main application window
 
 ### Step 3: Configure Settings
+
+![Settings Dialog](../screenshots/03_settings.png)
+*Figure 2: Settings tab with API keys and configuration options*
 
 **Configure the following settings:**
 
@@ -256,15 +262,14 @@ Add at least one LLM provider API key:
 
 #### Directories
 
-- **Watch Directory**: Where you'll place documents for processing (default: `~/Documents/BookkeeperWatch`)
-- **Database Path**: Location of your transaction database (default: `~/.agentic_bookkeeper/bookkeeper.db`)
+- **Watch Directory**: Where you'll place documents for processing (default: `~/data/watch`)
+- **Processed Directory**: Where the processed documents will be placed (default: `~/data/processed`)
+- **Database Path**: Location of your transaction database (default: `~/data/bookkeeper.db`)
 
 #### Preferences
 
 - **Tax Jurisdiction**: Select CRA (Canada) or IRS (United States)
-- **Currency**: Select USD or CAD
 - **LLM Provider**: Choose your preferred AI provider
-- **Auto-start Monitoring**: Whether to start document monitoring on launch
 
 **Save your settings** by clicking the **Save Settings** button.
 
@@ -293,6 +298,7 @@ python src\agentic_bookkeeper\main.py
 **Linux:**
 
 ```bash
+exec bash
 cd ~/agentic_bookkeeper
 source venv/bin/activate
 python src/agentic_bookkeeper/main.py
@@ -303,6 +309,9 @@ python src/agentic_bookkeeper/main.py
 ### Processing Documents
 
 #### Automatic Processing (Recommended)
+
+![Dashboard Tab](../screenshots/02_dashboard.png)
+*Figure 3: Dashboard view with monitoring controls and statistics*
 
 1. Click the **Dashboard** tab
 2. Click **Start Monitoring** button
@@ -325,6 +334,9 @@ python src/agentic_bookkeeper/main.py
 
 If you prefer to enter transactions manually:
 
+![Add Transaction Dialog](../screenshots/05_add_transaction.png)
+*Figure 4: Dialog for adding a new transaction manually*
+
 1. Go to **Transactions** tab
 2. Click **Add Transaction** button
 3. Fill in the form:
@@ -339,6 +351,9 @@ If you prefer to enter transactions manually:
 ### Managing Transactions
 
 #### Viewing Transactions
+
+![Transactions List](../screenshots/04_transactions_list.png)
+*Figure 5: Transactions table with color-coded rows and filter controls*
 
 The **Transactions** tab displays all transactions in a table:
 
@@ -358,6 +373,9 @@ Use the filter controls at the top:
 5. Click **Apply Filters**
 
 #### Editing Transactions
+
+![Edit Transaction Dialog](../screenshots/06_edit_transaction.png)
+*Figure 6: Dialog for editing an existing transaction*
 
 1. Select a transaction in the table
 2. Click **Edit Selected** button
@@ -407,6 +425,9 @@ Click **Preview** to see the report in the text area. Review:
 
 #### Step 4: Export Report
 
+![Export Dialog](../screenshots/10_export_dialog.png)
+*Figure 10: File save dialog for exporting reports*
+
 1. Select export format: **PDF**, **CSV**, or **JSON**
 2. Click **Export** button
 3. Choose save location in file dialog
@@ -419,9 +440,13 @@ Click **Preview** to see the report in the text area. Review:
 - **CSV**: Excel-compatible spreadsheet with complete tax breakdown
 - **JSON**: Structured data with all tax information preserved
 
+![Sample PDF Report](../screenshots/11_sample_pdf_report.png)
+*Figure 11: Generated PDF report with professional formatting*
+
 **Tax Information in Exports:**
 
 All three export formats now include complete tax information:
+
 - Income statements show revenue/expenses with tax breakdown
 - Expense reports include tax paid columns
 - Tax summary exports show all taxable transactions with net position
@@ -433,12 +458,11 @@ To review how a document was processed:
 
 1. Go to **Transactions** tab
 2. Select a transaction that was auto-processed
-3. Click **Edit Selected**
-4. Click **View Source Document** (if available)
-5. The Document Review Dialog shows:
-   - Original document image
-   - Extracted transaction details
-   - AI confidence/notes
+3. Click **Edit Transaction** to view the extracted details
+4. Review the transaction fields (date, vendor, amount, category)
+5. Make any necessary corrections and save
+
+**Note:** Document preview feature is planned for a future release.
 
 ---
 
@@ -519,6 +543,9 @@ All reports use cash-basis accounting, which means:
 
 #### Income Statement (Cash Basis)
 
+![Income Statement Report](../screenshots/08_report_income_statement.png)
+*Figure 8: Income Statement with pre-tax, tax, and cash total breakdowns*
+
 Includes:
 
 - **Revenue Section**: All income by category with tax breakdown
@@ -539,6 +566,9 @@ Includes:
 
 #### Expense Report (Cash Basis)
 
+![Expense Report](../screenshots/09_report_expense.png)
+*Figure 9: Expense Report with tax codes and category breakdowns*
+
 Includes:
 
 - **Expense Breakdown**: Grouped by category with tax columns
@@ -549,6 +579,9 @@ Includes:
 **Use Case**: Tax preparation, deduction tracking, expense analysis.
 
 #### Tax Summary Report
+
+![Tax Summary Report](../screenshots/07_report_tax_summary.png)
+*Figure 7: Tax Summary report for GST/HST filing*
 
 **New in v0.2.0** - Dedicated report for GST/HST filing:
 
@@ -570,6 +603,7 @@ Includes:
 **Use Case**: GST/HST filing, quarterly tax remittances.
 
 **For Canadian Businesses:**
+
 - Tax collected = Output Tax for GST/HST return
 - Tax paid = Input Tax Credits (ITCs) for GST/HST return
 - Net position = Line 109 of GST/HST return
@@ -995,6 +1029,13 @@ Based on testing with 1000 transactions:
 
 ### Version History
 
+**Version 0.2.0** (2025-10-30):
+
+- Cash-basis tax reporting
+- Tax Summary report for GST/HST filing
+- Enhanced exports (PDF, CSV, JSON) with tax information
+- Pre-tax, tax, and cash total breakdowns
+
 **Version 0.1.0** (2025-10-29):
 
 - Initial MVP release
@@ -1017,6 +1058,7 @@ See `docs/KNOWN_ISSUES.md` for complete list. Key limitations:
 
 **Planned for Future Versions:**
 
+- **Document Preview Dialog**: View original source documents alongside transaction details
 - Bank statement import and reconciliation
 - Multi-year comparison reports
 - Budget tracking and alerts
@@ -1024,6 +1066,8 @@ See `docs/KNOWN_ISSUES.md` for complete list. Key limitations:
 - Mobile app for receipt capture
 - Multi-currency support
 - Custom categories
+- Tax rate field with validation
+- Quarterly tax report presets
 
 ---
 

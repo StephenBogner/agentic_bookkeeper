@@ -89,17 +89,17 @@ The following screenshots should be captured and placed in this directory:
 
 ---
 
-### 7. Document Review Dialog
+### 7. Reports Tab - Tax Summary
 
-**Filename:** `07_document_review.png`
+**Filename:** `07_report_tax_summary.png`
 
-**Description:** Dialog showing original document and extracted data
+**Description:** Reports tab with tax summary preview (New in v0.2.0)
 
-**Capture:** Document Review dialog showing:
+**Capture:** Reports tab showing:
 
-- Document image preview on left
-- Extracted transaction details on right
-- Close button
+- Report type selector (Tax Summary selected)
+- Date range selector
+- Preview text area showing tax collected, tax paid, and net position
 
 ---
 
@@ -280,6 +280,8 @@ Place screenshot references at relevant sections in the User Guide.
 4. Update USER_GUIDE.md with screenshot references
 5. Review and validate all images
 
+**Note:** Document Review Dialog (#7) was replaced with Tax Summary Report screenshot to reflect v0.2.0 features. Document review feature is planned for future release.
+
 ---
 
-**Last Updated:** 2025-10-29
+**Last Updated:** 2025-10-30
