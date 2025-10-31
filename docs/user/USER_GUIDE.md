@@ -151,7 +151,7 @@ python src\agentic_bookkeeper\main.py --version
 
 ### Linux Installation
 
-#### Step 1: Install Python
+#### Linux Step 1: Install Python
 
 Python 3.8+ is usually pre-installed. Verify:
 
@@ -166,7 +166,7 @@ sudo apt-get update
 sudo apt-get install python3 python3-pip python3-venv
 ```
 
-#### Step 2: Install Tesseract OCR
+#### Linux Step 2: Install Tesseract OCR
 
 ```bash
 sudo apt-get install tesseract-ocr
@@ -887,7 +887,7 @@ reliability.
 A: No. The application is designed for single-user operation. Database locking will prevent
 concurrent access.
 
-### Troubleshooting
+### Technical Troubleshooting
 
 **Q: What if the AI extracts wrong information?**
 
@@ -1023,7 +1023,7 @@ Based on testing with 1000 transactions:
 
 **Feature Requests:** Submit via GitHub Issues
 
-**Email:** stephen@example.com (replace with actual email)
+**Email:** <stephenbogner@stephenbogner.com>
 
 **Documentation:** Check docs/ folder for additional guides
 
