@@ -77,9 +77,6 @@ class JSONExporter:
         if "metadata" not in report_data:
             raise ValueError("report_data missing required field: metadata")
 
-        if "summary" not in report_data:
-            raise ValueError("report_data missing required field: summary")
-
         # Validate output path
         output_file = Path(output_path)
         if not output_file.parent.exists():
@@ -95,6 +92,8 @@ class JSONExporter:
             json_data = self._build_income_statement_json(report_data)
         elif report_type == "expense_report":
             json_data = self._build_expense_report_json(report_data)
+        elif report_type == "tax_summary":
+            json_data = self._build_tax_summary_json(report_data)
         else:
             raise ValueError(f"Unsupported report type: {report_type}")
 
@@ -109,7 +108,7 @@ class JSONExporter:
 
     def _build_income_statement_json(self, report_data: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Build JSON structure for income statement report.
+        Build JSON structure for income statement report (cash basis with tax breakdown).
 
         Args:
             report_data: Income statement data from ReportGenerator
@@ -117,56 +116,25 @@ class JSONExporter:
         Returns:
             Dictionary with structured JSON data
         """
+        # For JSON, we can export the report_data structure directly since it's already
+        # well-structured with the new cash-basis format. Just add schema version and timestamp.
         metadata = report_data["metadata"]
-        summary = report_data["summary"]
-        details = report_data.get("details", {})
 
-        # Build structured JSON
         json_data = {
             "schema_version": self.SCHEMA_VERSION,
             "report_type": "income_statement",
-            "metadata": {
-                "generated_at": datetime.now().isoformat(),
-                "start_date": metadata["start_date"],
-                "end_date": metadata["end_date"],
-                "jurisdiction": metadata.get("jurisdiction", self.jurisdiction),
-                "currency": metadata.get("currency", self.currency),
-            },
-            "summary": {
-                "total_revenue": self._format_currency(summary["total_revenue"]),
-                "total_expenses": self._format_currency(summary["total_expenses"]),
-                "net_income": self._format_currency(summary["net_income"]),
-            },
-            "details": {},
+            "generated_at": datetime.now().isoformat(),
+            "metadata": metadata,
+            "revenue": report_data.get("revenue", {}),
+            "expenses": report_data.get("expenses", {}),
+            "net_income": report_data.get("net_income", {}),
         }
-
-        # Add revenue breakdown
-        if "revenue" in details and details["revenue"]:
-            json_data["details"]["revenue"] = [
-                {
-                    "category": category["category"],
-                    "amount": self._format_currency(category["total"]),
-                    "percentage": round(float(category["percentage"]), 1),
-                }
-                for category in details["revenue"]
-            ]
-
-        # Add expense breakdown
-        if "expenses" in details and details["expenses"]:
-            json_data["details"]["expenses"] = [
-                {
-                    "category": category["category"],
-                    "amount": self._format_currency(category["total"]),
-                    "percentage": round(float(category["percentage"]), 1),
-                }
-                for category in details["expenses"]
-            ]
 
         return json_data
 
     def _build_expense_report_json(self, report_data: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Build JSON structure for expense report.
+        Build JSON structure for expense report (cash basis with tax breakdown).
 
         Args:
             report_data: Expense report data from ReportGenerator
@@ -174,40 +142,41 @@ class JSONExporter:
         Returns:
             Dictionary with structured JSON data
         """
+        # For JSON, export the report_data structure directly with schema metadata
         metadata = report_data["metadata"]
-        summary = report_data["summary"]
-        details = report_data.get("details", {})
 
-        # Build structured JSON
         json_data = {
             "schema_version": self.SCHEMA_VERSION,
             "report_type": "expense_report",
-            "metadata": {
-                "generated_at": datetime.now().isoformat(),
-                "start_date": metadata["start_date"],
-                "end_date": metadata["end_date"],
-                "jurisdiction": metadata.get("jurisdiction", self.jurisdiction),
-                "currency": metadata.get("currency", self.currency),
-            },
-            "summary": {
-                "total_expenses": self._format_currency(summary["total_expenses"]),
-                "category_count": summary["category_count"],
-                "transaction_count": summary.get("transaction_count", 0),
-            },
-            "details": {},
+            "generated_at": datetime.now().isoformat(),
+            "metadata": metadata,
+            "expenses": report_data.get("expenses", {}),
         }
 
-        # Add expense breakdown with tax codes
-        if "expenses" in details and details["expenses"]:
-            json_data["details"]["expenses"] = [
-                {
-                    "category": category["category"],
-                    "tax_code": category.get("tax_code", "N/A"),
-                    "amount": self._format_currency(category["total"]),
-                    "percentage": round(float(category["percentage"]), 1),
-                }
-                for category in details["expenses"]
-            ]
+        return json_data
+
+    def _build_tax_summary_json(self, report_data: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Build JSON structure for tax summary report.
+
+        Args:
+            report_data: Tax summary data from ReportGenerator
+
+        Returns:
+            Dictionary with structured JSON data
+        """
+        # For JSON, export the report_data structure directly with schema metadata
+        metadata = report_data["metadata"]
+
+        json_data = {
+            "schema_version": self.SCHEMA_VERSION,
+            "report_type": "tax_summary",
+            "generated_at": datetime.now().isoformat(),
+            "metadata": metadata,
+            "tax_collected": report_data.get("tax_collected", {}),
+            "tax_paid": report_data.get("tax_paid", {}),
+            "net_position": report_data.get("net_position", {}),
+        }
 
         return json_data
 

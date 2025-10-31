@@ -29,6 +29,10 @@ from PySide6.QtWidgets import (
 from agentic_bookkeeper.gui.dashboard_widget import DashboardWidget
 from agentic_bookkeeper.gui.settings_dialog import SettingsDialog
 from agentic_bookkeeper.gui.transactions_widget import TransactionsWidget
+from agentic_bookkeeper.gui.reports_widget import ReportsWidget
+from agentic_bookkeeper.models.database import Database
+from agentic_bookkeeper.core.transaction_manager import TransactionManager
+from agentic_bookkeeper.core.document_monitor import DocumentMonitor
 from agentic_bookkeeper.utils.config import Config
 
 
@@ -40,12 +44,22 @@ class MainWindow(QMainWindow):
     and status bar for the bookkeeping application.
     """
 
-    def __init__(self, config: Optional[Config] = None, parent: Optional[QWidget] = None) -> None:
+    def __init__(
+        self,
+        config: Optional[Config] = None,
+        database: Optional[Database] = None,
+        transaction_manager: Optional[TransactionManager] = None,
+        document_monitor: Optional[DocumentMonitor] = None,
+        parent: Optional[QWidget] = None
+    ) -> None:
         """
         Initialize the main window.
 
         Args:
             config: Configuration manager instance. If None, creates a new one.
+            database: Database instance for data persistence
+            transaction_manager: TransactionManager instance for business logic
+            document_monitor: DocumentMonitor instance for watching directories
             parent: Optional parent widget
         """
         super().__init__(parent)
@@ -53,6 +67,9 @@ class MainWindow(QMainWindow):
         self.logger.info("Initializing MainWindow")
 
         self.config = config or Config()
+        self.database = database
+        self.transaction_manager = transaction_manager
+        self.document_monitor = document_monitor
 
         self._setup_window()
         self._create_menu_bar()
@@ -178,23 +195,37 @@ class MainWindow(QMainWindow):
         self.tab_widget.setMovable(False)
 
         # Create dashboard tab with actual widget
-        self.dashboard_widget = DashboardWidget()
+        self.dashboard_widget = DashboardWidget(
+            database=self.database,
+            transaction_manager=self.transaction_manager,
+            document_monitor=self.document_monitor,
+            config=self.config
+        )
         self.tab_widget.addTab(self.dashboard_widget, "Dashboard")
         self.tab_widget.setTabToolTip(
             0, "Monitor document processing and view summary statistics (Ctrl+1)"
         )
 
         # Create transactions tab with actual widget
-        self.transactions_widget = TransactionsWidget()
+        self.transactions_widget = TransactionsWidget(
+            database=self.database,
+            transaction_manager=self.transaction_manager,
+            config=self.config
+        )
         self.tab_widget.addTab(self.transactions_widget, "Transactions")
         self.tab_widget.setTabToolTip(1, "View and manage all transaction records (Ctrl+2)")
 
-        # Create placeholder tab for reports
-        self._add_placeholder_tab("Reports", "Reports view coming soon")
+        # Create reports tab with actual widget
+        self.reports_widget = ReportsWidget(
+            database=self.database,
+            transaction_manager=self.transaction_manager,
+            config=self.config
+        )
+        self.tab_widget.addTab(self.reports_widget, "Reports")
         self.tab_widget.setTabToolTip(2, "Generate and export financial reports (Ctrl+3)")
 
         self.setCentralWidget(self.tab_widget)
-        self.logger.info("Tab widget created with dashboard and placeholder tabs")
+        self.logger.info("Tab widget created with dashboard, transactions, and reports tabs")
 
     def _add_placeholder_tab(self, title: str, message: str) -> None:
         """

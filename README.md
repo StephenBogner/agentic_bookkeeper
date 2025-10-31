@@ -6,7 +6,7 @@
 [![Python](https://img.shields.io/badge/python-3.8%2B-blue.svg)](https://www.python.org/downloads/)
 [![Tests](https://img.shields.io/badge/tests-647%20passing-brightgreen.svg)](#testing)
 [![Coverage](https://img.shields.io/badge/coverage-92%25-brightgreen.svg)](#testing)
-[![Version](https://img.shields.io/badge/version-0.1.0-blue.svg)](PROJECT_STATUS.md)
+[![Version](https://img.shields.io/badge/version-0.2.0-blue.svg)](CHANGELOG.md)
 
 **Agentic Bookkeeper** is an intelligent bookkeeping automation system that leverages
 AI and Large Language Models (LLMs) to automate document processing, transaction
@@ -25,9 +25,12 @@ self-employed individuals.
 - **Tax Jurisdiction Support**: Built-in support for CRA (Canada) and IRS (United States)
   tax codes
 - **Modern GUI**: Full-featured PySide6 desktop application with intuitive interface
-- **Comprehensive Reporting**: Generate Income Statements and Expense Reports with
-  professional formatting
-- **Multi-Format Export**: Export reports to PDF, CSV, or JSON formats
+- **Cash-Basis Tax Reporting** _(New in v0.2.0)_: All reports show pre-tax amounts, tax collected/paid,
+  and cash totals for accurate bank reconciliation
+- **Tax Summary Report** _(New in v0.2.0)_: Dedicated report for GST/HST filing with net tax position
+- **Comprehensive Reporting**: Generate Income Statements, Expense Reports, and Tax Summaries
+  with professional formatting
+- **Multi-Format Export**: Export all reports to PDF, CSV, or JSON with complete tax information
 - **Transaction Management**: Full CRUD operations with advanced filtering and search
 - **Document Monitoring**: Automatic processing of new documents from watched directories
 - **Secure Configuration**: Encrypted API key storage with proper security practices
@@ -41,7 +44,26 @@ self-employed individuals.
 - **Security Audited**: Strong security posture with comprehensive audit
   (see [SECURITY_REVIEW.md](docs/developer/SECURITY_REVIEW.md))
 - **Well Documented**: Complete user and developer documentation
-- **Production Ready**: All 58 tasks completed, v0.1.0 released
+- **Production Ready**: v0.2.0 with complete tax reporting functionality
+
+### What's New in v0.2.0
+
+- **Cash-Basis Tax Reporting**: All financial reports now include tax breakdown
+  - Income/Expense reports show pre-tax, tax, and cash total columns
+  - Percentages calculated on pre-tax amounts for accuracy
+  - Cash totals match actual bank transactions
+
+- **Tax Summary Report**: New report type for GST/HST filing
+  - Lists all taxes collected from customers (output tax)
+  - Lists all taxes paid to vendors (input tax credits)
+  - Calculates net tax position (payable or refundable)
+
+- **Enhanced Exports**: All export formats updated with tax information
+  - PDF exports include color-coded net position and tax columns
+  - CSV exports have complete tax breakdown for Excel analysis
+  - JSON exports preserve all tax data for integration
+
+See [CHANGELOG.md](CHANGELOG.md) for complete release notes.
 
 ---
 
@@ -64,7 +86,7 @@ self-employed individuals.
 
 **Download and install the pre-built Windows installer:**
 
-1. Download `AgenticBookkeeper-0.1.0-Setup.exe` from the [releases page](https://github.com/StephenBogner/agentic_bookkeeper/releases)
+1. Download `AgenticBookkeeper-0.2.0-Setup.exe` from the [releases page](https://github.com/StephenBogner/agentic_bookkeeper/releases)
 2. Run the installer (requires administrator privileges)
 3. Follow the installation wizard
 4. Launch from Start Menu: **Agentic Bookkeeper**
@@ -114,6 +136,16 @@ pip install -r requirements-dev.txt
 
 1. **Run the application**:
 
+   **Using the launcher script (recommended):**
+   ```bash
+   # Linux/Mac
+   ./run_bookkeeper.sh
+
+   # Windows
+   run_bookkeeper.bat
+   ```
+
+   **Or run directly:**
    ```bash
    python src/agentic_bookkeeper/main.py
    ```
@@ -142,13 +174,25 @@ pip install -r requirements-dev.txt
 
 ### GUI Mode (Recommended)
 
+**Option 1: Using the launcher script (easiest):**
+```bash
+# Linux/Mac
+./run_bookkeeper.sh
+
+# Windows
+run_bookkeeper.bat
+```
+
+**Option 2: Direct Python:**
 ```bash
 # Run the GUI application
 python src/agentic_bookkeeper/main.py
 
-# Or use the console script
+# Or use the console script (if installed)
 agentic_bookkeeper
 ```
+
+See [LAUNCHER_GUIDE.md](LAUNCHER_GUIDE.md) for detailed launcher documentation.
 
 ### CLI Mode
 
@@ -286,6 +330,11 @@ agentic_bookkeeper/
 │   └── screenshots/              # Application screenshots
 ├── specs/                        # Task specifications
 ├── samples/                      # Sample documents and config
+├── cli.py                        # CLI interface
+├── main.py                       # Direct entry point
+├── run_bookkeeper.sh             # Linux/Mac launcher script
+├── run_bookkeeper.bat            # Windows launcher script
+├── install.sh                    # Linux installation script
 ├── requirements.txt              # Production dependencies
 ├── requirements-dev.txt          # Development dependencies
 ├── setup.py                      # Package setup
@@ -293,6 +342,7 @@ agentic_bookkeeper/
 ├── CONTEXT.md                    # Project context
 ├── LICENSE                       # Proprietary license
 ├── THIRD_PARTY_LICENSES.md       # Third-party licenses
+├── LAUNCHER_GUIDE.md             # Launcher documentation
 └── README.md                     # This file
 ```
 

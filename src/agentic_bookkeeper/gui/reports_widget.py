@@ -135,10 +135,11 @@ class ReportsWidget(QWidget):
         type_layout = QHBoxLayout()
         type_layout.addWidget(QLabel("Report Type:"))
         self.report_type_combo = QComboBox()
-        self.report_type_combo.addItems(["Income Statement", "Expense Report"])
+        self.report_type_combo.addItems(["Income Statement", "Expense Report", "Tax Summary"])
         self.report_type_combo.setToolTip(
-            "Select report type: Income Statement shows income and expenses with net income, "
-            "Expense Report shows detailed expense breakdown by category."
+            "Select report type: Income Statement shows income and expenses with net income (cash basis), "
+            "Expense Report shows detailed expense breakdown by category, "
+            "Tax Summary shows taxes collected and paid for GST/HST filing."
         )
         type_layout.addWidget(self.report_type_combo)
         type_layout.addStretch()
@@ -336,11 +337,19 @@ class ReportsWidget(QWidget):
             start_date = self.start_date_edit.date().toPython()
             end_date = self.end_date_edit.date().toPython()
 
+            # Convert dates to strings (YYYY-MM-DD format) for report generator
+            start_date_str = start_date.strftime("%Y-%m-%d")
+            end_date_str = end_date.strftime("%Y-%m-%d")
+
             # Generate report
             if report_type == "Income Statement":
-                report_data = self.report_generator.generate_income_statement(start_date, end_date)
-            else:  # Expense Report
-                report_data = self.report_generator.generate_expense_report(start_date, end_date)
+                report_data = self.report_generator.generate_income_statement(start_date_str, end_date_str)
+            elif report_type == "Expense Report":
+                report_data = self.report_generator.generate_expense_report(start_date_str, end_date_str)
+            elif report_type == "Tax Summary":
+                report_data = self.report_generator.generate_tax_summary(start_date_str, end_date_str)
+            else:
+                raise ValueError(f"Unknown report type: {report_type}")
 
             # Store report data
             self._current_report_data = report_data
@@ -433,53 +442,111 @@ class ReportsWidget(QWidget):
         preview_text.append(f"Generated: {metadata.get('generated_at')}")
         preview_text.append("")
 
-        # Summary
-        summary = report_data.get("summary", {})
-        preview_text.append("SUMMARY")
-        preview_text.append("-" * 60)
-
-        if "total_income" in summary:
-            preview_text.append(f"Total Income:    {summary['total_income']}")
-            preview_text.append(f"Total Expenses:  {summary['total_expenses']}")
-            preview_text.append(f"Net Income:      {summary['net_income']}")
-        else:
-            preview_text.append(f"Total Expenses:  {summary['total_expenses']}")
-
-        preview_text.append("")
-
-        # Categories
+        # Summary section varies by report type
         report_type = metadata.get("report_type")
-        if report_type == "income_statement":
+
+        if report_type == "tax_summary":
+            # Tax Summary Report
+            tax_collected = report_data.get("tax_collected", {})
+            tax_paid = report_data.get("tax_paid", {})
+            net_position = report_data.get("net_position", {})
+
+            preview_text.append("TAX COLLECTED (Output Tax)")
+            preview_text.append("-" * 60)
+            for txn in tax_collected.get("transactions", []):
+                desc = (txn.get("description") or txn.get("category", ""))[:25]
+                amt = txn.get("amount_formatted", "$0.00")
+                preview_text.append(f"{txn.get('date')}  {desc:25s}  {amt:>12s}")
+            preview_text.append("-" * 60)
+            preview_text.append(f"Total Tax Collected:               {tax_collected.get('total_formatted', '$0.00'):>12s}")
+            preview_text.append("")
+
+            preview_text.append("TAX PAID (Input Tax Credits)")
+            preview_text.append("-" * 60)
+            for txn in tax_paid.get("transactions", []):
+                desc = (txn.get("description") or txn.get("category", ""))[:25]
+                amt = txn.get("amount_formatted", "$0.00")
+                preview_text.append(f"{txn.get('date')}  {desc:25s}  {amt:>12s}")
+            preview_text.append("-" * 60)
+            preview_text.append(f"Total Tax Paid:                    {tax_paid.get('total_formatted', '$0.00'):>12s}")
+            preview_text.append("")
+
+            preview_text.append("NET TAX POSITION")
+            preview_text.append("-" * 60)
+            payable = net_position.get("payable", True)
+            status = "PAYABLE" if payable else "REFUNDABLE"
+            preview_text.append(f"Net Amount {status}:                {net_position.get('amount_formatted', '$0.00'):>12s}")
+            preview_text.append("")
+            preview_text.append("Note: This is for informational purposes. Consult a tax professional.")
+
+        else:
+            # Income Statement or Expense Report (Cash Basis)
+            preview_text.append("SUMMARY (Cash Basis)")
+            preview_text.append("-" * 60)
+
+            # Handle income statement structure
+            if "revenue" in report_data:
+                revenue = report_data.get("revenue", {})
+                expenses = report_data.get("expenses", {})
+                net_income = report_data.get("net_income", {})
+
+                preview_text.append(f"Total Income:    {revenue.get('cash_total_formatted', '$0.00')}")
+                preview_text.append(f"  (Pre-tax:      {revenue.get('total_formatted', '$0.00')})")
+                preview_text.append(f"  (Tax:          {revenue.get('tax_total_formatted', '$0.00')})")
+                preview_text.append("")
+                preview_text.append(f"Total Expenses:  {expenses.get('cash_total_formatted', '$0.00')}")
+                preview_text.append(f"  (Pre-tax:      {expenses.get('total_formatted', '$0.00')})")
+                preview_text.append(f"  (Tax:          {expenses.get('tax_total_formatted', '$0.00')})")
+                preview_text.append("")
+                preview_text.append(f"Net Income:      {net_income.get('cash_amount_formatted', '$0.00')}")
+                preview_text.append(f"  (Pre-tax:      {net_income.get('pretax_amount_formatted', '$0.00')})")
+                preview_text.append(f"  (Tax position: {net_income.get('tax_position_formatted', '$0.00')})")
+
+            # Handle expense report structure
+            elif "expenses" in report_data:
+                expenses = report_data.get("expenses", {})
+                preview_text.append(f"Total Expenses:  {expenses.get('cash_total_formatted', '$0.00')}")
+                preview_text.append(f"  (Pre-tax:      {expenses.get('total_formatted', '$0.00')})")
+                preview_text.append(f"  (Tax:          {expenses.get('tax_total_formatted', '$0.00')})")
+
+            preview_text.append("")
+
+        # Categories (skip for tax summary)
+        if report_type != "tax_summary" and report_type == "income_statement":
             # Income categories
-            income_categories = report_data.get("income_categories", [])
-            if income_categories:
+            revenue = report_data.get("revenue", {})
+            revenue_categories = revenue.get("categories", {})
+            if revenue_categories:
                 preview_text.append("INCOME BY CATEGORY")
                 preview_text.append("-" * 60)
-                for cat in income_categories:
-                    preview_text.append(
-                        f"{cat['category']:30s} {cat['amount']:>15s} " f"({cat['percentage']:>6s})"
-                    )
+                for cat_name, cat_data in revenue_categories.items():
+                    amount = cat_data.get("total_formatted", "$0.00")
+                    percentage = cat_data.get("percentage_formatted", "0%")
+                    preview_text.append(f"{cat_name:30s} {amount:>15s} ({percentage:>6s})")
                 preview_text.append("")
 
             # Expense categories
-            expense_categories = report_data.get("expense_categories", [])
+            expenses = report_data.get("expenses", {})
+            expense_categories = expenses.get("categories", {})
             if expense_categories:
                 preview_text.append("EXPENSES BY CATEGORY")
                 preview_text.append("-" * 60)
-                for cat in expense_categories:
-                    preview_text.append(
-                        f"{cat['category']:30s} {cat['amount']:>15s} " f"({cat['percentage']:>6s})"
-                    )
-        else:  # expense_report
-            categories = report_data.get("categories", [])
-            if categories:
+                for cat_name, cat_data in expense_categories.items():
+                    amount = cat_data.get("total_formatted", "$0.00")
+                    percentage = cat_data.get("percentage_formatted", "0%")
+                    preview_text.append(f"{cat_name:30s} {amount:>15s} ({percentage:>6s})")
+        elif report_type == "expense_report":
+            expenses = report_data.get("expenses", {})
+            expense_categories = expenses.get("categories", {})
+            if expense_categories:
                 preview_text.append("EXPENSES BY CATEGORY")
                 preview_text.append("-" * 60)
-                for cat in categories:
-                    tax_code = cat.get("tax_code", "N/A")
+                for cat_name, cat_data in expense_categories.items():
+                    amount = cat_data.get("total_formatted", "$0.00")
+                    percentage = cat_data.get("percentage_formatted", "0%")
+                    tax_code = cat_data.get("tax_code", "N/A")
                     preview_text.append(
-                        f"{cat['category']:25s} {tax_code:10s} "
-                        f"{cat['amount']:>15s} ({cat['percentage']:>6s})"
+                        f"{cat_name:25s} {tax_code:10s} {amount:>15s} ({percentage:>6s})"
                     )
 
         self.preview_text.setPlainText("\n".join(preview_text))

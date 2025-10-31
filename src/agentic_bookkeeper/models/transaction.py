@@ -252,8 +252,22 @@ class Transaction:
         return round(self.amount + self.tax_amount, 2)
 
 
-# Valid CRA and IRS categories
-CRA_CATEGORIES = [
+# Valid CRA income categories
+CRA_INCOME_CATEGORIES = [
+    "Professional services revenue",
+    "Consulting revenue",
+    "Sales revenue",
+    "Service revenue",
+    "Commission revenue",
+    "Royalty revenue",
+    "Rental income",
+    "Interest income",
+    "Investment income",
+    "Other income",
+]
+
+# Valid CRA expense categories
+CRA_EXPENSE_CATEGORIES = [
     "Advertising",
     "Business tax, fees, licenses",
     "Insurance",
@@ -270,7 +284,27 @@ CRA_CATEGORIES = [
     "Other expenses",
 ]
 
-IRS_CATEGORIES = [
+# Combined CRA categories (for backward compatibility)
+CRA_CATEGORIES = CRA_INCOME_CATEGORIES + CRA_EXPENSE_CATEGORIES
+
+# Valid IRS income categories
+IRS_INCOME_CATEGORIES = [
+    "Professional services revenue",
+    "Consulting revenue",
+    "Sales revenue",
+    "Service revenue",
+    "Commission revenue",
+    "Royalty revenue",
+    "Rental income",
+    "Interest income",
+    "Investment income",
+    "Dividend income",
+    "Capital gains",
+    "Other income",
+]
+
+# Valid IRS expense categories
+IRS_EXPENSE_CATEGORIES = [
     "Advertising",
     "Car and truck expenses",
     "Commissions and fees",
@@ -292,6 +326,9 @@ IRS_CATEGORIES = [
     "Wages",
     "Other expenses",
 ]
+
+# Combined IRS categories (for backward compatibility)
+IRS_CATEGORIES = IRS_INCOME_CATEGORIES + IRS_EXPENSE_CATEGORIES
 
 
 def validate_category(category: str, jurisdiction: str) -> bool:
@@ -316,12 +353,13 @@ def validate_category(category: str, jurisdiction: str) -> bool:
         raise ValueError(f"Invalid jurisdiction: {jurisdiction}. Must be 'CRA' or 'IRS'")
 
 
-def get_categories_for_jurisdiction(jurisdiction: str) -> list:
+def get_categories_for_jurisdiction(jurisdiction: str, transaction_type: Optional[str] = None) -> list:
     """
-    Get list of valid categories for a tax jurisdiction.
+    Get list of valid categories for a tax jurisdiction, optionally filtered by transaction type.
 
     Args:
         jurisdiction: Tax jurisdiction ('CRA' or 'IRS')
+        transaction_type: Optional filter by 'income' or 'expense'
 
     Returns:
         List of category names
@@ -330,8 +368,18 @@ def get_categories_for_jurisdiction(jurisdiction: str) -> list:
         ValueError: If jurisdiction is invalid
     """
     if jurisdiction == "CRA":
-        return CRA_CATEGORIES.copy()
+        if transaction_type == "income":
+            return CRA_INCOME_CATEGORIES.copy()
+        elif transaction_type == "expense":
+            return CRA_EXPENSE_CATEGORIES.copy()
+        else:
+            return CRA_CATEGORIES.copy()
     elif jurisdiction == "IRS":
-        return IRS_CATEGORIES.copy()
+        if transaction_type == "income":
+            return IRS_INCOME_CATEGORIES.copy()
+        elif transaction_type == "expense":
+            return IRS_EXPENSE_CATEGORIES.copy()
+        else:
+            return IRS_CATEGORIES.copy()
     else:
         raise ValueError(f"Invalid jurisdiction: {jurisdiction}. Must be 'CRA' or 'IRS'")

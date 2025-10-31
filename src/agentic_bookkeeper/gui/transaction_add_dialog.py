@@ -112,7 +112,7 @@ class TransactionAddDialog(QDialog):
 
         # Category dropdown
         self.category_combo = QComboBox()
-        self._populate_categories()
+        # Categories will be populated in _set_defaults() with proper filtering
         self.category_combo.setToolTip(
             "Transaction category for tax reporting. Categories are based on your tax jurisdiction."
         )
@@ -186,13 +186,29 @@ class TransactionAddDialog(QDialog):
         save_shortcut = QShortcut(QKeySequence("Ctrl+S"), self)
         save_shortcut.activated.connect(self._on_save)
 
-    def _populate_categories(self) -> None:
-        """Populate category dropdown based on tax jurisdiction."""
+    def _populate_categories(self, transaction_type: Optional[str] = None) -> None:
+        """
+        Populate category dropdown based on tax jurisdiction and transaction type.
+
+        Args:
+            transaction_type: Optional filter by 'income' or 'expense'
+        """
         try:
-            categories = get_categories_for_jurisdiction(self.jurisdiction)
+            # Get current selection to preserve it if possible
+            current_category = self.category_combo.currentText()
+
+            # Get categories filtered by type
+            categories = get_categories_for_jurisdiction(self.jurisdiction, transaction_type)
             self.category_combo.clear()
             self.category_combo.addItems(categories)
-            self.logger.debug(f"Populated {len(categories)} categories for {self.jurisdiction}")
+
+            # Try to restore previous selection if it's still valid
+            if current_category and current_category in categories:
+                self.category_combo.setCurrentText(current_category)
+
+            self.logger.debug(
+                f"Populated {len(categories)} {transaction_type or 'all'} categories for {self.jurisdiction}"
+            )
         except Exception as e:
             self.logger.error(f"Failed to populate categories: {e}")
             self.category_combo.clear()
@@ -207,6 +223,9 @@ class TransactionAddDialog(QDialog):
 
             # Set default type to expense (most common)
             self.type_combo.setCurrentText("expense")
+
+            # Populate categories for the default type
+            self._populate_categories(transaction_type="expense")
 
             # Set default amount to 0.00
             self.amount_spin.setValue(0.00)
@@ -225,7 +244,8 @@ class TransactionAddDialog(QDialog):
             new_type: The new transaction type ('income' or 'expense')
         """
         self.logger.debug(f"Transaction type changed to: {new_type}")
-        # Could update UI styling based on type if desired
+        # Re-populate categories based on the new type
+        self._populate_categories(transaction_type=new_type)
 
     def _validate_fields(self) -> bool:
         """

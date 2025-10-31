@@ -1,5 +1,153 @@
 # Agentic Bookkeeper - Release Notes
 
+## Version 0.2.0 - Tax Reporting Enhancement
+
+**Release Date:** October 30, 2025
+
+**"Cash-basis tax reporting for small businesses"**
+
+---
+
+### Overview
+
+Agentic Bookkeeper v0.2.0 adds comprehensive cash-basis tax reporting to the system.
+This release enhances all financial reports with detailed tax information, making it easy
+to reconcile with bank statements and file GST/HST returns. The implementation maintains
+the simplicity of the "drop and go" product vision while providing professional tax
+reporting capabilities.
+
+---
+
+### What's New
+
+#### Cash-Basis Tax Reporting
+
+All financial reports now use cash-basis accounting with tax breakdown:
+
+- **Income Statement**: Shows pre-tax amounts, tax collected, and cash totals
+  - Revenue section with tax collected from customers
+  - Expense section with tax paid to vendors
+  - Net income with three views: pre-tax, tax position, and cash
+
+- **Expense Report**: Includes tax columns for all expenses
+  - Pre-tax amounts for business deductions
+  - Tax paid amounts for input tax credits
+  - Cash totals matching actual payments
+
+- **Percentages**: Calculated on pre-tax amounts for accuracy
+- **Bank Reconciliation**: Cash totals match actual bank transactions
+
+#### Tax Summary Report
+
+New dedicated report for GST/HST filing:
+
+- **Tax Collected (Output Tax)**: Lists all income transactions with tax > $0
+  - Transaction date, description, and tax amount
+  - Total tax collected from customers
+
+- **Tax Paid (Input Tax Credits)**: Lists all expense transactions with tax > $0
+  - Transaction date, description, and tax amount
+  - Total tax paid to vendors
+
+- **Net Tax Position**: Automatic calculation
+  - Amount payable (if collected > paid) - shown in red
+  - Amount refundable (if paid > collected) - shown in green
+  - Professional disclaimer for tax filing
+
+#### Enhanced Exports
+
+All three export formats updated with complete tax information:
+
+- **PDF Export**:
+  - Tax columns added to all report types
+  - Color-coded net tax position (red for payable, green for refundable)
+  - Professional layout with tax breakdown
+
+- **CSV Export**:
+  - Excel-compatible format with tax columns
+  - Complete tax breakdown for analysis
+  - Separate columns for pre-tax, tax, and cash total
+
+- **JSON Export**:
+  - Structured data with all tax information
+  - Preserves complete report structure
+  - Ready for integration with other tools
+
+---
+
+### Technical Details
+
+**Files Modified:**
+- `report_generator.py` (~180 lines): Tax tracking and summary generation
+- `reports_widget.py` (~120 lines): GUI updates for tax reports
+- `pdf_exporter.py` (~180 lines): PDF export with tax columns
+- `csv_exporter.py` (~150 lines): CSV export with tax breakdown
+- `json_exporter.py` (~60 lines): JSON export structure update
+
+**Total Changes:** ~690 lines across 5 files
+
+**Implementation Time:** ~5 hours
+
+**Backward Compatibility:** Maintained with legacy field support
+
+---
+
+### Installation
+
+Update to v0.2.0 using pip:
+
+```bash
+pip install --upgrade agentic_bookkeeper
+```
+
+Or download the latest release from GitHub:
+- Linux: `agentic_bookkeeper-0.2.0-py3-none-any.whl`
+- Windows: `AgenticBookkeeper-0.2.0-Setup.exe`
+
+---
+
+### Migration from v0.1.0
+
+No database migration required. All existing transaction data will work with the new
+reporting system. Simply update the software and start using the new tax reports.
+
+**Note:** Existing exports will continue to work, but regenerating reports will use the
+new cash-basis format with tax information.
+
+---
+
+### Known Limitations
+
+- Tax rates not stored (only tax amounts)
+- No distinction between different tax types (GST, HST, PST, etc.)
+- No tax remittance tracking
+- Single currency per transaction
+
+These limitations are by design to maintain simplicity. Future enhancements may address
+these based on user feedback.
+
+---
+
+### Documentation Updates
+
+- Updated User Guide with tax reporting instructions
+- Added Tax Summary Report usage examples
+- Created comprehensive tax implementation documentation
+- Updated README with v0.2.0 features
+- Created CHANGELOG.md for version tracking
+
+---
+
+### What's Next
+
+Planned for future releases:
+- Tax rate field with validation
+- Tax type categorization (GST, HST, PST, etc.)
+- Quarterly tax report presets
+- Tax remittance tracking
+
+---
+
 ## Version 0.1.0 - Initial Release
 
 **Release Date:** October 29, 2025

@@ -1,7 +1,7 @@
 # Agentic Bookkeeper User Guide
 
-**Version:** 0.1.0
-**Last Updated:** 2025-10-29
+**Version:** 0.2.0
+**Last Updated:** 2025-10-30
 **Author:** Stephen Bogner, P.Eng.
 
 ---
@@ -35,8 +35,10 @@ tax filing and business management.
   vendor, amount, and category information
 - **Multi-LLM Support**: Choose from OpenAI, Anthropic, XAI, or Google AI providers
 - **Tax Jurisdiction Support**: Configured for CRA (Canada) and IRS (United States) tax codes
-- **Professional Reports**: Generate income statements and expense reports with tax codes
-- **Multiple Export Formats**: Export reports as PDF, CSV, or JSON
+- **Professional Reports**: Generate income statements, expense reports, and tax summaries
+- **Cash-Basis Tax Reporting**: All reports show pre-tax amounts, tax collected/paid, and cash totals
+- **Tax Summary for Filing**: Dedicated report for GST/HST filing with net position calculation
+- **Multiple Export Formats**: Export all reports as PDF, CSV, or JSON with complete tax information
 - **User-Friendly GUI**: Full-featured PySide6 desktop application
 - **Secure**: API keys are encrypted, and sensitive data is protected
 
@@ -376,8 +378,9 @@ Use the filter controls at the top:
 
 1. Go to **Reports** tab
 2. Choose report type:
-   - **Income Statement**: Complete income/expense summary with net income
-   - **Expense Report**: Detailed expense breakdown by category with tax codes
+   - **Income Statement**: Complete income/expense summary with net income (cash basis with tax breakdown)
+   - **Expense Report**: Detailed expense breakdown by category with tax codes (cash basis with tax breakdown)
+   - **Tax Summary**: Report for GST/HST filing showing taxes collected vs. paid
 
 #### Step 2: Select Date Range
 
@@ -397,8 +400,10 @@ Click **Preview** to see the report in the text area. Review:
 
 - Date range
 - Transaction counts
-- Totals and percentages
+- Totals and percentages (percentages calculated on pre-tax amounts)
 - Category breakdowns
+- **Cash-basis amounts**: All reports show pre-tax, tax, and cash total
+- **Tax Summary**: Shows tax collected, tax paid, and net position
 
 #### Step 4: Export Report
 
@@ -410,9 +415,17 @@ Click **Preview** to see the report in the text area. Review:
 
 **Export Formats:**
 
-- **PDF**: Professional report suitable for printing and tax filing
-- **CSV**: Excel-compatible spreadsheet for further analysis
-- **JSON**: Structured data for integration with other tools
+- **PDF**: Professional report with tax columns and color-coded net position
+- **CSV**: Excel-compatible spreadsheet with complete tax breakdown
+- **JSON**: Structured data with all tax information preserved
+
+**Tax Information in Exports:**
+
+All three export formats now include complete tax information:
+- Income statements show revenue/expenses with tax breakdown
+- Expense reports include tax paid columns
+- Tax summary exports show all taxable transactions with net position
+- Cash totals match your actual bank transactions (pre-tax + tax)
 
 ### Reviewing Processed Documents
 
@@ -493,33 +506,81 @@ Based on testing:
 
 ### Report Generation
 
-#### Income Statement
+#### Cash-Basis Accounting
+
+All reports use cash-basis accounting, which means:
+
+- **Income**: Recorded when you receive payment (cash in)
+- **Expenses**: Recorded when you make payment (cash out)
+- **Tax Amounts**: Tracked separately from pre-tax business amounts
+- **Cash Totals**: Match your actual bank transactions (pre-tax + tax)
+
+**Why Cash-Basis?** Simpler, matches real cash flow, and acceptable for most small businesses.
+
+#### Income Statement (Cash Basis)
 
 Includes:
 
-- **Revenue Section**: All income by category
-- **Expenses Section**: All expenses by category
-- **Net Income**: Revenue minus expenses
-- **Percentages**: Each category as % of total
+- **Revenue Section**: All income by category with tax breakdown
+  - Pre-tax amount (your business revenue)
+  - Tax collected (GST/HST/sales tax from customers)
+  - Cash total (what actually hit your bank)
+- **Expenses Section**: All expenses by category with tax breakdown
+  - Pre-tax amount (your business expense)
+  - Tax paid (GST/HST/sales tax to vendors)
+  - Cash total (what actually left your bank)
+- **Net Income**: Three views
+  - Pre-tax net income (business profit before tax)
+  - Tax position (tax collected minus tax paid)
+  - Cash net income (actual change in bank balance)
+- **Percentages**: Based on pre-tax amounts for accuracy
 
-**Use Case**: Monthly/quarterly financial review, tax filing.
+**Use Case**: Monthly/quarterly financial review, tax filing, bank reconciliation.
 
-#### Expense Report
+#### Expense Report (Cash Basis)
 
 Includes:
 
-- **Expense Breakdown**: Grouped by category
+- **Expense Breakdown**: Grouped by category with tax columns
 - **Tax Codes**: IRS Schedule C or CRA T2125 codes
-- **Category Totals**: Sum per category
-- **Percentages**: Each category as % of total expenses
+- **Category Totals**: Pre-tax, tax, and cash total per category
+- **Percentages**: Based on pre-tax amounts
 
 **Use Case**: Tax preparation, deduction tracking, expense analysis.
 
+#### Tax Summary Report
+
+**New in v0.2.0** - Dedicated report for GST/HST filing:
+
+Includes:
+
+- **Tax Collected (Output Tax)**: All income transactions with tax > $0
+  - Transaction date and description
+  - Tax amount per transaction
+  - Total tax collected
+- **Tax Paid (Input Tax Credits)**: All expense transactions with tax > $0
+  - Transaction date and description
+  - Tax amount per transaction
+  - Total tax paid
+- **Net Tax Position**:
+  - Amount payable to government (if collected > paid)
+  - Amount refundable from government (if paid > collected)
+- **Professional Disclaimer**: Reminder to consult tax professional
+
+**Use Case**: GST/HST filing, quarterly tax remittances.
+
+**For Canadian Businesses:**
+- Tax collected = Output Tax for GST/HST return
+- Tax paid = Input Tax Credits (ITCs) for GST/HST return
+- Net position = Line 109 of GST/HST return
+
+**Important:** This report is for informational purposes only. Always consult a tax professional for actual filing.
+
 #### Report Customization
 
-**Current Version**: Reports use fixed templates.
+**Current Version**: Reports use fixed templates with cash-basis format.
 
-**Future Enhancement**: Custom templates planned for future version.
+**Future Enhancement**: Custom templates and accrual-basis option planned.
 
 ### Settings & Configuration
 

@@ -25,12 +25,19 @@ from PySide6.QtWidgets import (
     QTableWidgetItem,
     QHeaderView,
     QFrame,
+    QMessageBox,
 )
 from PySide6.QtGui import QColor
 
 from agentic_bookkeeper.core.transaction_manager import TransactionManager
 from agentic_bookkeeper.core.document_monitor import DocumentMonitor
+from agentic_bookkeeper.core.document_processor import DocumentProcessor
 from agentic_bookkeeper.models.database import Database
+from agentic_bookkeeper.utils.config import Config
+from agentic_bookkeeper.llm.openai_provider import OpenAIProvider
+from agentic_bookkeeper.llm.anthropic_provider import AnthropicProvider
+from agentic_bookkeeper.llm.xai_provider import XAIProvider
+from agentic_bookkeeper.llm.google_provider import GoogleProvider
 
 
 class DashboardWidget(QWidget):
@@ -50,6 +57,7 @@ class DashboardWidget(QWidget):
         database: Optional[Database] = None,
         transaction_manager: Optional[TransactionManager] = None,
         document_monitor: Optional[DocumentMonitor] = None,
+        config: Optional[Config] = None,
         parent: Optional[QWidget] = None,
     ) -> None:
         """
@@ -59,6 +67,7 @@ class DashboardWidget(QWidget):
             database: Database instance for querying data
             transaction_manager: Transaction manager for operations
             document_monitor: Document monitor for watching directories
+            config: Configuration instance
             parent: Optional parent widget
         """
         super().__init__(parent)
@@ -69,6 +78,7 @@ class DashboardWidget(QWidget):
         self.database = database
         self.transaction_manager = transaction_manager
         self.document_monitor = document_monitor
+        self.config = config if config else Config()
 
         # Monitoring state
         self._is_monitoring = False
@@ -320,22 +330,24 @@ class DashboardWidget(QWidget):
             return
 
         try:
-            stats = self.transaction_manager.get_statistics()
+            stats = self.transaction_manager.get_transaction_statistics()
 
             # Update income
-            total_income = stats.get("total_income", 0.0)
+            total_income = stats.get("income", {}).get("total", 0.0)
             self.income_label.setText(f"${total_income:,.2f}")
 
             # Update expenses
-            total_expenses = stats.get("total_expense", 0.0)
+            total_expenses = stats.get("expense", {}).get("total", 0.0)
             self.expense_label.setText(f"${total_expenses:,.2f}")
 
             # Update net income
-            net_income = total_income - total_expenses
+            net_income = stats.get("net", 0.0)
             self.net_label.setText(f"${net_income:,.2f}")
 
-            # Update transaction count
-            transaction_count = stats.get("count", 0)
+            # Update transaction count (sum of income and expense counts)
+            income_count = stats.get("income", {}).get("count", 0)
+            expense_count = stats.get("expense", {}).get("count", 0)
+            transaction_count = income_count + expense_count
             self.count_label.setText(str(transaction_count))
 
             self.logger.debug(f"Statistics loaded: {stats}")
@@ -352,7 +364,7 @@ class DashboardWidget(QWidget):
         try:
             # Get last 10 transactions
             transactions = self.transaction_manager.query_transactions(
-                limit=10, order_by="date", order_desc=True
+                limit=10, order_by="date DESC"
             )
 
             # Clear existing rows
@@ -404,17 +416,52 @@ class DashboardWidget(QWidget):
 
     def _start_monitoring(self) -> None:
         """Start document monitoring."""
+        # Initialize DocumentMonitor on demand if not already created
         if not self.document_monitor:
-            self.logger.warning("Document monitor not available")
-            return
+            self.logger.info("DocumentMonitor not initialized - attempting on-demand initialization")
+
+            # Validate configuration
+            validation_error = self._validate_monitoring_configuration()
+            if validation_error:
+                self.logger.warning(f"Cannot start monitoring: {validation_error}")
+                self._show_configuration_error(validation_error)
+                return
+
+            # Initialize DocumentMonitor
+            try:
+                self.document_monitor = self._initialize_document_monitor()
+                self.logger.info("DocumentMonitor initialized successfully")
+            except Exception as e:
+                self.logger.error(f"Failed to initialize DocumentMonitor: {e}", exc_info=True)
+                QMessageBox.critical(
+                    self,
+                    "Initialization Error",
+                    f"Failed to initialize document monitoring:\n\n{str(e)}\n\n"
+                    "Please check the log file for details."
+                )
+                return
 
         try:
             self.document_monitor.start()
             self._is_monitoring = True
             self.status_changed.emit("running")
             self.logger.info("Document monitoring started")
+
+            # Process any existing files in the watch directory
+            self.logger.info("Processing existing files in watch directory...")
+            processed_files = self.document_monitor.process_existing_files()
+            if processed_files:
+                self.logger.info(f"Processed {len(processed_files)} existing file(s)")
+            else:
+                self.logger.info("No existing files to process")
+
         except Exception as e:
             self.logger.error(f"Error starting monitoring: {e}", exc_info=True)
+            QMessageBox.critical(
+                self,
+                "Monitoring Error",
+                f"Failed to start document monitoring:\n\n{str(e)}"
+            )
 
     def _stop_monitoring(self) -> None:
         """Stop document monitoring."""
@@ -484,6 +531,117 @@ class DashboardWidget(QWidget):
             True if monitoring is active, False otherwise
         """
         return self._is_monitoring
+
+    def _validate_monitoring_configuration(self) -> Optional[str]:
+        """
+        Validate that required configuration is present for monitoring.
+
+        Returns:
+            Error message if validation fails, None if configuration is valid
+        """
+        # Check if watch directory is configured
+        watch_dir = self.config.get_watch_directory()
+        if not watch_dir or not str(watch_dir).strip():
+            return "Watch directory not configured"
+
+        # Check if processed directory is configured
+        processed_dir = self.config.get_processed_directory()
+        if not processed_dir or not str(processed_dir).strip():
+            return "Processed directory not configured"
+
+        # Check if LLM provider is configured
+        llm_provider = self.config.get("llm_provider")
+        if not llm_provider:
+            return "LLM provider not configured"
+
+        # Check if API key is configured for the provider
+        api_key = self.config.get_api_key(llm_provider)
+        if not api_key:
+            return f"API key not configured for {llm_provider}"
+
+        return None  # Configuration is valid
+
+    def _show_configuration_error(self, error_message: str) -> None:
+        """
+        Show user-friendly configuration error dialog.
+
+        Args:
+            error_message: Error message describing the missing configuration
+        """
+        QMessageBox.warning(
+            self,
+            "Configuration Required",
+            f"{error_message}\n\n"
+            "To enable document monitoring, please configure the following:\n\n"
+            "1. Watch Directory - where new documents will be placed\n"
+            "2. Processed Directory - where processed documents will be moved\n"
+            "3. LLM Provider - select your AI provider (OpenAI, Anthropic, etc.)\n"
+            "4. API Key - enter your API key for the selected provider\n\n"
+            "Go to File → Settings to configure these options.",
+        )
+
+    def _initialize_document_monitor(self) -> DocumentMonitor:
+        """
+        Initialize DocumentMonitor with current configuration.
+
+        Returns:
+            Initialized DocumentMonitor instance
+
+        Raises:
+            Exception: If initialization fails
+        """
+        # Get directories from config
+        watch_dir = str(self.config.get_watch_directory())
+        processed_dir = str(self.config.get_processed_directory())
+
+        # Create LLM provider
+        llm_provider_name = self.config.get("llm_provider")
+        api_key = self.config.get_api_key(llm_provider_name)
+
+        # Create provider based on name
+        if llm_provider_name == "openai":
+            llm_provider = OpenAIProvider(api_key)
+        elif llm_provider_name == "anthropic":
+            llm_provider = AnthropicProvider(api_key)
+        elif llm_provider_name == "xai":
+            llm_provider = XAIProvider(api_key)
+        elif llm_provider_name == "google":
+            llm_provider = GoogleProvider(api_key)
+        else:
+            raise ValueError(f"Unknown LLM provider: {llm_provider_name}")
+
+        # Get tax categories
+        tax_categories = self.config.get_categories()
+
+        # Create document processor
+        document_processor = DocumentProcessor(llm_provider, tax_categories)
+
+        # Create callback function that processes documents and saves to database
+        def process_document_callback(document_path: str) -> None:
+            """Process document and save transaction to database."""
+            try:
+                self.logger.info(f"Processing document: {document_path}")
+
+                # Process document
+                transaction = document_processor.process_document(document_path)
+
+                if transaction and self.transaction_manager:
+                    # Save transaction to database
+                    self.transaction_manager.create_transaction(transaction)
+                    self.logger.info(f"Transaction saved: {transaction.id}")
+
+                    # Refresh dashboard
+                    self.refresh_requested.emit()
+
+            except Exception as e:
+                self.logger.error(f"Error processing document {document_path}: {e}", exc_info=True)
+
+        # Create and return DocumentMonitor
+        return DocumentMonitor(
+            watch_directory=watch_dir,
+            processed_directory=processed_dir,
+            on_document_callback=process_document_callback,
+        )
 
     def set_backend_services(
         self,

@@ -74,9 +74,6 @@ class CSVExporter:
         if "metadata" not in report_data:
             raise ValueError("report_data missing required field: metadata")
 
-        if "summary" not in report_data:
-            raise ValueError("report_data missing required field: summary")
-
         # Validate output path
         output_file = Path(output_path)
         if not output_file.parent.exists():
@@ -92,6 +89,8 @@ class CSVExporter:
             df = self._build_income_statement_csv(report_data)
         elif report_type == "expense_report":
             df = self._build_expense_report_csv(report_data)
+        elif report_type == "tax_summary":
+            df = self._build_tax_summary_csv(report_data)
         else:
             raise ValueError(f"Unsupported report type: {report_type}")
 
@@ -102,7 +101,7 @@ class CSVExporter:
 
     def _build_income_statement_csv(self, report_data: Dict[str, Any]) -> pd.DataFrame:
         """
-        Build DataFrame for income statement report.
+        Build DataFrame for income statement report (cash basis with tax breakdown).
 
         Args:
             report_data: Income statement data from ReportGenerator
@@ -111,8 +110,9 @@ class CSVExporter:
             pandas DataFrame with income statement data
         """
         metadata = report_data["metadata"]
-        summary = report_data["summary"]
-        details = report_data.get("details", {})
+        revenue = report_data.get("revenue", {})
+        expenses = report_data.get("expenses", {})
+        net_income = report_data.get("net_income", {})
 
         rows = []
 
@@ -121,7 +121,9 @@ class CSVExporter:
             {
                 "Section": "Metadata",
                 "Category": "Report Type",
-                "Amount": "Income Statement",
+                "Pre-Tax": "Income Statement (Cash Basis)",
+                "Tax": "",
+                "Cash Total": "",
                 "Percentage": "",
             }
         )
@@ -129,7 +131,9 @@ class CSVExporter:
             {
                 "Section": "Metadata",
                 "Category": "Date Range",
-                "Amount": f"{metadata['start_date']} to {metadata['end_date']}",
+                "Pre-Tax": f"{metadata['start_date']} to {metadata['end_date']}",
+                "Tax": "",
+                "Cash Total": "",
                 "Percentage": "",
             }
         )
@@ -137,7 +141,9 @@ class CSVExporter:
             {
                 "Section": "Metadata",
                 "Category": "Jurisdiction",
-                "Amount": metadata.get("jurisdiction", self.jurisdiction),
+                "Pre-Tax": metadata.get("jurisdiction", self.jurisdiction),
+                "Tax": "",
+                "Cash Total": "",
                 "Percentage": "",
             }
         )
@@ -145,79 +151,121 @@ class CSVExporter:
             {
                 "Section": "Metadata",
                 "Category": "Currency",
-                "Amount": metadata.get("currency", self.currency),
+                "Pre-Tax": metadata.get("currency", self.currency),
+                "Tax": "",
+                "Cash Total": "",
                 "Percentage": "",
             }
         )
-        rows.append({"Section": "", "Category": "", "Amount": "", "Percentage": ""})  # Blank row
+        rows.append(
+            {"Section": "", "Category": "", "Pre-Tax": "", "Tax": "", "Cash Total": "", "Percentage": ""}
+        )  # Blank row
 
-        # Summary section
+        # Summary section with cash-basis breakdown
         rows.append(
             {
                 "Section": "Summary",
-                "Category": "Total Revenue",
-                "Amount": self._format_currency(summary["total_revenue"]),
+                "Category": "Total Revenue (Cash)",
+                "Pre-Tax": revenue.get("total_formatted", "$0.00"),
+                "Tax": revenue.get("tax_total_formatted", "$0.00"),
+                "Cash Total": revenue.get("cash_total_formatted", "$0.00"),
                 "Percentage": "",
             }
         )
         rows.append(
             {
                 "Section": "Summary",
-                "Category": "Total Expenses",
-                "Amount": self._format_currency(summary["total_expenses"]),
+                "Category": "Total Expenses (Cash)",
+                "Pre-Tax": expenses.get("total_formatted", "$0.00"),
+                "Tax": expenses.get("tax_total_formatted", "$0.00"),
+                "Cash Total": expenses.get("cash_total_formatted", "$0.00"),
                 "Percentage": "",
             }
         )
         rows.append(
             {
                 "Section": "Summary",
-                "Category": "Net Income",
-                "Amount": self._format_currency(summary["net_income"]),
+                "Category": "Net Income (Pre-tax)",
+                "Pre-Tax": net_income.get("pretax_amount_formatted", "$0.00"),
+                "Tax": "",
+                "Cash Total": "",
                 "Percentage": "",
             }
         )
-        rows.append({"Section": "", "Category": "", "Amount": "", "Percentage": ""})  # Blank row
+        rows.append(
+            {
+                "Section": "Summary",
+                "Category": "Tax Position",
+                "Pre-Tax": "",
+                "Tax": net_income.get("tax_position_formatted", "$0.00"),
+                "Cash Total": "",
+                "Percentage": "",
+            }
+        )
+        rows.append(
+            {
+                "Section": "Summary",
+                "Category": "Net Income (Cash)",
+                "Pre-Tax": "",
+                "Tax": "",
+                "Cash Total": net_income.get("cash_amount_formatted", "$0.00"),
+                "Percentage": "",
+            }
+        )
+        rows.append(
+            {"Section": "", "Category": "", "Pre-Tax": "", "Tax": "", "Cash Total": "", "Percentage": ""}
+        )  # Blank row
 
-        # Revenue breakdown
-        if "revenue" in details and details["revenue"]:
+        # Revenue breakdown with tax columns
+        revenue_categories = revenue.get("categories", {})
+        if revenue_categories:
             rows.append(
                 {
                     "Section": "Revenue Details",
                     "Category": "Category",
-                    "Amount": "Amount",
-                    "Percentage": "Percentage",
+                    "Pre-Tax": "Pre-Tax Amount",
+                    "Tax": "Tax Collected",
+                    "Cash Total": "Cash Total",
+                    "Percentage": "% of Revenue",
                 }
             )
-            for category in details["revenue"]:
+            for cat_name, cat_data in revenue_categories.items():
                 rows.append(
                     {
                         "Section": "Revenue Details",
-                        "Category": self._escape_special_characters(category["category"]),
-                        "Amount": self._format_currency(category["total"]),
-                        "Percentage": f"{category['percentage']:.1f}%",
+                        "Category": self._escape_special_characters(cat_name),
+                        "Pre-Tax": cat_data.get("total_formatted", "$0.00"),
+                        "Tax": cat_data.get("tax_total_formatted", "$0.00"),
+                        "Cash Total": cat_data.get("cash_total_formatted", "$0.00"),
+                        "Percentage": cat_data.get("percentage_formatted", "0.0%"),
                     }
                 )
             rows.append(
-                {"Section": "", "Category": "", "Amount": "", "Percentage": ""}
+                {"Section": "", "Category": "", "Pre-Tax": "", "Tax": "", "Cash Total": "", "Percentage": ""}
             )  # Blank row
 
-        # Expense breakdown
-        if "expenses" in details and details["expenses"]:
+        # Expense breakdown with tax columns
+        expense_categories = expenses.get("categories", {})
+        if expense_categories:
             rows.append(
                 {
                     "Section": "Expense Details",
                     "Category": "Category",
-                    "Amount": "Amount",
-                    "Percentage": "Percentage",
+                    "Pre-Tax": "Pre-Tax Amount",
+                    "Tax": "Tax Paid",
+                    "Cash Total": "Cash Total",
+                    "Percentage": "% of Expenses",
                 }
             )
-            for category in details["expenses"]:
+            for cat_name, cat_data in expense_categories.items():
                 rows.append(
                     {
                         "Section": "Expense Details",
-                        "Category": self._escape_special_characters(category["category"]),
-                        "Amount": self._format_currency(category["total"]),
-                        "Percentage": f"{category['percentage']:.1f}%",
+                        "Category": self._escape_special_characters(cat_name),
+                        "Pre-Tax": cat_data.get("total_formatted", "$0.00"),
+                        "Tax": cat_data.get("tax_total_formatted", "$0.00"),
+                        "Cash Total": cat_data.get("cash_total_formatted", "$0.00"),
+                        "Percentage": cat_data.get("percentage_formatted", "0.0%"),
                     }
                 )
 
@@ -225,7 +273,7 @@ class CSVExporter:
 
     def _build_expense_report_csv(self, report_data: Dict[str, Any]) -> pd.DataFrame:
         """
-        Build DataFrame for expense report.
+        Build DataFrame for expense report (cash basis with tax breakdown).
 
         Args:
             report_data: Expense report data from ReportGenerator
@@ -234,8 +282,7 @@ class CSVExporter:
             pandas DataFrame with expense report data
         """
         metadata = report_data["metadata"]
-        summary = report_data["summary"]
-        details = report_data.get("details", {})
+        expenses = report_data.get("expenses", {})
 
         rows = []
 
@@ -244,8 +291,10 @@ class CSVExporter:
             {
                 "Section": "Metadata",
                 "Category": "Report Type",
-                "Tax Code": "Expense Report",
-                "Amount": "",
+                "Tax Code": "Expense Report (Cash Basis)",
+                "Pre-Tax": "",
+                "Tax": "",
+                "Cash Total": "",
                 "Percentage": "",
             }
         )
@@ -254,7 +303,9 @@ class CSVExporter:
                 "Section": "Metadata",
                 "Category": "Date Range",
                 "Tax Code": f"{metadata['start_date']} to {metadata['end_date']}",
-                "Amount": "",
+                "Pre-Tax": "",
+                "Tax": "",
+                "Cash Total": "",
                 "Percentage": "",
             }
         )
@@ -263,7 +314,9 @@ class CSVExporter:
                 "Section": "Metadata",
                 "Category": "Jurisdiction",
                 "Tax Code": metadata.get("jurisdiction", self.jurisdiction),
-                "Amount": "",
+                "Pre-Tax": "",
+                "Tax": "",
+                "Cash Total": "",
                 "Percentage": "",
             }
         )
@@ -272,21 +325,25 @@ class CSVExporter:
                 "Section": "Metadata",
                 "Category": "Currency",
                 "Tax Code": metadata.get("currency", self.currency),
-                "Amount": "",
+                "Pre-Tax": "",
+                "Tax": "",
+                "Cash Total": "",
                 "Percentage": "",
             }
         )
         rows.append(
-            {"Section": "", "Category": "", "Tax Code": "", "Amount": "", "Percentage": ""}
+            {"Section": "", "Category": "", "Tax Code": "", "Pre-Tax": "", "Tax": "", "Cash Total": "", "Percentage": ""}
         )  # Blank row
 
-        # Summary section
+        # Summary section with cash-basis breakdown
         rows.append(
             {
                 "Section": "Summary",
-                "Category": "Total Expenses",
+                "Category": "Total Expenses (Cash)",
                 "Tax Code": "",
-                "Amount": self._format_currency(summary["total_expenses"]),
+                "Pre-Tax": expenses.get("total_formatted", "$0.00"),
+                "Tax": expenses.get("tax_total_formatted", "$0.00"),
+                "Cash Total": expenses.get("cash_total_formatted", "$0.00"),
                 "Percentage": "",
             }
         )
@@ -295,7 +352,9 @@ class CSVExporter:
                 "Section": "Summary",
                 "Category": "Number of Categories",
                 "Tax Code": "",
-                "Amount": str(summary["category_count"]),
+                "Pre-Tax": str(expenses.get("category_count", 0)),
+                "Tax": "",
+                "Cash Total": "",
                 "Percentage": "",
             }
         )
@@ -304,35 +363,179 @@ class CSVExporter:
                 "Section": "Summary",
                 "Category": "Transaction Count",
                 "Tax Code": "",
-                "Amount": str(summary.get("transaction_count", 0)),
+                "Pre-Tax": str(expenses.get("transaction_count", 0)),
+                "Tax": "",
+                "Cash Total": "",
                 "Percentage": "",
             }
         )
         rows.append(
-            {"Section": "", "Category": "", "Tax Code": "", "Amount": "", "Percentage": ""}
+            {"Section": "", "Category": "", "Tax Code": "", "Pre-Tax": "", "Tax": "", "Cash Total": "", "Percentage": ""}
         )  # Blank row
 
-        # Expense breakdown with tax codes
-        if "expenses" in details and details["expenses"]:
+        # Expense breakdown with tax columns
+        expense_categories = expenses.get("categories", {})
+        if expense_categories:
             rows.append(
                 {
                     "Section": "Expense Details",
                     "Category": "Category",
                     "Tax Code": "Tax Code",
-                    "Amount": "Amount",
-                    "Percentage": "Percentage",
+                    "Pre-Tax": "Pre-Tax Amount",
+                    "Tax": "Tax Paid",
+                    "Cash Total": "Cash Total",
+                    "Percentage": "% of Expenses",
                 }
             )
-            for category in details["expenses"]:
+            for cat_name, cat_data in expense_categories.items():
                 rows.append(
                     {
                         "Section": "Expense Details",
-                        "Category": self._escape_special_characters(category["category"]),
-                        "Tax Code": category.get("tax_code", "N/A"),
-                        "Amount": self._format_currency(category["total"]),
-                        "Percentage": f"{category['percentage']:.1f}%",
+                        "Category": self._escape_special_characters(cat_name),
+                        "Tax Code": cat_data.get("tax_code", "N/A"),
+                        "Pre-Tax": cat_data.get("total_formatted", "$0.00"),
+                        "Tax": cat_data.get("tax_total_formatted", "$0.00"),
+                        "Cash Total": cat_data.get("cash_total_formatted", "$0.00"),
+                        "Percentage": cat_data.get("percentage_formatted", "0.0%"),
                     }
                 )
+
+        return pd.DataFrame(rows)
+
+    def _build_tax_summary_csv(self, report_data: Dict[str, Any]) -> pd.DataFrame:
+        """
+        Build DataFrame for tax summary report.
+
+        Args:
+            report_data: Tax summary data from ReportGenerator
+
+        Returns:
+            pandas DataFrame with tax summary data
+        """
+        metadata = report_data["metadata"]
+        tax_collected = report_data.get("tax_collected", {})
+        tax_paid = report_data.get("tax_paid", {})
+        net_position = report_data.get("net_position", {})
+
+        rows = []
+
+        # Metadata section
+        rows.append(
+            {
+                "Section": "Metadata",
+                "Date": "Report Type",
+                "Description": "Tax Summary",
+                "Amount": "",
+            }
+        )
+        rows.append(
+            {
+                "Section": "Metadata",
+                "Date": "Date Range",
+                "Description": f"{metadata['start_date']} to {metadata['end_date']}",
+                "Amount": "",
+            }
+        )
+        rows.append(
+            {
+                "Section": "Metadata",
+                "Date": "Jurisdiction",
+                "Description": metadata.get("jurisdiction", self.jurisdiction),
+                "Amount": "",
+            }
+        )
+        rows.append(
+            {
+                "Section": "Metadata",
+                "Date": "Currency",
+                "Description": metadata.get("currency", self.currency),
+                "Amount": "",
+            }
+        )
+        rows.append(
+            {
+                "Section": "Metadata",
+                "Date": "Disclaimer",
+                "Description": "For informational purposes only. Consult a tax professional.",
+                "Amount": "",
+            }
+        )
+        rows.append({"Section": "", "Date": "", "Description": "", "Amount": ""})  # Blank row
+
+        # Tax Collected section
+        rows.append(
+            {
+                "Section": "Tax Collected (Output Tax)",
+                "Date": "Date",
+                "Description": "Description",
+                "Amount": "Tax Amount",
+            }
+        )
+
+        tax_collected_txns = tax_collected.get("transactions", [])
+        for txn in tax_collected_txns:
+            rows.append(
+                {
+                    "Section": "Tax Collected (Output Tax)",
+                    "Date": txn.get("date", ""),
+                    "Description": self._escape_special_characters(txn.get("description", "")),
+                    "Amount": txn.get("amount_formatted", "$0.00"),
+                }
+            )
+
+        rows.append(
+            {
+                "Section": "Tax Collected (Output Tax)",
+                "Date": "TOTAL",
+                "Description": f"Total Tax Collected ({tax_collected.get('count', 0)} transactions)",
+                "Amount": tax_collected.get("total_formatted", "$0.00"),
+            }
+        )
+        rows.append({"Section": "", "Date": "", "Description": "", "Amount": ""})  # Blank row
+
+        # Tax Paid section
+        rows.append(
+            {
+                "Section": "Tax Paid (Input Tax Credits)",
+                "Date": "Date",
+                "Description": "Description",
+                "Amount": "Tax Amount",
+            }
+        )
+
+        tax_paid_txns = tax_paid.get("transactions", [])
+        for txn in tax_paid_txns:
+            rows.append(
+                {
+                    "Section": "Tax Paid (Input Tax Credits)",
+                    "Date": txn.get("date", ""),
+                    "Description": self._escape_special_characters(txn.get("description", "")),
+                    "Amount": txn.get("amount_formatted", "$0.00"),
+                }
+            )
+
+        rows.append(
+            {
+                "Section": "Tax Paid (Input Tax Credits)",
+                "Date": "TOTAL",
+                "Description": f"Total Tax Paid ({tax_paid.get('count', 0)} transactions)",
+                "Amount": tax_paid.get("total_formatted", "$0.00"),
+            }
+        )
+        rows.append({"Section": "", "Date": "", "Description": "", "Amount": ""})  # Blank row
+
+        # Net Position section
+        payable = net_position.get("payable", True)
+        status = "PAYABLE TO GOVERNMENT" if payable else "REFUNDABLE FROM GOVERNMENT"
+
+        rows.append(
+            {
+                "Section": "Net Tax Position",
+                "Date": "Status",
+                "Description": status,
+                "Amount": net_position.get("amount_formatted", "$0.00"),
+            }
+        )
 
         return pd.DataFrame(rows)
 

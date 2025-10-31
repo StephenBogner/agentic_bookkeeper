@@ -18,6 +18,7 @@ from typing import Optional
 from PySide6.QtWidgets import QApplication, QMessageBox
 
 from agentic_bookkeeper.models.database import Database
+from agentic_bookkeeper.core.transaction_manager import TransactionManager
 from agentic_bookkeeper.gui.main_window import MainWindow
 from agentic_bookkeeper.utils.config import Config
 
@@ -193,9 +194,28 @@ def main() -> int:
         else:
             logger.info("Loading existing application data")
 
+        # Initialize core components
+        logger.info("Initializing core components")
+        db_path = config.get_database_path()
+        database = Database(str(db_path))
+        logger.info("Database initialized")
+
+        transaction_manager = TransactionManager(database=database)
+        logger.info("TransactionManager initialized")
+
+        # DocumentMonitor will be initialized when user starts monitoring from the GUI
+        # This requires LLM provider configuration which may not be set yet
+        document_monitor = None
+        logger.info("DocumentMonitor will be initialized on demand")
+
         # Create and show main window
         logger.info("Creating main window")
-        main_window = MainWindow(config=config)
+        main_window = MainWindow(
+            config=config,
+            database=database,
+            transaction_manager=transaction_manager,
+            document_monitor=document_monitor
+        )
         main_window.show()
 
         logger.info("Application startup complete - entering main event loop")

@@ -134,9 +134,6 @@ class PDFExporter:
         if "metadata" not in report_data:
             raise ValueError("report_data missing required field: metadata")
 
-        if "summary" not in report_data:
-            raise ValueError("report_data missing required field: summary")
-
         # Validate output path
         output_file = Path(output_path)
         if not output_file.parent.exists():
@@ -166,6 +163,8 @@ class PDFExporter:
                 story = self._build_income_statement_pdf(report_data)
             elif report_type == "expense_report":
                 story = self._build_expense_report_pdf(report_data)
+            elif report_type == "tax_summary":
+                story = self._build_tax_summary_pdf(report_data)
             else:
                 raise ValueError(f"Unsupported report type: {report_type}")
 
@@ -217,7 +216,7 @@ class PDFExporter:
 
     def _build_income_statement_pdf(self, report_data: Dict[str, Any]) -> List:
         """
-        Build PDF content for income statement report.
+        Build PDF content for income statement report (cash basis).
 
         Args:
             report_data: Income statement data from ReportGenerator
@@ -227,11 +226,12 @@ class PDFExporter:
         """
         story = []
         metadata = report_data["metadata"]
-        summary = report_data["summary"]
-        details = report_data.get("details", {})
+        revenue = report_data.get("revenue", {})
+        expenses = report_data.get("expenses", {})
+        net_income = report_data.get("net_income", {})
 
         # Title
-        title = Paragraph("Income Statement", self.styles["ReportTitle"])
+        title = Paragraph("Income Statement (Cash Basis)", self.styles["ReportTitle"])
         story.append(title)
 
         # Date range
@@ -245,63 +245,82 @@ class PDFExporter:
         story.append(Paragraph("Summary", self.styles["SectionHeader"]))
 
         summary_data = [
-            ["Total Revenue", self._format_currency(summary["total_revenue"])],
-            ["Total Expenses", self._format_currency(summary["total_expenses"])],
-            ["Net Income", self._format_currency(summary["net_income"])],
+            ["Total Revenue (Cash)", revenue.get("cash_total_formatted", "$0.00")],
+            ["  Pre-tax Amount", revenue.get("total_formatted", "$0.00")],
+            ["  Tax Collected", revenue.get("tax_total_formatted", "$0.00")],
+            ["", ""],
+            ["Total Expenses (Cash)", expenses.get("cash_total_formatted", "$0.00")],
+            ["  Pre-tax Amount", expenses.get("total_formatted", "$0.00")],
+            ["  Tax Paid", expenses.get("tax_total_formatted", "$0.00")],
+            ["", ""],
+            ["Net Income (Cash)", net_income.get("cash_amount_formatted", "$0.00")],
+            ["  Pre-tax Net Income", net_income.get("pretax_amount_formatted", "$0.00")],
+            ["  Net Tax Position", net_income.get("tax_position_formatted", "$0.00")],
         ]
 
         summary_table = Table(summary_data, colWidths=[4 * inch, 2 * inch])
         summary_table.setStyle(
             TableStyle(
                 [
-                    ("FONT", (0, 0), (-1, -1), "Helvetica", 11),
-                    ("FONT", (0, 2), (-1, 2), "Helvetica-Bold", 12),
+                    ("FONT", (0, 0), (-1, -1), "Helvetica", 10),
+                    ("FONT", (0, 0), (0, 0), "Helvetica-Bold", 11),
+                    ("FONT", (0, 4), (0, 4), "Helvetica-Bold", 11),
+                    ("FONT", (0, 8), (0, 8), "Helvetica-Bold", 12),
                     ("TEXTCOLOR", (0, 0), (-1, -1), colors.HexColor("#333333")),
+                    ("TEXTCOLOR", (0, 1), (0, 2), colors.HexColor("#666666")),
+                    ("TEXTCOLOR", (0, 5), (0, 6), colors.HexColor("#666666")),
+                    ("TEXTCOLOR", (0, 9), (0, 10), colors.HexColor("#666666")),
                     ("ALIGN", (1, 0), (1, -1), "RIGHT"),
-                    ("TOPPADDING", (0, 0), (-1, -1), 8),
-                    ("BOTTOMPADDING", (0, 0), (-1, -1), 8),
-                    ("LINEABOVE", (0, 2), (-1, 2), 2, colors.HexColor("#1a1a1a")),
-                    ("LINEBELOW", (0, 2), (-1, 2), 2, colors.HexColor("#1a1a1a")),
+                    ("TOPPADDING", (0, 0), (-1, -1), 4),
+                    ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
+                    ("LINEABOVE", (0, 8), (-1, 8), 2, colors.HexColor("#1a1a1a")),
+                    ("LINEBELOW", (0, 8), (-1, 8), 2, colors.HexColor("#1a1a1a")),
                 ]
             )
         )
         story.append(summary_table)
 
         # Revenue breakdown
-        if "revenue" in details and details["revenue"]:
+        revenue_categories = revenue.get("categories", {})
+        if revenue_categories:
             story.append(Spacer(1, 0.3 * inch))
             story.append(Paragraph("Revenue by Category", self.styles["SectionHeader"]))
 
-            revenue_data = [["Category", "Amount", "Percentage"]]
-            for category in details["revenue"]:
+            revenue_data = [["Category", "Pre-Tax", "Tax", "Cash Total", "%"]]
+            for cat_name, cat_data in revenue_categories.items():
                 revenue_data.append(
                     [
-                        category["category"],
-                        self._format_currency(category["total"]),
-                        f"{category['percentage']:.1f}%",
+                        cat_name,
+                        cat_data.get("total_formatted", "$0.00"),
+                        cat_data.get("tax_total_formatted", "$0.00"),
+                        cat_data.get("cash_total_formatted", "$0.00"),
+                        cat_data.get("percentage_formatted", "0%"),
                     ]
                 )
 
-            revenue_table = Table(revenue_data, colWidths=[3 * inch, 1.75 * inch, 1.25 * inch])
+            revenue_table = Table(revenue_data, colWidths=[2 * inch, 1.25 * inch, 1.25 * inch, 1.25 * inch, 0.75 * inch])
             revenue_table.setStyle(self._create_detail_table_style())
             story.append(revenue_table)
 
         # Expense breakdown
-        if "expenses" in details and details["expenses"]:
+        expense_categories = expenses.get("categories", {})
+        if expense_categories:
             story.append(Spacer(1, 0.3 * inch))
             story.append(Paragraph("Expenses by Category", self.styles["SectionHeader"]))
 
-            expense_data = [["Category", "Amount", "Percentage"]]
-            for category in details["expenses"]:
+            expense_data = [["Category", "Pre-Tax", "Tax", "Cash Total", "%"]]
+            for cat_name, cat_data in expense_categories.items():
                 expense_data.append(
                     [
-                        category["category"],
-                        self._format_currency(category["total"]),
-                        f"{category['percentage']:.1f}%",
+                        cat_name,
+                        cat_data.get("total_formatted", "$0.00"),
+                        cat_data.get("tax_total_formatted", "$0.00"),
+                        cat_data.get("cash_total_formatted", "$0.00"),
+                        cat_data.get("percentage_formatted", "0%"),
                     ]
                 )
 
-            expense_table = Table(expense_data, colWidths=[3 * inch, 1.75 * inch, 1.25 * inch])
+            expense_table = Table(expense_data, colWidths=[2 * inch, 1.25 * inch, 1.25 * inch, 1.25 * inch, 0.75 * inch])
             expense_table.setStyle(self._create_detail_table_style())
             story.append(expense_table)
 
@@ -309,7 +328,7 @@ class PDFExporter:
 
     def _build_expense_report_pdf(self, report_data: Dict[str, Any]) -> List:
         """
-        Build PDF content for expense report.
+        Build PDF content for expense report (cash basis).
 
         Args:
             report_data: Expense report data from ReportGenerator
@@ -319,11 +338,10 @@ class PDFExporter:
         """
         story = []
         metadata = report_data["metadata"]
-        summary = report_data["summary"]
-        details = report_data.get("details", {})
+        expenses = report_data.get("expenses", {})
 
         # Title
-        title = Paragraph("Expense Report", self.styles["ReportTitle"])
+        title = Paragraph("Expense Report (Cash Basis)", self.styles["ReportTitle"])
         story.append(title)
 
         # Date range
@@ -337,46 +355,190 @@ class PDFExporter:
         story.append(Paragraph("Summary", self.styles["SectionHeader"]))
 
         summary_data = [
-            ["Total Expenses", self._format_currency(summary["total_expenses"])],
-            ["Number of Categories", str(summary["category_count"])],
-            ["Transaction Count", str(summary.get("transaction_count", 0))],
+            ["Total Expenses (Cash)", expenses.get("cash_total_formatted", "$0.00")],
+            ["  Pre-tax Amount", expenses.get("total_formatted", "$0.00")],
+            ["  Tax Paid", expenses.get("tax_total_formatted", "$0.00")],
+            ["", ""],
+            ["Transaction Count", str(expenses.get("transaction_count", 0))],
         ]
 
         summary_table = Table(summary_data, colWidths=[4 * inch, 2 * inch])
         summary_table.setStyle(
             TableStyle(
                 [
-                    ("FONT", (0, 0), (-1, -1), "Helvetica", 11),
+                    ("FONT", (0, 0), (-1, -1), "Helvetica", 10),
+                    ("FONT", (0, 0), (0, 0), "Helvetica-Bold", 11),
                     ("TEXTCOLOR", (0, 0), (-1, -1), colors.HexColor("#333333")),
+                    ("TEXTCOLOR", (0, 1), (0, 2), colors.HexColor("#666666")),
                     ("ALIGN", (1, 0), (1, -1), "RIGHT"),
-                    ("TOPPADDING", (0, 0), (-1, -1), 8),
-                    ("BOTTOMPADDING", (0, 0), (-1, -1), 8),
+                    ("TOPPADDING", (0, 0), (-1, -1), 4),
+                    ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
                 ]
             )
         )
         story.append(summary_table)
 
         # Expense breakdown with tax codes
-        if "expenses" in details and details["expenses"]:
+        expense_categories = expenses.get("categories", {})
+        if expense_categories:
             story.append(Spacer(1, 0.3 * inch))
             story.append(Paragraph("Expenses by Category", self.styles["SectionHeader"]))
 
-            expense_data = [["Category", "Tax Code", "Amount", "%"]]
-            for category in details["expenses"]:
+            expense_data = [["Category", "Tax Code", "Pre-Tax", "Tax", "Cash Total", "%"]]
+            for cat_name, cat_data in expense_categories.items():
                 expense_data.append(
                     [
-                        category["category"],
-                        category.get("tax_code", "N/A"),
-                        self._format_currency(category["total"]),
-                        f"{category['percentage']:.1f}%",
+                        cat_name,
+                        cat_data.get("tax_code", "N/A"),
+                        cat_data.get("total_formatted", "$0.00"),
+                        cat_data.get("tax_total_formatted", "$0.00"),
+                        cat_data.get("cash_total_formatted", "$0.00"),
+                        cat_data.get("percentage_formatted", "0%"),
                     ]
                 )
 
             expense_table = Table(
-                expense_data, colWidths=[2.5 * inch, 1.25 * inch, 1.5 * inch, 0.75 * inch]
+                expense_data, colWidths=[1.5 * inch, 0.75 * inch, 1.25 * inch, 1.0 * inch, 1.25 * inch, 0.75 * inch]
             )
             expense_table.setStyle(self._create_detail_table_style())
             story.append(expense_table)
+
+        return story
+
+    def _build_tax_summary_pdf(self, report_data: Dict[str, Any]) -> List:
+        """
+        Build PDF content for tax summary report.
+
+        Args:
+            report_data: Tax summary data from ReportGenerator
+
+        Returns:
+            List of ReportLab Flowable objects
+        """
+        story = []
+        metadata = report_data["metadata"]
+        tax_collected = report_data.get("tax_collected", {})
+        tax_paid = report_data.get("tax_paid", {})
+        net_position = report_data.get("net_position", {})
+
+        # Title
+        title = Paragraph("Tax Summary Report", self.styles["ReportTitle"])
+        story.append(title)
+
+        # Date range
+        subtitle = Paragraph(
+            f"{metadata['start_date']} to {metadata['end_date']}", self.styles["ReportSubtitle"]
+        )
+        story.append(subtitle)
+
+        # Disclaimer
+        disclaimer = Paragraph(
+            "<i>This report is for informational purposes only. "
+            "Consult with a tax professional for actual filing.</i>",
+            self.styles["Normal"]
+        )
+        story.append(disclaimer)
+        story.append(Spacer(1, 0.2 * inch))
+
+        # Tax Collected Section
+        story.append(Paragraph("Tax Collected (Output Tax)", self.styles["SectionHeader"]))
+
+        tax_collected_txns = tax_collected.get("transactions", [])
+        if tax_collected_txns:
+            collected_data = [["Date", "Description", "Amount"]]
+            for txn in tax_collected_txns:
+                desc = txn.get("description", "")[:40]  # Truncate long descriptions
+                collected_data.append([
+                    txn.get("date", ""),
+                    desc,
+                    txn.get("amount_formatted", "$0.00")
+                ])
+
+            collected_table = Table(collected_data, colWidths=[1.25 * inch, 3.5 * inch, 1.75 * inch])
+            collected_table.setStyle(self._create_detail_table_style())
+            story.append(collected_table)
+        else:
+            story.append(Paragraph("<i>No tax collected during this period</i>", self.styles["Normal"]))
+
+        story.append(Spacer(1, 0.1 * inch))
+
+        # Total tax collected
+        total_collected_data = [
+            ["Total Tax Collected:", tax_collected.get("total_formatted", "$0.00")]
+        ]
+        total_collected_table = Table(total_collected_data, colWidths=[4 * inch, 2 * inch])
+        total_collected_table.setStyle(
+            TableStyle([
+                ("FONT", (0, 0), (-1, -1), "Helvetica-Bold", 12),
+                ("ALIGN", (1, 0), (1, -1), "RIGHT"),
+                ("TOPPADDING", (0, 0), (-1, -1), 6),
+                ("LINEABOVE", (0, 0), (-1, 0), 1, colors.HexColor("#333333")),
+            ])
+        )
+        story.append(total_collected_table)
+
+        # Tax Paid Section
+        story.append(Spacer(1, 0.3 * inch))
+        story.append(Paragraph("Tax Paid (Input Tax Credits)", self.styles["SectionHeader"]))
+
+        tax_paid_txns = tax_paid.get("transactions", [])
+        if tax_paid_txns:
+            paid_data = [["Date", "Description", "Amount"]]
+            for txn in tax_paid_txns:
+                desc = txn.get("description", "")[:40]  # Truncate long descriptions
+                paid_data.append([
+                    txn.get("date", ""),
+                    desc,
+                    txn.get("amount_formatted", "$0.00")
+                ])
+
+            paid_table = Table(paid_data, colWidths=[1.25 * inch, 3.5 * inch, 1.75 * inch])
+            paid_table.setStyle(self._create_detail_table_style())
+            story.append(paid_table)
+        else:
+            story.append(Paragraph("<i>No tax paid during this period</i>", self.styles["Normal"]))
+
+        story.append(Spacer(1, 0.1 * inch))
+
+        # Total tax paid
+        total_paid_data = [
+            ["Total Tax Paid:", tax_paid.get("total_formatted", "$0.00")]
+        ]
+        total_paid_table = Table(total_paid_data, colWidths=[4 * inch, 2 * inch])
+        total_paid_table.setStyle(
+            TableStyle([
+                ("FONT", (0, 0), (-1, -1), "Helvetica-Bold", 12),
+                ("ALIGN", (1, 0), (1, -1), "RIGHT"),
+                ("TOPPADDING", (0, 0), (-1, -1), 6),
+                ("LINEABOVE", (0, 0), (-1, 0), 1, colors.HexColor("#333333")),
+            ])
+        )
+        story.append(total_paid_table)
+
+        # Net Tax Position Section
+        story.append(Spacer(1, 0.3 * inch))
+        story.append(Paragraph("Net Tax Position", self.styles["SectionHeader"]))
+
+        payable = net_position.get("payable", True)
+        status = "PAYABLE TO GOVERNMENT" if payable else "REFUNDABLE FROM GOVERNMENT"
+        status_color = colors.HexColor("#d9534f") if payable else colors.HexColor("#5cb85c")
+
+        net_data = [
+            ["Net Amount " + status + ":", net_position.get("amount_formatted", "$0.00")]
+        ]
+        net_table = Table(net_data, colWidths=[4 * inch, 2 * inch])
+        net_table.setStyle(
+            TableStyle([
+                ("FONT", (0, 0), (-1, -1), "Helvetica-Bold", 14),
+                ("TEXTCOLOR", (0, 0), (-1, -1), status_color),
+                ("ALIGN", (1, 0), (1, -1), "RIGHT"),
+                ("TOPPADDING", (0, 0), (-1, -1), 10),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 10),
+                ("LINEABOVE", (0, 0), (-1, 0), 2, colors.HexColor("#1a1a1a")),
+                ("LINEBELOW", (0, 0), (-1, 0), 2, colors.HexColor("#1a1a1a")),
+            ])
+        )
+        story.append(net_table)
 
         return story
 

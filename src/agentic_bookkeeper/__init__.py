@@ -8,7 +8,7 @@ Ownership: Stephen Bogner - All Rights Reserved.  See LICENSE
 Date Created: 2025-10-24
 """
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 __author__ = "Stephen Bogner, P.Eng."
 __email__ = "stephenbogner@stephenbogner.com"
 
